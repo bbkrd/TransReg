@@ -1,0 +1,115 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.bundesbank.transReg.ui.propertyEditor;
+
+import de.bundesbank.transReg.settings.CenteruserSettings;
+import de.bundesbank.transReg.util.CenteruserEnum;
+import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyEditorRegistry;
+import ec.tstoolkit.descriptors.EnhancedPropertyDescriptor;
+import ec.tstoolkit.descriptors.IObjectDescriptor;
+import ec.ui.descriptors.TsPeriodSelectorUI;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.List;
+import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
+
+/**
+ *
+ * @author s4504gn
+ */
+public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSettings> {
+    static{
+        CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(CenteruserEnum.class);
+    }
+
+    private CenteruserSettings core;
+
+    public CenteruserSettingsUI() {
+        core = new CenteruserSettings();
+    }
+
+    public CenteruserSettingsUI(CenteruserSettings c) {
+        core = c;
+    }
+
+    @Override
+    public CenteruserSettings getCore() {
+        return core;
+    }
+
+    @Override
+    public List<EnhancedPropertyDescriptor> getProperties() {
+        ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
+        EnhancedPropertyDescriptor desc = methodDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+
+        desc = spanDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        return descs;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Center user";
+    }
+
+    private static final int Method_ID = 1, Span_ID = 2;
+
+    @Messages({
+        "centeruserSettingsUI.methodDesc.name=Method",
+        "centeruserSettingsUI.methodDesc.desc=Erklärung"
+    })
+    private EnhancedPropertyDescriptor methodDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("Method", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Method_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.centeruserSettingsUI_methodDesc_name());
+            desc.setShortDescription(Bundle.centeruserSettingsUI_methodDesc_desc());
+            edesc.setReadOnly(false);
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    public CenteruserEnum getMethod() {
+        return core.getMethod();
+    }
+
+    public void setMethod(CenteruserEnum e) {
+        core.setMethod(e);
+    }
+
+    @NbBundle.Messages({
+        "centeruserSettingsUI.spanDesc.name=Span",
+        "centeruserSettingsUI.spanDesc.desc=Specify the way the time span is defined"
+    })
+    private EnhancedPropertyDescriptor spanDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("Span", this.getClass(), "getSpan", null);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Span_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.centeruserSettingsUI_spanDesc_name());
+            desc.setShortDescription(Bundle.centeruserSettingsUI_spanDesc_desc());
+            edesc.setReadOnly(core.getMethod().equals(CenteruserEnum.None));
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    public TsPeriodSelectorUI getSpan() {
+        return new TsPeriodSelectorUI(core.getSpan(), core.getMethod().equals(CenteruserEnum.None));
+    }
+
+}
