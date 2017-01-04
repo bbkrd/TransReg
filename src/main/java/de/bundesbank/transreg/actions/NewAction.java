@@ -1,17 +1,7 @@
-/* 
- * Copyright 2016 Deutsche Bundesbank
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
- * by the European Commission - subsequent versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- * 
- * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the Licence is distributed on an "AS IS" basis,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and
- * limitations under the Licence.
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package de.bundesbank.transreg.actions;
 
@@ -28,14 +18,18 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "KIX",
-          id = "ec.nbdemetra.kix.actions.NewAction")
-@ActionRegistration(displayName = "#CTL_NewAction")
+@ActionID(
+        category = "TransReg",
+        id = "de.bundesbank.transreg.actions.NewAction"
+)
+@ActionRegistration(
+        displayName = "#CTL_NewAction"
+)
 @ActionReferences({
     @ActionReference(path = TransRegDocumentManager.PATH, position = 1000)
 })
 @Messages("CTL_NewAction=New")
-public class NewAction implements ActionListener {
+public final class NewAction implements ActionListener {
 
     private final WsNode context;
 

@@ -30,8 +30,8 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "KIX",
-        id = "ec.nbdemetra.kix.actions.RenameAction")
+@ActionID(category = "TransReg",
+        id = "de.bundesbank.transreg.actions.RenameAction")
 @ActionRegistration(
         displayName = "#CTL_RenameAction", lazy = false)
 @ActionReferences({

@@ -5,6 +5,7 @@
  */
 package de.bundesbank.transreg.admin;
 
+import ec.tstoolkit.information.InformationSetSerializable;
 import ec.tstoolkit.timeseries.regression.TsVariables;
 import ec.tstoolkit.utilities.DefaultNameValidator;
 
@@ -12,7 +13,7 @@ import ec.tstoolkit.utilities.DefaultNameValidator;
  *
  * @author s4504gn
  */
-public class TransRegDocument extends TsVariables{
+public class TransRegDocument extends TsVariables implements InformationSetSerializable{
 
     
     public TransRegDocument(){
