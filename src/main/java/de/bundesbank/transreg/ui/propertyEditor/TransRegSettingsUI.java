@@ -21,6 +21,7 @@ import org.openide.util.NbBundle.Messages;
 public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
     private TransRegSettings core;
+    private boolean readOnly = false;
 
     public TransRegSettingsUI() {
         core = new TransRegSettings();
@@ -34,6 +35,10 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         core = new TransRegSettings(freq);
     }
 
+    public void setReadOnly(boolean b){
+        readOnly=b;
+    }
+    
     @Override
     public TransRegSettings getCore() {
         return core;
@@ -42,10 +47,16 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = groupsDesc();
+        
+        EnhancedPropertyDescriptor desc = groupsDesc(); // horizontalverticaldesc
         if (desc != null) {
             descs.add(desc);
         }
+          desc = horizontalDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        
         desc = centeruserDesc();
         if (desc != null) {
             descs.add(desc);
@@ -58,7 +69,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         return "TransReg Settings";
     }
 
-    private static final int Centeruser_ID = 1, Groups_ID = 2;
+    private static final int Centeruser_ID = 2, Groups_ID = 1;
 
     @Messages({
         "transregSettingsUI.centeruserDesc.name=CENTER USER",
@@ -71,7 +82,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.transregSettingsUI_centeruserDesc_name());
             desc.setShortDescription(Bundle.transregSettingsUI_centeruserDesc_desc());
-            edesc.setReadOnly(false);
+            edesc.setReadOnly(readOnly);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -79,7 +90,9 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     }
 
     public CenteruserSettingsUI getCenteruser() {
-        return new CenteruserSettingsUI(core.getCenteruser());
+        CenteruserSettingsUI ui = new CenteruserSettingsUI(core.getCenteruser());
+        ui.setReadOnly(readOnly);
+        return ui;
     }
 
     @Messages({
@@ -93,7 +106,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.transregSettingsUI_groupsDesc_name());
             desc.setShortDescription(Bundle.transregSettingsUI_groupsDesc_desc());
-            edesc.setReadOnly(false);
+            edesc.setReadOnly(readOnly);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -101,6 +114,31 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     }
 
     public GroupsSettingsUI getGroups() {
-        return new GroupsSettingsUI(core.getGroups());
+        GroupsSettingsUI ui = new GroupsSettingsUI(core.getGroups());
+        ui.setReadOnly(readOnly);
+        return ui;
+    }
+
+    @Messages({
+        "transregSettingsUI.horizontalDesc.name=Horizontal GROUPS",
+        "transregSettingsUI.horizontalDesc.desc=Erklärung"
+    })
+    private EnhancedPropertyDescriptor horizontalDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("Horizontal", this.getClass(), "getHorizontal", null);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Groups_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.transregSettingsUI_horizontalDesc_name());
+            desc.setShortDescription(Bundle.transregSettingsUI_horizontalDesc_desc());
+            edesc.setReadOnly(readOnly);
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+        public HorizontalSettingsUI getHorizontal() {
+        HorizontalSettingsUI ui = new HorizontalSettingsUI(core.getHorizontal());
+        ui.setReadOnly(readOnly);
+        return ui;
     }
 }

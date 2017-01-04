@@ -324,7 +324,7 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Table">
-    private static final String[] information = new String[]{"Name", "Frequency", "Start", "End", "Centeruser Test", "Data"};
+    private static final String[] information = new String[]{"Name", "Frequency", "Start", "End", "TransReg Info", "Data"};
 
     private XTable buildTable() {
         final XTable result = new XTable();
@@ -480,9 +480,11 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
                     }
                 }
                 case 4:
-                    // TransRegInfo : auf DefaultSettings pruefen
-                    
-                    return TransRegCalculationTool.testCenteruser(row.getTsData());
+                    // TransRegInfo : auf DefaultSettings, Datengleicheit pruefen
+                    if (row.getSettings().isDefault()) {
+                        return TransRegCalculationTool.testCenteruser(row.getTsData());
+                    }
+                return row.getSettings().getInfo();
                 case 5:
                     TsDomain d = row.getDefinitionDomain();
                     if (d != null) {

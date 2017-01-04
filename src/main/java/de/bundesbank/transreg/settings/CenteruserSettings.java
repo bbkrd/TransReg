@@ -60,4 +60,8 @@ public class CenteruserSettings {
         
         return copy;
     }
+    
+    public String getInfo(){
+        return "Centeruser method: "+method.toString();
+    }
 }

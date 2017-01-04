@@ -28,6 +28,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
     }
 
     private CenteruserSettings core;
+    private boolean readOnly = false;
 
     public CenteruserSettingsUI() {
         core = new CenteruserSettings();
@@ -37,6 +38,10 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
         core = c;
     }
 
+    public void setReadOnly(boolean b){
+        readOnly = b;
+    }
+    
     @Override
     public CenteruserSettings getCore() {
         return core;
@@ -75,7 +80,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.centeruserSettingsUI_methodDesc_name());
             desc.setShortDescription(Bundle.centeruserSettingsUI_methodDesc_desc());
-            edesc.setReadOnly(false);
+            edesc.setReadOnly(readOnly);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -101,7 +106,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.centeruserSettingsUI_spanDesc_name());
             desc.setShortDescription(Bundle.centeruserSettingsUI_spanDesc_desc());
-            edesc.setReadOnly(core.getMethod().equals(CenteruserEnum.None));
+            edesc.setReadOnly(readOnly && core.getMethod().equals(CenteruserEnum.None));
             return edesc;
         } catch (IntrospectionException ex) {
             return null;

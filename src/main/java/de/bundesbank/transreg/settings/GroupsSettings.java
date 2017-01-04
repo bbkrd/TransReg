@@ -14,13 +14,24 @@ import java.util.Arrays;
  */
 public class GroupsSettings {
 
+    private GroupsEnum myGroup = GroupsEnum.Group1;
     private GroupsEnum[] groups;
+    private boolean enable = false;
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
     public GroupsSettings() {
-        generateGroups(4);
+
     }
 
     public GroupsSettings(int freq) {
+        enable = true;
         generateGroups(freq);
     }
 
@@ -38,7 +49,10 @@ public class GroupsSettings {
     }
 
     public int getFreq() {
-        return groups.length;
+        if (enable) {
+            return groups.length;
+        }
+        return 0;
     }
 
     public boolean isDefault() {
@@ -51,10 +65,17 @@ public class GroupsSettings {
     }
 
     public GroupsSettings copy() {
-        
+
         GroupsSettings copy = new GroupsSettings();
         copy.setGroups(groups.clone());
-        
+
         return copy;
+    }
+
+    public String getInfo() {
+        if (enable) {
+            return myGroup.toString();
+        }
+        return "";
     }
 }

@@ -109,7 +109,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         JButton calc = new JButton("Calculate");
         calc.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent e) {
                 TransRegVar var = variablesList.getSelectedVariable();
@@ -119,10 +118,26 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             }
         });
         buttonPanel.add(calc);
+        
+        JButton restore = new JButton("Restore");
+        restore.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Restore\n*******");
+                // getSelected 
+                // currentSettings = oldSettings.copy
+                // calculate
+                // refresh GUI
+                
+            }
+        });
         //</editor-fold>
 
         if (regressors.isEmpty()) {
-            propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(new TransRegSettingsUI());
+            TransRegSettingsUI settingsUI = new TransRegSettingsUI();
+            settingsUI.setReadOnly(true);
+            propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(settingsUI);
         } else {
             String[] names = regressors.getNames();
             ITsVariable var = regressors.get(names[0]);

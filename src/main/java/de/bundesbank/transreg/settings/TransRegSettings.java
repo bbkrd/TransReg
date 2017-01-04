@@ -13,15 +13,18 @@ public class TransRegSettings {
 
     private CenteruserSettings centeruser;
     private GroupsSettings groups;
+    private HorizontalSettings horizontal;
 
     public TransRegSettings() {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings();
+        horizontal = new HorizontalSettings();
     }
 
     public TransRegSettings(int freq) {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings(freq);
+        horizontal = new HorizontalSettings();
     }
 
     public CenteruserSettings getCenteruser() {
@@ -40,19 +43,32 @@ public class TransRegSettings {
         this.groups = groups;
     }
 
+    public HorizontalSettings getHorizontal() {
+        return horizontal;
+    }
+
+    public void setHorizontal(HorizontalSettings horizontal) {
+        this.horizontal = horizontal;
+    }
+
     public boolean isDefault() {
-        if (centeruser.isDefault() && groups.isDefault()) {
+        if (centeruser.isDefault() && groups.isDefault() && horizontal.isDefault()) {
             return true;
         }
         return false;
     }
-    
-    public TransRegSettings copy(){
-        
+
+    public TransRegSettings copy() {
+
         TransRegSettings copy = new TransRegSettings();
         copy.setCenteruser(centeruser.copy());
         copy.setGroups(groups.copy());
-        
+        copy.setHorizontal(horizontal.copy());
+
         return copy;
+    }
+
+    public String getInfo() {
+        return centeruser.getInfo() + " " + groups.getInfo() + " " + horizontal.getInfo();
     }
 }
