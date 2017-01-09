@@ -165,8 +165,8 @@ class CustomGroupsEnumEditor extends AbstractCellEditor implements TableCellEdit
     private final JComboBox cb_;
 
     public CustomGroupsEnumEditor() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(GroupsEnum.values());
-        cb_ = new JComboBox(model);
+        GroupsEnumSelector s = new GroupsEnumSelector();
+        cb_ = (JComboBox) s.getCustomEditor();
     }
 
     @Override

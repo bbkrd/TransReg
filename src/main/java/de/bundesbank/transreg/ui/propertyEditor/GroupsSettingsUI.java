@@ -23,7 +23,7 @@ import org.openide.util.NbBundle;
 public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
 
     static {
-        CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(GroupsEnum.class);
+        CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(GroupsEnum.class, new GroupsEnumSelector());
         CustomPropertyEditorRegistry.INSTANCE.register(GroupsEnum[].class, new GroupsEnumPropertyEditor());
         //TODO: Button CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(GroupsEnum[].class, new ArrayRenderer());
     }
