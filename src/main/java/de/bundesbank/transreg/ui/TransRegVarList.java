@@ -5,6 +5,7 @@
  */
 package de.bundesbank.transreg.ui;
 
+import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.logic.TransRegCalculationTool;
 import de.bundesbank.transreg.logic.TransRegVar;
 import ec.nbdemetra.ui.DemetraUI;
@@ -76,11 +77,11 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
     public static final String OPEN_ACTION = "open";
 
     private ITsAction tsAction;
-    private TsVariables vars;
+    private TransRegDocument vars;
     private final XTable table;
     private TransRegTableModel model;
 
-    public TransRegVarList(TsVariables vars) {
+    public TransRegVarList(TransRegDocument vars) {
 
         this.vars = vars;
         model = new TransRegTableModel();

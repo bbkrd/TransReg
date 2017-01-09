@@ -5,11 +5,14 @@
  */
 package de.bundesbank.transreg.settings;
 
+import ec.tstoolkit.information.InformationSet;
+import ec.tstoolkit.information.InformationSetSerializable;
+
 /**
  *
  * @author s4504gn
  */
-public class HorizontalSettings {
+public class HorizontalSettings implements InformationSetSerializable{
 
     private boolean enable = false;
 
@@ -33,5 +36,15 @@ public class HorizontalSettings {
 
     public String getInfo() {
         return "Horizontal: " + enable + "";
+    }
+
+    @Override
+    public InformationSet write(boolean verbose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean read(InformationSet info) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -99,7 +99,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         JPopupMenu preSelectionPopup = new JPopupMenu();
         JButton preSelectionButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, preSelectionPopup));
 
-        TsVariables regressors = getDocument().getElement();
+        TransRegDocument regressors = getDocument().getElement();
         variablesList = new TransRegVarList(regressors);
 
         
@@ -119,19 +119,21 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         });
         buttonPanel.add(calc);
         
-        JButton restore = new JButton("Restore");
+       /* JButton restore = new JButton("Restore");
         restore.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Restore\n*******");
-                // getSelected 
-                // currentSettings = oldSettings.copy
-                // calculate
-                // refresh GUI
-                
+                TransRegVar var = variablesList.getSelectedVariable();
+                if(var != null){
+                    var.restore();
+                    //refresh
+                    propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(var.getSettings());
+                }                
             }
         });
+        buttonPanel.add(restore);*/
         //</editor-fold>
 
         if (regressors.isEmpty()) {

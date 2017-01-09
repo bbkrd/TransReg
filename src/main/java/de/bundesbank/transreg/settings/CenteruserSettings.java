@@ -6,6 +6,8 @@
 package de.bundesbank.transreg.settings;
 
 import de.bundesbank.transreg.util.CenteruserEnum;
+import ec.tstoolkit.information.InformationSet;
+import ec.tstoolkit.information.InformationSetSerializable;
 import ec.tstoolkit.timeseries.PeriodSelectorType;
 import ec.tstoolkit.timeseries.TsPeriodSelector;
 
@@ -13,7 +15,7 @@ import ec.tstoolkit.timeseries.TsPeriodSelector;
  *
  * @author s4504gn
  */
-public class CenteruserSettings {
+public class CenteruserSettings implements InformationSetSerializable {
 
     TsPeriodSelector span;
     CenteruserEnum method;
@@ -46,22 +48,41 @@ public class CenteruserSettings {
     }
 
     public boolean isDefault() {
-        if (method.equals(CenteruserEnum.None) && span.getType().equals(PeriodSelectorType.All)) {
-            return true;
+        if(!method.equals(CenteruserEnum.None)){
+            return false;
         }
-        return false;
+        if (!span.getType().equals(PeriodSelectorType.All)) {
+            return false;
+        }
+        return true;
     }
-    
-    public CenteruserSettings copy(){
-        
+
+    public CenteruserSettings copy() {
+
         CenteruserSettings copy = new CenteruserSettings();
         copy.setMethod(method);
         copy.setSpan(span.clone());
-        
+
         return copy;
     }
-    
-    public String getInfo(){
-        return "Centeruser method: "+method.toString();
+
+    public String getInfo() {
+        return "Centeruser method: " + method.toString();
     }
+
+    @Override
+    public InformationSet write(boolean verbose) {
+        InformationSet info = new InformationSet();
+        info.add(METHOD, method.toString());
+        //TODO: Span
+        return info;
+    }
+
+    @Override
+    public boolean read(InformationSet info) {
+        method = CenteruserEnum.valueOf(info.get(METHOD, String.class));       
+        return true;
+    }
+
+    private static String METHOD = "method";
 }

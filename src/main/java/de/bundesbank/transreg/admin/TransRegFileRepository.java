@@ -5,6 +5,7 @@
  */
 package de.bundesbank.transreg.admin;
 
+import de.bundesbank.transreg.logic.TransRegVar;
 import ec.nbdemetra.ws.AbstractFileItemRepository;
 import static ec.nbdemetra.ws.AbstractFileItemRepository.loadInfo;
 import static ec.nbdemetra.ws.AbstractFileItemRepository.saveInfo;
@@ -19,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IWorkspaceItemRepository.class)
 public class TransRegFileRepository extends AbstractFileItemRepository<TransRegDocument> {
     public static final String REPOSITORY = "TransReg";
-
+    
     @Override
     public boolean load(WorkspaceItem<TransRegDocument> item) {
         String sfile = this.fullName(item, REPOSITORY, false);

@@ -5,11 +5,14 @@
  */
 package de.bundesbank.transreg.settings;
 
+import ec.tstoolkit.information.InformationSet;
+import ec.tstoolkit.information.InformationSetSerializable;
+
 /**
  *
  * @author s4504gn
  */
-public class TransRegSettings {
+public class TransRegSettings implements InformationSetSerializable {
 
     private CenteruserSettings centeruser;
     private GroupsSettings groups;
@@ -52,10 +55,16 @@ public class TransRegSettings {
     }
 
     public boolean isDefault() {
-        if (centeruser.isDefault() && groups.isDefault() && horizontal.isDefault()) {
-            return true;
+        if (!centeruser.isDefault() ) {
+            return false;
         }
-        return false;
+        if (!groups.isDefault()) {
+            return false;
+        }
+        if (!horizontal.isDefault()) {
+            return false;
+        }
+        return true;
     }
 
     public TransRegSettings copy() {
@@ -71,4 +80,27 @@ public class TransRegSettings {
     public String getInfo() {
         return centeruser.getInfo() + " " + groups.getInfo() + " " + horizontal.getInfo();
     }
+
+    @Override
+    public InformationSet write(boolean verbose) {
+        InformationSet info = new InformationSet();
+        InformationSet tmp = centeruser.write(verbose);
+        info.add(CENTERUSER, tmp);
+        tmp = groups.write(verbose);
+        info.add(GROUPS, tmp);
+
+        //TODO: horizontal.write();
+        return info;
+    }
+
+    @Override
+    public boolean read(InformationSet info) {
+        centeruser.read(info.getSubSet(CENTERUSER));
+        groups.read(info.getSubSet(GROUPS));
+        return true;
+    }
+
+    private static String CENTERUSER = "centeruser",
+            GROUPS = "groups",
+            HORIZONTAL = "horizontal";
 }

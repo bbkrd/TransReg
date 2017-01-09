@@ -6,13 +6,15 @@
 package de.bundesbank.transreg.settings;
 
 import de.bundesbank.transreg.util.GroupsEnum;
+import ec.tstoolkit.information.InformationSet;
+import ec.tstoolkit.information.InformationSetSerializable;
 import java.util.Arrays;
 
 /**
  *
  * @author s4504gn
  */
-public class GroupsSettings {
+public class GroupsSettings implements InformationSetSerializable {
 
     private GroupsEnum myGroup = GroupsEnum.Group1;
     private GroupsEnum[] groups;
@@ -77,5 +79,44 @@ public class GroupsSettings {
             return myGroup.toString();
         }
         return "";
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (GroupsEnum g : groups) {
+            result += g.name() + " ";
+        }
+        return result.trim();
+    }
+
+    private static String GROUPS = "groups", STATUS = "status";
+    
+    @Override
+    public InformationSet write(boolean verbose) {
+        InformationSet info = new InformationSet();
+        if (groups != null) {
+            String[] groupsInfo = new String[groups.length];
+            for (int i = 0; i < groupsInfo.length; ++i) {
+                groupsInfo[i] = groups[i].name();
+            }
+            info.add(GROUPS, groupsInfo);
+        }        
+        info.add(STATUS, myGroup.name());
+        return info;
+    }
+
+
+    @Override
+    public boolean read(InformationSet info) {
+        String[] groupsInfo = info.get(GROUPS, String[].class);
+            if (groupsInfo != null) {
+                groups = new GroupsEnum[groupsInfo.length];
+                for (int i = 0; i < groupsInfo.length; ++i) {
+                    groups[i] = GroupsEnum.valueOf(groupsInfo[i]);
+                }
+            }
+        myGroup = GroupsEnum.valueOf(info.get(STATUS, String.class));
+        return true;
     }
 }

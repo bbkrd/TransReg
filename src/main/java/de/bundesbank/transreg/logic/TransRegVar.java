@@ -11,7 +11,6 @@ import ec.tss.TsFactory;
 import ec.tss.TsInformationType;
 import ec.tss.TsMoniker;
 import ec.tss.TsStatus;
-import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.information.InformationConverter;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.timeseries.regression.TsVariable;
@@ -47,20 +46,20 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
     }
 
     public TransRegVar(String s, TsMoniker m, TsData d) {
-        super(s, d);
-        calculatedData = d.clone();
+        super(s, d);        
         moniker = m;
+        calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
         oldSettings = currentSettings.copy();
     }
 
     // Fuer Encoding
-    private TransRegVar(String s, TsMoniker m, TsData data, TsData calculated, TransRegSettings current, TransRegSettings old) {
+    private TransRegVar(String s, TsMoniker m, TsData data, TsData calculated, TransRegSettings current) {
         super(s, data);
         moniker = m;
         calculatedData = calculated;
         currentSettings = current;
-        oldSettings = old;
+        oldSettings = currentSettings.copy();;
     }
 
     public TsMoniker getMoniker() {
@@ -85,6 +84,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         this.currentSettings = settings;
     }
 
+    public void restore(){
+        currentSettings = oldSettings.copy();
+    }
+    
     public TransRegSettings getOldSettings() {
         return oldSettings;
     }
@@ -127,10 +130,17 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
             String desc = info.get(DESC, String.class);
             TsMoniker monk = info.get(MONIKER, TsMoniker.class);
             TsData original = info.get(ORIGINAL, TsData.class);
-            TransRegSettings cur = info.get(SETTINGS, TransRegSettings.class);
-            TransRegSettings old = info.get(OLDSETTINGS, TransRegSettings.class);
 
-            TransRegVar result = new TransRegVar(desc, monk, original, data, cur, old);
+            //read methode, auf null prüfen 
+            int frequency = data.getFrequency().intValue();
+            TransRegSettings cur = new TransRegSettings(frequency);
+            InformationSet curInfo = info.getSubSet(SETTINGS);
+            if (curInfo != null) {
+                cur.read(curInfo);
+            }
+            
+            
+            TransRegVar result = new TransRegVar(desc, monk, original, data, cur);
             return result;
         }
 
@@ -142,8 +152,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
             info.set(MONIKER, t.getMoniker());
             info.set(DATA, t.getTsData());
             info.set(ORIGINAL, t.getOriginalData());
-            info.set(SETTINGS, t.getSettings());
-            info.set(OLDSETTINGS, t.getOldSettings());
+            InformationSet settings = t.getSettings().write(verbose);
+            info.set(SETTINGS, settings);
             return info;
         }
 
@@ -156,7 +166,13 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         public String getTypeDescription() {
             return TYPE;
         }
-        static final String TYPE = "transformed time series", OLDSETTINGS = "old settings", SETTINGS = "settings", MONIKER = "moniker", DATA = "data", ORIGINAL = "original data", DESC = "description";
+        static final String TYPE = "transformed time series",
+                OLDSETTINGS = "old settings",
+                SETTINGS = "settings",
+                MONIKER = "moniker",
+                DATA = "data",
+                ORIGINAL = "original data",
+                DESC = "description";
     };
 
     private static final InformationConverter<TransRegVar> tsvar = new TransRegVarConverter();
