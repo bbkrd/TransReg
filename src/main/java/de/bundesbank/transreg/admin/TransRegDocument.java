@@ -19,7 +19,7 @@ public class TransRegDocument extends TsVariables implements InformationSetSeria
 
     
     public TransRegDocument() {
-        super("t", new DefaultNameValidator(".+-*/"));
+        super("t_", new DefaultNameValidator(".+-*/"));
     }
     
     @Override

@@ -399,17 +399,17 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         for (Ts s : coll) {
             TransRegVar v;
             if (s.getMoniker().isAnonymous()) {
-                v = new TransRegVar(s.getName(), s.getTsData());
+                v = new TransRegVar(vars.nextName(), s.getTsData());
             } else {
-                v = new TransRegVar(s.getName(), s.getMoniker(), s.getTsData());
+                v = new TransRegVar(vars.nextName(), s.getMoniker(), s.getTsData());
             }
             v.calculate();
-            vars.set(s.getName(), v);
+            vars.set(vars.nextName(), v);
         }
         ((AbstractTableModel) table.getModel()).fireTableStructureChanged();
     }
 
-    private class TransRegTableModel extends ListTableModel<TransRegVar> {
+    private class TransRegTableModel extends AbstractTableModel {
 
         private String[] names;
 
@@ -434,70 +434,6 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         }
 
         @Override
-        protected List<String> getColumnNames() {
-            return Arrays.asList(names);
-        }
-
-        @Override
-        protected List<TransRegVar> getValues() {
-            List<TransRegVar> result = new ArrayList<>();
-            for (ITsVariable v : vars.variables()) {
-                if (v instanceof TransRegVar) {
-                    result.add((TransRegVar) v);
-                }
-            }
-            return result;
-        }
-
-        @Override
-        protected Object getValueAt(TransRegVar row, int columnIndex
-        ) {
-            switch (columnIndex) {
-                case 0:
-                    int i = 0;
-                    for (String s : vars.getNames()) {
-                        if (vars.get(s).equals(row)) {
-                            return names[i];
-                        }
-                        i++;
-                    }
-                    return null;
-                case 1:
-                    return row.getDefinitionFrequency();
-                case 2: {
-                    TsDomain d = row.getDefinitionDomain();
-                    if (d != null) {
-                        return d.getStart();
-                    }
-                }
-                case 3: {
-                    TsDomain d = row.getDefinitionDomain();
-                    if (d != null) {
-                        return d.getLast();
-                    }
-                }
-                case 4:
-                    // TransRegInfo : auf DefaultSettings, Datengleicheit pruefen
-                    if (row.getSettings().isDefault()) {
-                        return TransRegCalculationTool.testCenteruser(row.getTsData());
-                    }
-                    if (row.getSettings().getTimestamp() != null) {
-                        return row.getSettings().getTimestamp().toString();
-                    }
-                    return row.getSettings().getInfo();
-                case 5:
-                    TsDomain d = row.getDefinitionDomain();
-                    if (d != null) {
-                        List<DataBlock> data = Collections.singletonList(new DataBlock(d.getLength()));
-                        row.data(d, data);
-                        return new TsData(d.getStart(), data.get(0));
-                    }
-                default:
-                    return null;
-            }
-        }
-
-        @Override
         public String getColumnName(int column
         ) {
             return information[column];
@@ -508,20 +444,66 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         ) {
             switch (columnIndex) {
                 case 0:
-                    return String.class;
                 case 1:
+                case 4:
                     return String.class;
                 case 2:
                 case 3:
                     return TsDomain.class;
-                case 4:
-                    return String.class;
                 case 5:
                     return TsData.class;
             }
             return super.getColumnClass(columnIndex);
         }
-    }
-    //</editor-fold>
 
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            TransRegVar item = (TransRegVar) vars.get(names[rowIndex]);
+            switch (columnIndex) {
+                case 0:
+                    int i = 0;
+                    for (String s : vars.getNames()) {
+                        if (vars.get(s).equals(item)) {
+                            return names[i];
+                        }
+                        i++;
+                    }
+                    return null;
+                case 1:
+                    return item.getDefinitionFrequency();
+                case 2: {
+                    TsDomain d = item.getDefinitionDomain();
+                    if (d != null) {
+                        return d.getStart();
+                    }
+                }
+                case 3: {
+                    TsDomain d = item.getDefinitionDomain();
+                    if (d != null) {
+                        return d.getLast();
+                    }
+                }
+                case 4:
+                    // TransRegInfo : auf DefaultSettings, Datengleicheit pruefen
+                    if (item.getSettings().isDefault()) {
+                        return TransRegCalculationTool.testCenteruser(item.getTsData());
+                    }
+                    if (item.getSettings().getTimestamp() != null) {
+                        return item.getSettings().getTimestamp().toString();
+                    }
+                    return item.getSettings().getInfo();
+                case 5:
+                    TsDomain d = item.getDefinitionDomain();
+                    if (d != null) {
+                        List<DataBlock> data = Collections.singletonList(new DataBlock(d.getLength()));
+                        item.data(d, data);
+                        return new TsData(d.getStart(), data.get(0));
+                    }
+                default:
+                    return null;
+            }
+        }
+        //</editor-fold>
+
+    }
 }
