@@ -7,6 +7,7 @@ package de.bundesbank.transreg.settings;
 
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -17,6 +18,9 @@ public class TransRegSettings implements InformationSetSerializable {
     private CenteruserSettings centeruser;
     private GroupsSettings groups;
     private HorizontalSettings horizontal;
+    
+    // wird gesetzt wenn calculate() aufgerufen wurde 
+    private LocalDateTime timestamp;
 
     public TransRegSettings() {
         centeruser = new CenteruserSettings();
@@ -54,8 +58,16 @@ public class TransRegSettings implements InformationSetSerializable {
         this.horizontal = horizontal;
     }
 
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public boolean isDefault() {
-        if (!centeruser.isDefault() ) {
+        if (!centeruser.isDefault()) {
             return false;
         }
         if (!groups.isDefault()) {
@@ -84,8 +96,11 @@ public class TransRegSettings implements InformationSetSerializable {
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
+        info.add(TIMESTAMP, timestamp.toString());
+        
         InformationSet tmp = centeruser.write(verbose);
         info.add(CENTERUSER, tmp);
+        
         tmp = groups.write(verbose);
         info.add(GROUPS, tmp);
 
@@ -95,12 +110,15 @@ public class TransRegSettings implements InformationSetSerializable {
 
     @Override
     public boolean read(InformationSet info) {
+        String s = info.get(TIMESTAMP, String.class);
+        timestamp = LocalDateTime.parse(s);
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
         return true;
     }
 
-    private static String CENTERUSER = "centeruser",
+    private static String TIMESTAMP = "timestamp",
+            CENTERUSER = "centeruser",
             GROUPS = "groups",
             HORIZONTAL = "horizontal";
 }

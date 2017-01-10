@@ -22,7 +22,6 @@ import ec.tss.TsInformationType;
 import ec.tss.datatransfer.TssTransferSupport;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.timeseries.regression.ITsVariable;
-import ec.tstoolkit.timeseries.regression.TsVariables;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsDomain;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
@@ -482,7 +481,10 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
                     if (row.getSettings().isDefault()) {
                         return TransRegCalculationTool.testCenteruser(row.getTsData());
                     }
-                return row.getSettings().getInfo();
+                    if (row.getSettings().getTimestamp() != null) {
+                        return row.getSettings().getTimestamp().toString();
+                    }
+                    return row.getSettings().getInfo();
                 case 5:
                     TsDomain d = row.getDefinitionDomain();
                     if (d != null) {

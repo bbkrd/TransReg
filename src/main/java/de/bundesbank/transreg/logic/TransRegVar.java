@@ -17,6 +17,7 @@ import ec.tstoolkit.timeseries.regression.TsVariable;
 import static ec.tstoolkit.timeseries.regression.TsVariables.LINKER;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.utilities.IDynamicObject;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -46,7 +47,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
     }
 
     public TransRegVar(String s, TsMoniker m, TsData d) {
-        super(s, d);        
+        super(s, d);
         moniker = m;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
@@ -84,10 +85,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         this.currentSettings = settings;
     }
 
-    public void restore(){
+    public void restore() {
         currentSettings = oldSettings.copy();
     }
-    
+
     public TransRegSettings getOldSettings() {
         return oldSettings;
     }
@@ -115,6 +116,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
     public void calculate() {
         if (!currentSettings.isDefault()) {
             calculatedData = TransRegCalculationTool.calculateCenteruser(this);
+            currentSettings.setTimestamp(LocalDateTime.now());
         } else {
             // keine Berechnung
             calculatedData = getOriginalData().clone();
@@ -138,8 +140,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
             if (curInfo != null) {
                 cur.read(curInfo);
             }
-            
-            
+
             TransRegVar result = new TransRegVar(desc, monk, original, data, cur);
             return result;
         }

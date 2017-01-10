@@ -17,7 +17,6 @@ import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.ui.WorkspaceTopComponent;
 import ec.tstoolkit.timeseries.regression.ITsVariable;
-import ec.tstoolkit.timeseries.regression.TsVariables;
 import static ec.ui.view.tsprocessing.DefaultProcessingViewer.BUTTONS;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
