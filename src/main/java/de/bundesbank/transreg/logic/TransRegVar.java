@@ -60,7 +60,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         moniker = m;
         calculatedData = calculated;
         currentSettings = current;
-        oldSettings = currentSettings.copy();;
+        oldSettings = currentSettings.copy();
     }
 
     public TsMoniker getMoniker() {
@@ -87,6 +87,12 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
 
     public void restore() {
         currentSettings = oldSettings.copy();
+        calculatedData = getOriginalData().clone();
+        if (!currentSettings.isDefault()) {
+            currentSettings.setTimestamp(LocalDateTime.now());
+        }else{
+            currentSettings.setTimestamp(null);
+        }
     }
 
     public TransRegSettings getOldSettings() {
@@ -133,7 +139,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
             TsMoniker monk = info.get(MONIKER, TsMoniker.class);
             TsData original = info.get(ORIGINAL, TsData.class);
 
-            //read methode, auf null prüfen 
+            //read methode, auf null prÃ¼fen 
             int frequency = data.getFrequency().intValue();
             TransRegSettings cur = new TransRegSettings(frequency);
             InformationSet curInfo = info.getSubSet(SETTINGS);

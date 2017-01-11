@@ -102,7 +102,6 @@ public class TransRegCalculationTool {
                 TsData selectedData = var.getOriginalData().select(settings.getSpan());
                 double mean = new DescriptiveStatistics(selectedData.getValues()).getAverage();
                 newData = var.getOriginalData().minus(mean);
-                System.out.println("Mean: " + mean);
                 break;
             case Seasonal:
                 TsData dataMean = var.getOriginalData().select(settings.getSpan());
@@ -127,7 +126,7 @@ public class TransRegCalculationTool {
                     seasonalMean[i] = seasonalMean[i] / seasonal_n[i];
                 }
                 // von OriginalZR abziehen
-                newData = var.getOriginalData();
+                newData = var.getOriginalData().clone();
                 position = newData.getStart().getPosition();
                 for (int i = 0; i < newData.getLength(); i++) {
                     newData.set(i, (newData.get(i) - seasonalMean[position]));

@@ -101,51 +101,36 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         TransRegDocument regressors = getDocument().getElement();
         variablesList = new TransRegVarList(regressors);
 
-        
         //<editor-fold defaultstate="collapsed" desc="Buttons">
         JPanel buttonPanel = new JPanel();
         buttonPanel.setName(BUTTONS);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         JButton calc = new JButton("Calculate");
-        calc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TransRegVar var = variablesList.getSelectedVariable();
-                if (var != null) {
-                    var.calculate();
-                }
+        calc.addActionListener((ActionEvent e) -> {
+            TransRegVar var = variablesList.getSelectedVariable();
+            if (var != null) {
+                var.calculate();
+                //variablesList aktualiesieren
             }
         });
         buttonPanel.add(calc);
-        
-       /* JButton restore = new JButton("Restore");
-        restore.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Restore\n*******");
-                TransRegVar var = variablesList.getSelectedVariable();
-                if(var != null){
-                    var.restore();
-                    //refresh
-                    propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(var.getSettings());
-                }                
+        JButton restore = new JButton("Restore");
+        restore.addActionListener((ActionEvent e) -> {
+            TransRegVar var = variablesList.getSelectedVariable();
+            if (var != null) {
+                var.restore();
+                //refresh
+                //propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(var.getSettings());
             }
         });
-        buttonPanel.add(restore);*/
+        buttonPanel.add(restore);
         //</editor-fold>
 
-        if (regressors.isEmpty()) {
-            TransRegSettingsUI settingsUI = new TransRegSettingsUI();
-            settingsUI.setReadOnly(true);
-            propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(settingsUI);
-        } else {
-            String[] names = regressors.getNames();
-            ITsVariable var = regressors.get(names[0]);
-            if (var instanceof TransRegVar) {
-                propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(((TransRegVar) var).getSettings());
-            }
-        }
+        TransRegSettingsUI settingsUI = new TransRegSettingsUI();
+        settingsUI.setReadOnly(true);
+        propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(settingsUI);
+
         propertyPanel.setVisible(true);
 
         propertyPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -153,14 +138,9 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         add(propertyPanel, BorderLayout.EAST);
         add(variablesList);
 
-        variablesList.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-
-                if (TransRegVarList.SELECTION_CHANGE.equals(evt.getPropertyName())) {
-                    PropertiesPanelFactory.INSTANCE.update(propertyPanel, new TransRegSettingsUI(((TransRegVar) evt.getNewValue()).getSettings()), null);
-                }
+        variablesList.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (TransRegVarList.SELECTION_CHANGE.equals(evt.getPropertyName())) {
+                PropertiesPanelFactory.INSTANCE.update(propertyPanel, new TransRegSettingsUI(((TransRegVar) evt.getNewValue()).getSettings()), null);
             }
         });
     }

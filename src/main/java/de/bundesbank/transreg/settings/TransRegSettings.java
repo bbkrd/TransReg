@@ -18,7 +18,7 @@ public class TransRegSettings implements InformationSetSerializable {
     private CenteruserSettings centeruser;
     private GroupsSettings groups;
     private HorizontalSettings horizontal;
-    
+
     // wird gesetzt wenn calculate() aufgerufen wurde 
     private LocalDateTime timestamp;
 
@@ -96,11 +96,15 @@ public class TransRegSettings implements InformationSetSerializable {
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
-        info.add(TIMESTAMP, timestamp.toString());
-        
+        if (timestamp != null) {
+            InformationSet t = new InformationSet();
+            t.add(TIMESTAMP, timestamp.toString());
+            info.add(TIMESTAMP, t);
+        }
+
         InformationSet tmp = centeruser.write(verbose);
         info.add(CENTERUSER, tmp);
-        
+
         tmp = groups.write(verbose);
         info.add(GROUPS, tmp);
 
@@ -110,10 +114,18 @@ public class TransRegSettings implements InformationSetSerializable {
 
     @Override
     public boolean read(InformationSet info) {
-        String s = info.get(TIMESTAMP, String.class);
-        timestamp = LocalDateTime.parse(s);
+
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
+
+        InformationSet tmp = info.getSubSet(TIMESTAMP);
+        if (tmp != null) {
+            String s = tmp.get(TIMESTAMP, String.class);
+            if (s != null) {
+                timestamp = LocalDateTime.parse(s);
+            }
+        }
+
         return true;
     }
 

@@ -212,7 +212,7 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
     }
 
     private static Ts toTs(TransRegVar variable) {
-        return TsFactory.instance.createTs(variable.getDescription(), variable.getMoniker(), null, variable.getTsData());
+        return TsFactory.instance.createTs(variable.getDescription(), null, variable.getTsData());
     }
 
     private static final class OpenCommand extends JCommand<TransRegVarList> {
@@ -414,12 +414,17 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         private String[] names;
 
         public TransRegTableModel() {
-            names = vars.getNames();
+            if (vars != null) {
+                names = vars.getNames();
+            }
         }
 
         @Override
         public int getRowCount() {
-            return names.length;
+            if (names != null) {
+                return names.length;
+            }
+            return 0;
         }
 
         @Override
@@ -429,7 +434,9 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
 
         @Override
         public void fireTableStructureChanged() {
-            names = vars.getNames();
+            if (names != null) {
+                names = vars.getNames();
+            }
             super.fireTableStructureChanged();
         }
 
