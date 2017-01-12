@@ -72,8 +72,8 @@ public class TransRegCalculationTool {
         double mean = block.sum() / block.getLength();
 
         Preferences node = NbPreferences.forModule(TransRegOptionsPanelController.class);
-        double upper = node.getDouble(TransRegOptionsPanelController.TRANSREG_UPPER_LIMIT, Math.pow(10, -4));
-        double lower = node.getDouble(TransRegOptionsPanelController.TRANSREG_LOWER_LIMIT, Math.pow(10, -12));
+        double upper = node.getDouble(TransRegOptionsPanelController.TRANSREG_UPPER_LIMIT, 1E-4);
+        double lower = node.getDouble(TransRegOptionsPanelController.TRANSREG_LOWER_LIMIT, 1E-12);
 //        double upper = Math.pow(10, -4);
 //        double lower = Math.pow(10, -12);
 
@@ -109,7 +109,7 @@ public class TransRegCalculationTool {
                 double[] seasonalMean = new double[dataMean.getFrequency().intValue()];
                 int[] seasonal_n = new int[dataMean.getFrequency().intValue()];
 
-                // Aufaddieren und Zählen der Elemente
+                // Aufaddieren und ZÃ¤hlen der Elemente
                 int position = dataMean.getStart().getPosition();
                 for (int i = 0; i < dataMean.getLength(); i++) {
                     seasonalMean[position] += dataMean.get(i);
@@ -142,10 +142,6 @@ public class TransRegCalculationTool {
                 newData = new TsData(var.getOriginalData().getStart(), var.getOriginalData().getValues());
         }
 
-        //Ausgabe
-//        for (int i = 0; i < calc.getLength(); i++) {
-//            System.out.println((i + 1) + " " + var.getOriginalTsData().get(i) + " " + calc.get(i));
-//        }
         return newData;
     }
 

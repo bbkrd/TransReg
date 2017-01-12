@@ -8,12 +8,14 @@ package de.bundesbank.transreg.ui.propertyEditor;
 import de.bundesbank.transreg.settings.GroupsSettings;
 import de.bundesbank.transreg.util.GroupsEnum;
 import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyEditorRegistry;
+import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyRendererFactory;
 import ec.tstoolkit.descriptors.EnhancedPropertyDescriptor;
 import ec.tstoolkit.descriptors.IObjectDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.openide.util.NbBundle;
 
 /**
@@ -25,7 +27,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     static {
         CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(GroupsEnum.class, new GroupsEnumSelector());
         CustomPropertyEditorRegistry.INSTANCE.register(GroupsEnum[].class, new GroupsEnumPropertyEditor());
-        //TODO: Button CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(GroupsEnum[].class, new ArrayRenderer());
+        CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(GroupsEnum[].class, new ArrayRenderer());
     }
 
     private GroupsSettings core;
@@ -55,12 +57,12 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        
+
         EnhancedPropertyDescriptor desc = enableDesc();
         if (desc != null) {
             descs.add(desc);
         }
-        
+
         desc = groupsDesc();
         if (desc != null) {
             descs.add(desc);
@@ -98,7 +100,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     public void setGroups(GroupsEnum[] g) {
         core.setGroups(g);
     }
-    
+
     @NbBundle.Messages({
         "groupsSettingsUI.enableDesc.name=Vertical Groups",
         "groupsSettingsUI.enableDesc.desc=Erklärung"
@@ -116,12 +118,26 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
             return null;
         }
     }
-    
-    public boolean isEnable(){
+
+    public boolean isEnable() {
         return core.isEnable();
     }
-    
-    public void setEnable(boolean b){
+
+    public void setEnable(boolean b) {
         core.setEnable(b);
     }
+}
+
+class ArrayRenderer extends DefaultTableCellRenderer {
+
+    public ArrayRenderer() {
+        super();
+    }
+
+    @Override
+    protected void setValue(Object value) {
+        //super.setValue(value);
+        setText("");
+    }
+
 }

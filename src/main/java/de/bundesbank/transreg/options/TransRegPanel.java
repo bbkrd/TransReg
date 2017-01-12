@@ -150,11 +150,11 @@ final class TransRegPanel extends javax.swing.JPanel {
         int nr_h = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_HORIZONTAL_GROUPS, 2);
         maxNumberOfHorizontalGroupsComboBox.setSelectedItem(nr_h-2);
 
-        double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, Math.pow(10, -4));
+        double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, 1E-4);
         
         upperLimitExpField.setText(Math.log10(upper)+"");
 
-        double lower = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_LOWER_LIMIT, Math.pow(10, -12));
+        double lower = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_LOWER_LIMIT, 1E-12);
         lowerLimitExpField.setText(Math.log10(lower)+"");
     }
 
@@ -182,13 +182,13 @@ final class TransRegPanel extends javax.swing.JPanel {
         // upper limit exponent 
         NbPreferences.forModule(TransRegOptionsPanelController.class).
                 putDouble(TRANSREG_UPPER_LIMIT, 
-                        Math.pow(10, Double.parseDouble(upperLimitExpField.getText()))
+                        Double.parseDouble("1E"+upperLimitExpField.getText())
                 );
         
         // lower limit exponent
         NbPreferences.forModule(TransRegOptionsPanelController.class).
                 putDouble(TRANSREG_LOWER_LIMIT, 
-                        Math.pow(10, Double.parseDouble(lowerLimitExpField.getText()))
+                        Double.parseDouble("1E"+lowerLimitExpField.getText())
                 );
     }
 

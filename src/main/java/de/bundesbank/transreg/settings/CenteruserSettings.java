@@ -75,14 +75,17 @@ public class CenteruserSettings implements InformationSetSerializable {
         InformationSet info = new InformationSet();
         info.add(METHOD, method.toString());
         //TODO: Span
+        info.add(SPAN, span);
+        
         return info;
     }
 
     @Override
     public boolean read(InformationSet info) {
-        method = CenteruserEnum.valueOf(info.get(METHOD, String.class));       
+        method = CenteruserEnum.valueOf(info.get(METHOD, String.class));   
+        span = info.get(SPAN, TsPeriodSelector.class);
         return true;
     }
 
-    private static String METHOD = "method";
+    private static String METHOD = "method", SPAN = "span";
 }
