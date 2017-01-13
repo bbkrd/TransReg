@@ -90,7 +90,7 @@ public class GroupsSettings implements InformationSetSerializable {
         return result.trim();
     }
 
-    private static String GROUPS = "groups", STATUS = "status";
+    private static String GROUPS = "groups", STATUS = "status", ENABLE = "enable";
     
     @Override
     public InformationSet write(boolean verbose) {
@@ -103,6 +103,7 @@ public class GroupsSettings implements InformationSetSerializable {
             info.add(GROUPS, groupsInfo);
         }        
         info.add(STATUS, myGroup.name());
+        info.add(ENABLE, enable);
         return info;
     }
 
@@ -117,6 +118,7 @@ public class GroupsSettings implements InformationSetSerializable {
                 }
             }
         myGroup = GroupsEnum.valueOf(info.get(STATUS, String.class));
+        enable = info.get(ENABLE, Boolean.class);
         return true;
     }
 }
