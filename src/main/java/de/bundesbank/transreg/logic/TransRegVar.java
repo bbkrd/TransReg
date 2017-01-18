@@ -18,6 +18,7 @@ import static ec.tstoolkit.timeseries.regression.TsVariables.LINKER;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.utilities.IDynamicObject;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  *
@@ -29,13 +30,15 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
     private TransRegSettings oldSettings; // = new TransRegSettings();
     private TsData calculatedData;
     private final TsMoniker moniker;
-
+    private final UUID id;
+    
     public TransRegVar(TsData d) {
         super(d);
         moniker = null;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
         oldSettings = currentSettings.copy();
+        id = UUID.randomUUID();
     }
 
     public TransRegVar(String s, TsData d) {
@@ -44,6 +47,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
         oldSettings = currentSettings.copy();
+        id = UUID.randomUUID();
     }
 
     public TransRegVar(String s, TsMoniker m, TsData d) {
@@ -52,6 +56,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
         oldSettings = currentSettings.copy();
+        id = UUID.randomUUID();
     }
 
     // Fuer Encoding
@@ -61,10 +66,24 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         calculatedData = calculated;
         currentSettings = current;
         oldSettings = currentSettings.copy();
+        id = UUID.randomUUID();//uebergeben
+    }
+    
+    private TransRegVar(String s, TsMoniker m, TsData data, TsData calculated, TransRegSettings current, UUID id) {
+        super(s, data);
+        moniker = m;
+        calculatedData = calculated;
+        currentSettings = current;
+        oldSettings = currentSettings.copy();
+        this.id = id;
     }
 
     public TsMoniker getMoniker() {
         return moniker;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override
@@ -93,6 +112,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         }else{
             currentSettings.setTimestamp(null);
         }
+        calculate();
     }
 
     public TransRegSettings getOldSettings() {
@@ -120,7 +140,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
     }
 
     public void calculate() {
-        if (!currentSettings.isDefault()) {
+        if (!currentSettings.isDefault()) {           
             calculatedData = TransRegCalculationTool.calculateCenteruser(this);
             currentSettings.setTimestamp(LocalDateTime.now());
         } else {
@@ -129,6 +149,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject {
         }
     }
 
+    public TransRegVar copy() {
+        return new TransRegVar(this.getDescription()+"_copy", moniker, calculatedData.clone(), calculatedData.clone(), currentSettings.copy(), this.getId());
+    }
+    
     private static class TransRegVarConverter implements InformationConverter<TransRegVar> {
 
         @Override

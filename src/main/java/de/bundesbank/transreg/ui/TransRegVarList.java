@@ -13,7 +13,6 @@ import ec.nbdemetra.ui.NbComponents;
 import ec.nbdemetra.ui.awt.ActionMaps;
 import ec.nbdemetra.ui.awt.InputMaps;
 import ec.nbdemetra.ui.awt.KeyStrokes;
-import ec.nbdemetra.ui.awt.ListTableModel;
 import ec.nbdemetra.ui.tsaction.ITsAction;
 import ec.tss.Ts;
 import ec.tss.TsCollection;
@@ -22,6 +21,7 @@ import ec.tss.TsInformationType;
 import ec.tss.datatransfer.TssTransferSupport;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.timeseries.regression.ITsVariable;
+import ec.tstoolkit.timeseries.regression.TsVariables;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsDomain;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
@@ -38,19 +38,20 @@ import java.awt.Font;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
@@ -74,16 +75,17 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
     public static final String DELETE_ACTION = "delete";
     public static final String CLEAR_ACTION = "clear";
     public static final String OPEN_ACTION = "open";
+    public static final String RENAME_ACTION = "rename";
 
     private ITsAction tsAction;
     private TransRegDocument vars;
     private final XTable table;
-    private TransRegTableModel model;
+//    private TransRegTableModel model;
 
     public TransRegVarList(TransRegDocument vars) {
 
         this.vars = vars;
-        model = new TransRegTableModel();
+//        model = new TransRegTableModel();
         table = buildTable();
 
         registerActions();
@@ -99,9 +101,57 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         return getSelectedVariable(this);
     }
 
+    private static final class VarName extends NotifyDescriptor.InputLine {
+
+        VarName(final TsVariables vars, String title, String text, final String oldname) {
+            super(title, text, NotifyDescriptor.QUESTION_MESSAGE, NotifyDescriptor.OK_CANCEL_OPTION);
+
+            setInputText(oldname);
+            textField.addKeyListener(new KeyListener() {
+                // To handle VK_ENTER !!!
+                @Override
+                public void keyTyped(KeyEvent e) {
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER && !textField.getInputVerifier().verify(textField)) {
+                        e.consume();
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                }
+            });
+            textField.setInputVerifier(new InputVerifier() {
+                @Override
+                public boolean verify(JComponent input) {
+                    JTextField txt = (JTextField) input;
+                    String name = txt.getText();
+                    if (name.equals(oldname)) {
+                        return true;
+                    }
+                    if (vars.contains(name)) {
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(name + " is in use. You should choose another name!");
+                        DialogDisplayer.getDefault().notify(nd);
+                        return false;
+                    }
+                    if (!vars.getNameValidator().accept(name)) {
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(vars.getNameValidator().getLastError());
+                        DialogDisplayer.getDefault().notify(nd);
+                        return false;
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
     private void registerActions() {
         ActionMap am = getActionMap();
         am.put(OPEN_ACTION, OpenCommand.INSTANCE.toAction(this));
+        am.put(RENAME_ACTION, RenameCommand.INSTANCE.toAction(this));
         am.put(DELETE_ACTION, DeleteCommand.INSTANCE.toAction(this));
         am.put(CLEAR_ACTION, ClearCommand.INSTANCE.toAction(this));
         ActionMaps.copyEntries(am, false, table.getActionMap());
@@ -147,7 +197,6 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         ActionMap actionMap = getActionMap();
 
         JMenu result = new JMenu();
-
         JMenuItem item;
 
         item = new JMenuItem(actionMap.get(OPEN_ACTION));
@@ -160,6 +209,10 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         item.setText("Open with");
         result.add(item);
 
+        item = new JMenuItem(actionMap.get(RENAME_ACTION));
+        item.setText("Rename");
+        result.add(item);
+        
         result.addSeparator();
 
         item = new JMenuItem(actionMap.get(DELETE_ACTION));
@@ -318,8 +371,44 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
             ((AbstractTableModel) c.table.getModel()).fireTableStructureChanged();
         }
     }
-    //</editor-fold>
 
+    private static final class RenameCommand extends JCommand<TransRegVarList> {
+
+        public static final RenameCommand INSTANCE = new RenameCommand();
+
+        @Override
+        public void execute(TransRegVarList c) throws java.lang.Exception {
+            int[] sel = c.table.getSelectedRows();
+            if (sel.length != 1) {
+                return;
+            }
+
+            String oldName = c.names(sel)[0], newName;
+            VarName nd = new VarName(c.vars, "New name:", "Please enter the new name", oldName);
+            if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
+                return;
+            }
+            newName = nd.getInputText();
+            if (newName.equals(oldName)) {
+                return;
+            }
+            c.vars.rename(oldName, newName);
+            ((AbstractTableModel) c.table.getModel()).fireTableStructureChanged();
+        }
+
+        @Override
+        public boolean isEnabled(TransRegVarList c) {
+            return c.table.getSelectedRowCount() == 1;
+        }
+
+        @Override
+        public ActionAdapter toAction(TransRegVarList c) {
+            return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
+        }
+    }
+
+//</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Table">
     private static final String[] information = new String[]{"Name", "Frequency", "Start", "End", "TransReg Info", "Data"};
 
@@ -331,7 +420,7 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
         result.setDefaultRenderer(TsPeriod.class, new TsPeriodTableCellRenderer());
         result.setDefaultRenderer(TsFrequency.class, new TsFrequencyTableCellRenderer());
 
-        result.setModel(model);
+        result.setModel(new TransRegTableModel());
         XTable.setWidthAsPercentages(result, .2, .1, .1, .1, .1, .4);
 
         final ListSelectionModel lsmodel = result.getSelectionModel();
@@ -340,19 +429,21 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
 
             @Override
             public void valueChanged(ListSelectionEvent e) {
-
                 if (e.getValueIsAdjusting()) {
                     return;
                 }
                 String[] names = vars.getNames();
+                int row = result.getSelectedRow();
 
-                firePropertyChange(SELECTION_CHANGE, null, vars.get(names[result.getSelectedRow()]));
+                if (row < names.length) {
+                    firePropertyChange(SELECTION_CHANGE, null, row == -1 ? null : vars.get(names[row]));
+                }
             }
         });
 
-        result.setAutoCreateRowSorter(true);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(result.getModel());
-        result.setRowSorter(sorter);
+//        result.setAutoCreateRowSorter(true);
+//        TableRowSorter<TableModel> sorter = new TableRowSorter<>(result.getModel());
+//        result.setRowSorter(sorter);
         result.setDragEnabled(true);
         result.setTransferHandler(new TsVariableTransferHandler());
         result.setFillsViewportHeight(true);
@@ -403,9 +494,15 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
             } else {
                 v = new TransRegVar(vars.nextName(), s.getMoniker(), s.getTsData());
             }
-            v.calculate();
+//            v.calculate();
             vars.set(vars.nextName(), v);
+            // Fokus auf letztes Element setzen
+
         }
+        ((AbstractTableModel) table.getModel()).fireTableStructureChanged();
+    }
+
+    public void refresh() {
         ((AbstractTableModel) table.getModel()).fireTableStructureChanged();
     }
 
@@ -504,7 +601,7 @@ public class TransRegVarList extends JComponent implements ITsActionAble {
                     if (d != null) {
                         List<DataBlock> data = Collections.singletonList(new DataBlock(d.getLength()));
                         item.data(d, data);
-                        return new TsData(d.getStart(), data.get(0));
+                        return new TsData(d.getStart(), item.getTsData());
                     }
                 default:
                     return null;

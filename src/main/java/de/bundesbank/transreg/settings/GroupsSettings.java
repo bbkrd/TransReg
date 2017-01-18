@@ -121,4 +121,9 @@ public class GroupsSettings implements InformationSetSerializable {
         enable = info.get(ENABLE, Boolean.class);
         return true;
     }
+
+    public void setGroupsStatus(int i) {
+        String tmp = "GroupsEnum.Group"+i;
+        myGroup = GroupsEnum.valueOf(tmp);
+    }
 }

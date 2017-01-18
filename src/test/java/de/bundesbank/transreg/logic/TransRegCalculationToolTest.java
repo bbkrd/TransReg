@@ -11,6 +11,9 @@ import ec.tstoolkit.timeseries.Month;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import ec.tstoolkit.timeseries.simplets.TsPeriod;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,7 +29,20 @@ public class TransRegCalculationToolTest {
     @Test
     public void testTestCenteruser() {
 
-//        System.out.println("testCenteruser");
+        Set<String> list = new HashSet();
+        
+        String s1 = "Banane";
+        String s2 = "Apfel";
+        
+        list.add(s1);
+        list.add(s2);
+        s1 = s1.toUpperCase();
+//        list.add(s1);
+        
+        System.out.println("Anzahl elemente: "+list.size());
+        list.stream().forEach((s) -> {
+            System.out.println(s);
+        });//        System.out.println("testCenteruser");
 //        TsData data = null;
 //        String expResult = "";
 //        String result = TransRegCalculationTool.testCenteruser(data);
