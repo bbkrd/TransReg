@@ -24,12 +24,12 @@ public final class TransRegOptionsPanelController extends OptionsPanelController
 
     public static final String ID = "Demetra/TransReg";
     public static final String TRANSREG_SAVE_METHOD = "transreg_save_method";
-    public static final String TRANSREG_VERTICAL_GROUPS = "transreg_vertical_groups";
-    public static final String TRANSREG_HORIZONTAL_GROUPS = "transreg_horizontal_groups";
+    public static final String TRANSREG_GROUPS = "transreg_vertical_groups";
+//    public static final String TRANSREG_HORIZONTAL_GROUPS = "transreg_horizontal_groups";
     public static final String TRANSREG_UPPER_LIMIT = "transreg_upper_limit";
     public static final String TRANSREG_LOWER_LIMIT = "transreg_lower_limit";
 
-    private TransRegPanel panel;
+    private TransRegOptionPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -80,9 +80,9 @@ public final class TransRegOptionsPanelController extends OptionsPanelController
         pcs.removePropertyChangeListener(l);
     }
 
-    private TransRegPanel getPanel() {
+    private TransRegOptionPanel getPanel() {
         if (panel == null) {
-            panel = new TransRegPanel(this);
+            panel = new TransRegOptionPanel(this);
         }
         return panel;
     }
