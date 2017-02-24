@@ -17,14 +17,13 @@ import ec.tstoolkit.utilities.DefaultNameValidator;
  */
 public class TransRegDocument extends TsVariables implements InformationSetSerializable {
 
-    
     public TransRegDocument() {
-        super("t_", new DefaultNameValidator(".+-*/"));
+        super("reg_", new DefaultNameValidator(".+-*/"));
     }
-    
+
     @Override
     public InformationSet write(boolean verbose) {
-         TransRegVar.register();
+        TransRegVar.register();
         return super.write(verbose);
     }
 
@@ -33,5 +32,4 @@ public class TransRegDocument extends TsVariables implements InformationSetSeria
         TransRegVar.register();
         return super.read(info);
     }
-    
 }

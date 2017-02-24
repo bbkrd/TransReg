@@ -86,7 +86,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.groupsSettingsUI_groupsDesc_name());
             desc.setShortDescription(Bundle.groupsSettingsUI_groupsDesc_desc());
-            edesc.setReadOnly(!(!readOnly && core.isEnable()));
+            edesc.setReadOnly(!(!readOnly && core.isEnabled()));
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -120,11 +120,11 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     }
 
     public boolean isEnable() {
-        return core.isEnable();
+        return core.isEnabled();
     }
 
     public void setEnable(boolean b) {
-        core.setEnable(b);
+        core.setEnabled(b);
     }
 }
 

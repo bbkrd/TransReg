@@ -11,10 +11,10 @@ import org.openide.util.NbBundle;
  *
  * @author s4504gn
  */
-@NbBundle.Messages({"NONE=None", "AUTOMATIC=Automatic", "REQUEST=Request"})
+@NbBundle.Messages({"TRANSREG=in Utilities/TransReg", "VARIABLES=in Utilities/Variables", "BOTH=in Utiities/Variables and in Utilities/TransReg"})
 public enum SaveMethodEnum {
 
-    NONE(Bundle.NONE()), AUTOMATIC(Bundle.AUTOMATIC()), REQUEST(Bundle.REQUEST());
+    TRANSREG(Bundle.TRANSREG()), VARIABLES(Bundle.VARIABLES()), BOTH(Bundle.BOTH());
 
     private final String name;
     
@@ -24,7 +24,7 @@ public enum SaveMethodEnum {
 
     @Override
     public String toString() {
-        return name.toLowerCase();
+        return name;
     }
     
     public static SaveMethodEnum fromString(String text) {

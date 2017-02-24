@@ -52,10 +52,10 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         if (desc != null) {
             descs.add(desc);
         }
-          desc = horizontalDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
+//          desc = horizontalDesc();
+//        if (desc != null) {
+//            descs.add(desc);
+//        }
         
         desc = centeruserDesc();
         if (desc != null) {

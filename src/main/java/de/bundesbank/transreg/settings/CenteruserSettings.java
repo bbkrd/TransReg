@@ -88,4 +88,8 @@ public class CenteruserSettings implements InformationSetSerializable {
     }
 
     private static String METHOD = "method", SPAN = "span";
+
+    public boolean isEnabled() {
+        return !method.equals(CenteruserEnum.None);
+    }
 }

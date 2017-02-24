@@ -21,6 +21,5 @@ public enum GroupsEnum {
     Group9,
     Group10,
     Group11,
-    Group12
-    ;
+    Group12;
 }

@@ -16,15 +16,16 @@ import java.util.Arrays;
  */
 public class GroupsSettings implements InformationSetSerializable {
 
-    private GroupsEnum myGroup = GroupsEnum.Group1;
+    // TODO: myGroup entfernen?
+//    private GroupsEnum myGroup = GroupsEnum.Group1;
     private GroupsEnum[] groups;
     private boolean enable = false;
 
-    public boolean isEnable() {
+    public boolean isEnabled() {
         return enable;
     }
 
-    public void setEnable(boolean enable) {
+    public void setEnabled(boolean enable) {
         this.enable = enable;
     }
 
@@ -33,7 +34,7 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     public GroupsSettings(int freq) {
-        enable = true;
+//        enable = true;
         generateGroups(freq);
     }
 
@@ -58,12 +59,12 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     public boolean isDefault() {
-        // Default ist definiert als alle Gruppen 
+        // Default ist definiert als alle Gruppen mit Status Group1
         boolean result = true;
         for (GroupsEnum g : groups) {
             result = result && (g.equals(GroupsEnum.Group1));
         }
-        return result;
+        return result || !enable;
     }
 
     public GroupsSettings copy() {
@@ -74,12 +75,20 @@ public class GroupsSettings implements InformationSetSerializable {
         return copy;
     }
 
-    public String getInfo() {
-        if (enable) {
-            return myGroup.toString();
-        }
-        return "";
-    }
+//    public String getInfo() {
+//        if (enable) {
+//            return myGroup.toString();
+//        }
+//        return "";
+//    }
+
+//    public String getMyGroup() {
+//        return myGroup.toString();
+//    }
+//
+//    public void setMyGroup(GroupsEnum myGroup) {
+//        this.myGroup = myGroup;
+//    }
 
     @Override
     public String toString() {
@@ -91,7 +100,7 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     private static String GROUPS = "groups", STATUS = "status", ENABLE = "enable";
-    
+
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
@@ -101,29 +110,42 @@ public class GroupsSettings implements InformationSetSerializable {
                 groupsInfo[i] = groups[i].name();
             }
             info.add(GROUPS, groupsInfo);
-        }        
-        info.add(STATUS, myGroup.name());
+        }
+//        info.add(STATUS, myGroup.name());
         info.add(ENABLE, enable);
         return info;
     }
 
-
     @Override
     public boolean read(InformationSet info) {
         String[] groupsInfo = info.get(GROUPS, String[].class);
-            if (groupsInfo != null) {
-                groups = new GroupsEnum[groupsInfo.length];
-                for (int i = 0; i < groupsInfo.length; ++i) {
-                    groups[i] = GroupsEnum.valueOf(groupsInfo[i]);
-                }
+        if (groupsInfo != null) {
+            groups = new GroupsEnum[groupsInfo.length];
+            for (int i = 0; i < groupsInfo.length; ++i) {
+                groups[i] = GroupsEnum.valueOf(groupsInfo[i]);
             }
-        myGroup = GroupsEnum.valueOf(info.get(STATUS, String.class));
+        }
+//        myGroup = GroupsEnum.valueOf(info.get(STATUS, String.class));
         enable = info.get(ENABLE, Boolean.class);
         return true;
     }
 
-    public void setGroupsStatus(int i) {
-        String tmp = "GroupsEnum.Group"+i;
-        myGroup = GroupsEnum.valueOf(tmp);
+//    public void setGroupsStatus(int i) {
+//        String tmp = "GroupsEnum.Group" + i;
+//        myGroup = GroupsEnum.valueOf(tmp);
+//    }
+
+//    public int getGroupNumber() {
+//        return myGroup.ordinal();
+//    }
+
+    public int getMaxGroupNumber() {
+        int result = 0;
+        for (GroupsEnum g : getGroups()) {
+            if (g.ordinal() > result) {
+                result = g.ordinal();
+            }
+        }
+        return result;
     }
 }

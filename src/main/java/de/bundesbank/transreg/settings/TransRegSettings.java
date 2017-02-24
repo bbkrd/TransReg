@@ -19,9 +19,6 @@ public class TransRegSettings implements InformationSetSerializable {
     private GroupsSettings groups;
     private HorizontalSettings horizontal;
 
-    // wird gesetzt wenn calculate() aufgerufen wurde 
-    private LocalDateTime timestamp;
-
     public TransRegSettings() {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings();
@@ -58,14 +55,6 @@ public class TransRegSettings implements InformationSetSerializable {
         this.horizontal = horizontal;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public boolean isDefault() {
         if (!centeruser.isDefault()) {
             return false;
@@ -80,7 +69,6 @@ public class TransRegSettings implements InformationSetSerializable {
     }
 
     public TransRegSettings copy() {
-
         TransRegSettings copy = new TransRegSettings();
         copy.setCenteruser(centeruser.copy());
         copy.setGroups(groups.copy());
@@ -89,18 +77,19 @@ public class TransRegSettings implements InformationSetSerializable {
         return copy;
     }
 
-    public String getInfo() {
-        return centeruser.getInfo() + " " + groups.getInfo() + " " + horizontal.getInfo();
-    }
-
+//    public String getInfo() {
+//        return centeruser.getInfo() + " " + groups.getInfo() + " " + horizontal.getInfo();
+//    }
+    
+    //<editor-fold defaultstate="collapsed" desc="for Workspace">  
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
-        if (timestamp != null) {
-            InformationSet t = new InformationSet();
-            t.add(TIMESTAMP, timestamp.toString());
-            info.add(TIMESTAMP, t);
-        }
+//        if (timestamp != null) {
+//            InformationSet t = new InformationSet();
+//            t.add(TIMESTAMP, timestamp.toString());
+//            info.add(TIMESTAMP, t);
+//        }
 
         InformationSet tmp = centeruser.write(verbose);
         info.add(CENTERUSER, tmp);
@@ -118,13 +107,13 @@ public class TransRegSettings implements InformationSetSerializable {
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
 
-        InformationSet tmp = info.getSubSet(TIMESTAMP);
-        if (tmp != null) {
-            String s = tmp.get(TIMESTAMP, String.class);
-            if (s != null) {
-                timestamp = LocalDateTime.parse(s);
-            }
-        }
+//        InformationSet tmp = info.getSubSet(TIMESTAMP);
+//        if (tmp != null) {
+//            String s = tmp.get(TIMESTAMP, String.class);
+//            if (s != null) {
+//                timestamp = LocalDateTime.parse(s);
+//            }
+//        }
 
         return true;
     }
@@ -133,4 +122,5 @@ public class TransRegSettings implements InformationSetSerializable {
             CENTERUSER = "centeruser",
             GROUPS = "groups",
             HORIZONTAL = "horizontal";
+//</editor-fold>
 }

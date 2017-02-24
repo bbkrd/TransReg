@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.bundesbank.transReg</groupId>
     <artifactId>TransReg</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <packaging>nbm</packaging>
     <build>
         <plugins>
@@ -105,6 +105,16 @@
             <version>4.12</version>
             <scope>test</scope>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-explorer</artifactId>
+            <version>RELEASE81</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-swing-outline</artifactId>
+            <version>RELEASE81</version>
         </dependency>
     </dependencies>
     <properties>

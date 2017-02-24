@@ -106,7 +106,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.centeruserSettingsUI_spanDesc_name());
             desc.setShortDescription(Bundle.centeruserSettingsUI_spanDesc_desc());
-            edesc.setReadOnly(readOnly && core.getMethod().equals(CenteruserEnum.None));
+            edesc.setReadOnly(readOnly || core.getMethod().equals(CenteruserEnum.None));
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -114,7 +114,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
     }
 
     public TsPeriodSelectorUI getSpan() {
-        return new TsPeriodSelectorUI(core.getSpan(), core.getMethod().equals(CenteruserEnum.None));
+        return new TsPeriodSelectorUI(core.getSpan(), readOnly || core.getMethod().equals(CenteruserEnum.None));
     }
 
 }

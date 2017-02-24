@@ -141,7 +141,7 @@ final class TransRegPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        String saveMethod = NbPreferences.forModule(TransRegOptionsPanelController.class).get(TRANSREG_SAVE_METHOD, SaveMethodEnum.NONE.toString());
+        String saveMethod = NbPreferences.forModule(TransRegOptionsPanelController.class).get(TRANSREG_SAVE_METHOD, SaveMethodEnum.TRANSREG.toString());
         saveMethodComboBox.setSelectedItem(SaveMethodEnum.fromString(saveMethod));
 
         int nr_v = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_VERTICAL_GROUPS, 2);
@@ -152,10 +152,10 @@ final class TransRegPanel extends javax.swing.JPanel {
 
         double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, 1E-4);
         
-        upperLimitExpField.setText(Math.log10(upper)+"");
+        upperLimitExpField.setText(((int) Math.log10(upper))+"");
 
         double lower = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_LOWER_LIMIT, 1E-12);
-        lowerLimitExpField.setText(Math.log10(lower)+"");
+        lowerLimitExpField.setText(((int) Math.log10(lower))+"");
     }
 
     void store() {
