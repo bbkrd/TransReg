@@ -42,13 +42,6 @@ public class TransRegVarPropertySetter {
         this.timestampProperty = new TimestampProperty();
         this.centeruserProperty = new CenteruserTestProperty();
 
-//        this.var.addPropertyChangeListener(new PropertyChangeListener() {
-//
-//            @Override
-//            public void propertyChange(PropertyChangeEvent evt) {
-//                // Methode wenn häkchen gesetzt wird
-//            }
-//        });
         if (model.hasChildren()) {
             this.appearanceProperty = new AppearanceProperty();
             this.var.addPropertyChangeListener(new PropertyChangeListener() {
@@ -66,7 +59,7 @@ public class TransRegVarPropertySetter {
         }
     }
 
-    /*Active*/
+//<editor-fold defaultstate="collapsed" desc="ActiveProperty">
     public ActiveProperty getActiveProperty() {
         return activeProperty;
     }
@@ -87,8 +80,9 @@ public class TransRegVarPropertySetter {
 
         }
     }
+//</editor-fold>
 
-    /*Apperance*/
+//<editor-fold defaultstate="collapsed" desc="AppearanceProperty">
     public AppearanceProperty getAppearanceProperty() {
         return appearanceProperty;
     }
@@ -108,8 +102,10 @@ public class TransRegVarPropertySetter {
         public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         }
     }
+//</editor-fold>
 
-    /*Data*/
+// funktioniert nicht
+//<editor-fold defaultstate="collapsed" desc="DataProperty">
     public DataProperty getDataProperty() {
         return dataProperty;
     }
@@ -130,123 +126,129 @@ public class TransRegVarPropertySetter {
             return "Hallo";
         }
     }
+//</editor-fold>
 
-    /*Frequency*/
+//<editor-fold defaultstate="collapsed" desc="FrequencyProperty">
     public FrequencyProperty getFreqProperty() {
         return freqProperty;
     }
-
+    
     public class FrequencyProperty extends PropertySupport.ReadOnly<String> {
-
+        
         public FrequencyProperty() {
             super(TransRegVar.PROP_FREQUENCY, String.class, "Frequency", null);
         }
-
+        
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-
+        
         @Override
         public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         }
-
+        
         @Override
         public String toString() {
             return var.getFrequency().toString();
         }
     }
+//</editor-fold>
 
-    /*Level*/
+//<editor-fold defaultstate="collapsed" desc="LevelProperty">
     public LevelProperty getLevelProperty() {
         return levelProperty;
     }
-
+    
     public class LevelProperty extends PropertySupport.ReadOnly<String> {
-
+        
         public LevelProperty() {
             super(TransRegVar.PROP_LEVEL, String.class, "Level", null);
         }
-
+        
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-
+        
         @Override
         public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         }
-
+        
         @Override
         public String toString() {
             return var.getLevelName(); //To change body of generated methods, choose Tools | Templates.
         }
     }
+//</editor-fold>
 
-    /*Timespan*/
+//<editor-fold defaultstate="collapsed" desc="TimespanProperty">
     public TsPeriodProperty getTimespanProperty() {
         return timespanProperty;
     }
-
+    
     public class TsPeriodProperty extends PropertySupport.ReadOnly<String> {
-
+        
         public TsPeriodProperty() {
             super(TransRegVar.PROP_TIMESPAN, String.class, "TsPeriod", null);
         }
-
+        
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-
+        
         @Override
         public String toString() {
             return var.getTimespan();
         }
     }
+//</editor-fold>
 
-    /*Timestamp*/
+//<editor-fold defaultstate="collapsed" desc="TimestampProperty">
     public TimestampProperty getTimestampProperty() {
         return timestampProperty;
     }
-
+    
     public class TimestampProperty extends PropertySupport.ReadOnly<String> {
-
+        
         public TimestampProperty() {
             super(TransRegVar.PROP_TIMESTAMP, String.class, "Timestamp", null);
         }
-
+        
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-
+        
         @Override
         public String toString() {
             return var.getTimestamp();
         }
     }
+//</editor-fold>
 
-    /*Centeruser Test*/
+//<editor-fold defaultstate="collapsed" desc="CenteruserTestProperty">
     public CenteruserTestProperty getCenteruserTestProperty() {
         return centeruserProperty;
     }
-
+    
     public class CenteruserTestProperty extends PropertySupport.ReadOnly<String> {
-
+        
         public CenteruserTestProperty() {
             super(TransRegVar.PROP_CENTERUSER, String.class, "Centeruser Test", null);
         }
-
+        
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-
+        
         @Override
         public String toString() {
             return TransRegCalculationTool.testCenteruser(var.getTsData());
         }
     }
+//</editor-fold>
 
 }

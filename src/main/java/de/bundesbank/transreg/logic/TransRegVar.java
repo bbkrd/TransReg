@@ -46,7 +46,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     private GroupsEnum groupStatus = GroupsEnum.Group1;
     private NodesLevelEnum level = NodesLevelEnum.ORIGINAL;
     private TransRegSettings currentSettings;
-    private TransRegSettings oldSettings;
 
     // wird gesetzt wenn calculate() aufgerufen wurde 
     private LocalDateTime timestamp;
@@ -73,7 +72,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = null;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        oldSettings = currentSettings.copy();
         name = "var";
         id = UUID.randomUUID();
         variables.put(id, this);
@@ -84,7 +82,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = null;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        oldSettings = currentSettings.copy();
         name = s;
         id = UUID.randomUUID();
         variables.put(id, this);
@@ -96,7 +93,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = m;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        oldSettings = currentSettings.copy();
         name = s;
         id = UUID.randomUUID();
         variables.put(id, this);
@@ -108,7 +104,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = m;
         calculatedData = calculated;
         currentSettings = current;
-        oldSettings = currentSettings.copy();
         name = s;
         this.id = id;
     }
@@ -234,7 +229,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     public void setSettings(TransRegSettings settings) {
-        this.oldSettings = currentSettings.copy();
         this.currentSettings = settings;
     }
 
@@ -297,21 +291,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             return this;
         }
         return this.getParent().getRoot();
-    }
-
-    public void restore() {
-//        currentSettings = oldSettings.copy();
-//        calculatedData = getOriginalData().clone();
-//        if (!currentSettings.isDefault()) {
-//            currentSettings.setTimestamp(LocalDateTime.now());
-//        } else {
-//            currentSettings.setTimestamp(null);
-//        }
-//        calculate();
-    }
-
-    public TransRegSettings getOldSettings() {
-        return oldSettings;
     }
 
     // TODO: ueberarbeiten

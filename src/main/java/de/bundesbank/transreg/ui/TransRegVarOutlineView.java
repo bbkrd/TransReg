@@ -27,7 +27,6 @@ import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsDomain;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import ec.tstoolkit.timeseries.simplets.TsPeriod;
-import ec.ui.chart.TsSparklineCellRenderer;
 import ec.ui.interfaces.ITsActionAble;
 import ec.util.chart.swing.Charts;
 import ec.util.various.swing.JCommand;
@@ -175,7 +174,6 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 if (v.isRoot()) {
                     myModels.add(v);
                 }
-                // TODO: testen mit Kindern?
             }
         }
         setNodes();
@@ -195,8 +193,8 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 TransRegVar.PROP_LEVEL, "Level",
                 TransRegVar.PROP_FREQUENCY, "Frequency",
                 TransRegVar.PROP_TIMESPAN, "Period",
-                TransRegVar.PROP_TIMESTAMP, "Timestamp",
-                TransRegVar.PROP_CENTERUSER, "Centeruser Test"
+                TransRegVar.PROP_CENTERUSER, "Centeruser Test",
+                TransRegVar.PROP_TIMESTAMP, "Timestamp"
         //                TransRegVar.PROP_DATA, "TsData"
         );
         

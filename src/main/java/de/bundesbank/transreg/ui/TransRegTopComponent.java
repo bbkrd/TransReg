@@ -56,9 +56,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
     private JToolBar toolBarRepresentation;
     private JButton runButton;
-    /* private TransRegVarList variablesList;*/
     private PropertySheetPanel propertyPanel;
-
     private TransRegVarOutlineView outlineview;
 
     private static TransRegDocumentManager manager() {

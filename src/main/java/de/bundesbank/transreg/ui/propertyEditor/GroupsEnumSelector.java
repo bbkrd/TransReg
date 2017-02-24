@@ -25,7 +25,7 @@ public class GroupsEnumSelector extends ComboBoxPropertyEditor {
         GroupsEnum[] groups = GroupsEnum.values();
 
         Preferences node = NbPreferences.forModule(TransRegOptionsPanelController.class);
-        int count = node.getInt(TransRegOptionsPanelController.TRANSREG_VERTICAL_GROUPS, 2);
+        int count = node.getInt(TransRegOptionsPanelController.TRANSREG_GROUPS, 2);
 
         setAvailableValues(Arrays.copyOfRange(groups, 0, count));
 
