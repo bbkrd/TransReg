@@ -5,12 +5,12 @@
  */
 package de.bundesbank.transreg.admin;
 
-import de.bundesbank.transreg.logic.TransRegVar;
 import ec.nbdemetra.ws.AbstractFileItemRepository;
 import static ec.nbdemetra.ws.AbstractFileItemRepository.loadInfo;
 import static ec.nbdemetra.ws.AbstractFileItemRepository.saveInfo;
 import ec.nbdemetra.ws.IWorkspaceItemRepository;
 import ec.nbdemetra.ws.WorkspaceItem;
+import ec.tstoolkit.algorithm.ProcessingContext;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -19,8 +19,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = IWorkspaceItemRepository.class)
 public class TransRegFileRepository extends AbstractFileItemRepository<TransRegDocument> {
+
     public static final String REPOSITORY = "TransReg";
-    
+
     @Override
     public boolean load(WorkspaceItem<TransRegDocument> item) {
         String sfile = this.fullName(item, REPOSITORY, false);
@@ -29,6 +30,9 @@ public class TransRegFileRepository extends AbstractFileItemRepository<TransRegD
         }
         TransRegDocument doc = loadInfo(sfile, TransRegDocument.class);
         item.setElement(doc);
+        if (doc != null) {
+            item.getOwner().getContext().getTsVariableManagers().set(item.getDisplayName(), doc);
+        }
         item.resetDirty();
         return doc != null;
     }
@@ -52,11 +56,10 @@ public class TransRegFileRepository extends AbstractFileItemRepository<TransRegD
     public boolean delete(WorkspaceItem<TransRegDocument> doc) {
         return delete(doc, REPOSITORY);
     }
-    
-    
+
     @Override
     public Class<TransRegDocument> getSupportedType() {
         return TransRegDocument.class;
     }
-    
+
 }

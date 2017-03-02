@@ -28,7 +28,7 @@ import org.openide.util.NbPreferences;
  */
 public class TransRegCalculationTool {
 
-    private static final double neutralElement = Double.NaN;
+    private static final double defaultValue = Double.NaN;
 
     // Fuer test
     public static String testCenteruser(TsData data) {
@@ -39,21 +39,19 @@ public class TransRegCalculationTool {
         Preferences node = NbPreferences.forModule(TransRegOptionsPanelController.class);
         double upper = node.getDouble(TransRegOptionsPanelController.TRANSREG_UPPER_LIMIT, 1E-4);
         double lower = node.getDouble(TransRegOptionsPanelController.TRANSREG_LOWER_LIMIT, 1E-12);
-//        double upper = Math.pow(10, -4);
-//        double lower = Math.pow(10, -12);
 
         String rslt;
         if (Math.abs(mean) <= upper) {
-            rslt = "Probably centered";
+            rslt = "Probably centred";
 //            vermutlich zentriert
             if (Math.abs(mean) <= lower) {
                 // auf jeden fall zentiert
-                rslt = "Already centered";
+                rslt = "Centred";
             }
 
         } else {
             // nicht zentriert
-            rslt = "Definitely not centered";
+            rslt = "Not centred";
         }
         return rslt;
 
@@ -119,7 +117,7 @@ public class TransRegCalculationTool {
             Iterator<TsObservation> iterator = var.getTsData().iterator();
             while (iterator.hasNext()) {
                 TsObservation obs = iterator.next();
-                double value = neutralElement;
+                double value = defaultValue;
                 GroupsEnum group_status_for_current_obs = groups_array[i_groups_array];
                 if (group_status_for_current_obs.equals(currentGroup)) {
                     value = obs.getValue();
@@ -145,7 +143,7 @@ public class TransRegCalculationTool {
 
     private static TransRegVar doCenteruser(TransRegVar var) {
         TransRegVar result;
-        String name = var.getName() + "_centered";
+        String name = var.getName() + "_centred";
         result = new TransRegVar(name, var.getMoniker(), var.getOriginalData());
         result.setLevel(NodesLevelEnum.CENTERUSER);
 

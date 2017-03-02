@@ -5,6 +5,8 @@
  */
 package de.bundesbank.transreg.admin;
 
+import de.bundesbank.transreg.options.SaveMethodEnum;
+import de.bundesbank.transreg.options.TransRegOptionsPanelController;
 import de.bundesbank.transreg.ui.TransRegTopComponent;
 import ec.nbdemetra.ws.AbstractWorkspaceItemManager;
 import ec.nbdemetra.ws.IWorkspaceItemManager;
@@ -16,8 +18,10 @@ import ec.tstoolkit.timeseries.regression.TsVariables;
 import ec.tstoolkit.utilities.Id;
 import ec.tstoolkit.utilities.LinearId;
 import java.awt.event.ActionEvent;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -95,5 +99,10 @@ public class TransRegDocumentManager extends AbstractWorkspaceItemManager<TransR
             view.open();
             view.requestActive();
         }
+    }
+    
+    @Override
+    public boolean isAutoLoad() {
+        return true;
     }
 }

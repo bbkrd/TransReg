@@ -23,25 +23,6 @@ public class TransRegVarNodeAdapter extends AbstractNode {
         super(children, lookup);
     }
 
-//    public TransRegVar getVar() {
-//        TransRegVar v = getLookup().lookup(TransRegVar.class);
-//        return v;
-//    }
-//    @Override
-//    protected Sheet createSheet() {
-//        Sheet sheet = Sheet.createDefault();
-//        Sheet.Set set = Sheet.createPropertiesSet();
-//        TransRegVar model = getLookup().lookup(TransRegVar.class);
-//
-//        TransRegVarPropertySetter modelPropertySetter = new TransRegVarPropertySetter(model);
-//        set.put(modelPropertySetter.getActiveProperty());
-//        set.put(modelPropertySetter.getFreqProperty());
-//        set.put(modelPropertySetter.getLevelProperty());
-//
-//        sheet.put(set);
-//
-//        return sheet;
-//    }
     protected Sheet.Set createDefaultSetter() {
         Sheet.Set set = Sheet.createPropertiesSet();
 

@@ -164,7 +164,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         outlineview.getOutlineview().getOutline().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting()) {
+                if (!e.getValueIsAdjusting()) {
                     TransRegVar var = outlineview.getSelectedVariable();
                     if (var != null) {
                         // update settings

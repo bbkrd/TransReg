@@ -40,15 +40,15 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             PROP_TIMESPAN = "timespan",
             PROP_DATA = "data",
             PROP_TIMESTAMP = "timestamp",
-            PROP_CENTERUSER= "centeruser";
+            PROP_CENTERUSER = "centeruser";
 
-    private String name;
+//    private String name;
     private GroupsEnum groupStatus = GroupsEnum.Group1;
     private NodesLevelEnum level = NodesLevelEnum.ORIGINAL;
     private TransRegSettings currentSettings;
 
     // wird gesetzt wenn calculate() aufgerufen wurde 
-    private LocalDateTime timestamp;
+    private String timestamp;
     private TsData calculatedData;
     private final TsMoniker moniker;
 
@@ -72,8 +72,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = null;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        name = "var";
         id = UUID.randomUUID();
+        setName("var");
         variables.put(id, this);
     }
 
@@ -82,18 +82,18 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = null;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        name = s;
+        setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
     }
 
     //CalculationTool: doGroups
     public TransRegVar(String s, TsMoniker m, TsData d) {
-        super(s.replaceAll("\\n", " "), d);
+        super(s, d);
         moniker = m;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        name = s;
+        setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
     }
@@ -104,23 +104,25 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = m;
         calculatedData = calculated;
         currentSettings = current;
-        name = s;
+        setName(s);
         this.id = id;
     }
 //</editor-fold>
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String s) {
-        name = s;
-    }
+//    @Override
+//    public String getName() {
+//        return super.getName();
+//    }
+//
+//    @Override
+//    public void setName(String s) {
+//        
+//        name = s;
+//    }
 
     public void rename(String s) {
         this.setName(s);
+        this.setDescription(s);
     }
 
     public GroupsEnum getGroupStatus() {
@@ -190,7 +192,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     public void removeChild(TransRegVar child) {
-        getChildren().remove(child);
+//        getChildren().remove(child);
+        childrenIDs.remove(child.getID());
     }
 
     public TransRegVar getParent() {
@@ -207,10 +210,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         this.setSettings(variables.get(parentID).getSettings());
     }
 
-    public void removeParent(){
+    public void removeParent() {
         parentID = null;
     }
-    
+
     public TsMoniker getMoniker() {
         return moniker;
     }
@@ -274,8 +277,13 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp.toString();
+    }
+    
+     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+    
 
     public boolean isRoot() {
         /*
@@ -329,7 +337,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 //        return new TransRegVar(this.getDescription(getDefinitionFrequency()) + "_copy", moniker, calculatedData.clone(), calculatedData.clone(), currentSettings.copy(), this.getID());
 //    }
     public TsVariable convert() {
-        return new TsVariable(getDescription(getDefinitionFrequency()), calculatedData);
+        return new TsVariable(getName(), calculatedData);
     }
 
 //<editor-fold defaultstate="collapsed" desc="PropertyChangeListener">
@@ -366,11 +374,13 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         public TransRegVar decode(InformationSet info) {
 
             TsData data = info.get(DATA, TsData.class);
-            String desc = info.get(DESC, String.class);
+            String name = info.get(NAME, String.class);
             TsMoniker monk = info.get(MONIKER, TsMoniker.class);
             TsData original = info.get(ORIGINAL, TsData.class);
 
             String level = info.get(LEVEL, String.class);
+
+            String stamp = info.get(TIMESTAMP, String.class);
 
             //read methode, auf null prÃ¼fen
             int frequency = data.getFrequency().intValue();
@@ -389,8 +399,11 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 myID = UUID.randomUUID();
             }
 
-            TransRegVar result = new TransRegVar(desc, monk, original, data, cur, myID);
+            TransRegVar result = new TransRegVar(name, monk, original, data, cur, myID);
             result.setLevel(NodesLevelEnum.fromString(level));
+            if (stamp != null) {
+                result.setTimestamp(stamp);
+            }
 
             String parentID = info.get(PARENT, String.class);
             if (parentID != null) {
@@ -417,11 +430,15 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
             InformationSet info = new InformationSet();
             info.set(ID, t.getID().toString());
-            info.set(DESC, t.getDescription(t.getDefinitionFrequency()));
+            info.set(NAME, t.getName());
             info.set(MONIKER, t.getMoniker());
             info.set(DATA, t.getTsData());
             info.set(ORIGINAL, t.getOriginalData());
             info.set(LEVEL, t.getLevel().toString());
+
+            if (t.getTimestamp() != null) {
+                info.set(TIMESTAMP, t.getTimestamp());
+            }
 
             if (!t.isRoot()) {
                 info.set(PARENT, t.getParent().getID().toString());
@@ -454,11 +471,12 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 MONIKER = "moniker",
                 DATA = "data",
                 ORIGINAL = "original data",
-                DESC = "description",
+                NAME = "name",
                 ID = "id",
                 PARENT = "parent",
                 CHILDREN = "children",
-                LEVEL = "level";
+                LEVEL = "level",
+                TIMESTAMP = "timestamp";
     }
 //</editor-fold>
 
