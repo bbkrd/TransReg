@@ -23,7 +23,7 @@ import java.util.List;
 public class TransRegDocument extends TsVariables implements InformationSetSerializable {
 
     public TransRegDocument() {
-        super("reg_", new DefaultNameValidator(".+-*/"));
+        super("reg_", new DefaultNameValidator(""));
     }
 
     @Override
