@@ -370,6 +370,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     // for CalculationTool:doCenteruser
     public TransRegVar copy() {
         TransRegVar t = new TransRegVar(getName(), getMoniker(), getOriginalData());
+        t.setCalculatedData(this.getTsData().clone());
         t.setSettings(currentSettings.copy());
         return t;
     }

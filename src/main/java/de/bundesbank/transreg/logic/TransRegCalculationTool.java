@@ -150,7 +150,7 @@ public class TransRegCalculationTool {
         result.setName(name);
         result.setLevel(NodesLevelEnum.CENTERUSER);
 
-        TsData newData = result.getTsData();
+        TsData newData = result.getTsData().clone();
         CenteruserSettings settings = result.getSettings().getCenteruser();
         switch (settings.getMethod()) {
             case Mean:
