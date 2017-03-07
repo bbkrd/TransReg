@@ -102,7 +102,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     }
 
     @NbBundle.Messages({
-        "groupsSettingsUI.enableDesc.name=Vertical Groups",
+        "groupsSettingsUI.enableDesc.name=Groups by period",
         "groupsSettingsUI.enableDesc.desc=Erklärung"
     })
     private EnhancedPropertyDescriptor enableDesc() {

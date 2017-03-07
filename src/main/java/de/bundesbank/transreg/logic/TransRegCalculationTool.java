@@ -93,8 +93,11 @@ public class TransRegCalculationTool {
     }
 
     private static ArrayList<TransRegVar> doGroups(TransRegVar var) {
-        ArrayList<TransRegVar> result = new ArrayList();
+        TransRegVar result = var.copy();
         String name = var.getName() + "_group";
+        result.setName(name);
+        result.setLevel(NodesLevelEnum.CENTERUSER);
+        ArrayList<TransRegVar> results = new ArrayList();
 
         GroupsSettings settings = var.getSettings().getGroups();
         GroupsEnum[] groups_array = settings.getGroups();
@@ -136,24 +139,24 @@ public class TransRegCalculationTool {
             cur.setParent(var);
             var.addChild(cur);
 
-            result.add(cur);
+            results.add(cur);
         }
-        return result;
+        return results;
     }
 
     private static TransRegVar doCenteruser(TransRegVar var) {
-        TransRegVar result;
+        TransRegVar result = var.copy();
         String name = var.getName() + "_centred";
-        result = new TransRegVar(name, var.getMoniker(), var.getOriginalData());
+        result.setName(name);
         result.setLevel(NodesLevelEnum.CENTERUSER);
 
-        TsData newData = var.getTsData();
-        CenteruserSettings settings = var.getSettings().getCenteruser();
+        TsData newData = result.getTsData();
+        CenteruserSettings settings = result.getSettings().getCenteruser();
         switch (settings.getMethod()) {
             case Mean:
-                TsData selectedData = var.getTsData().select(settings.getSpan());
+                TsData selectedData = result.getTsData().select(settings.getSpan());
                 double mean = new DescriptiveStatistics(selectedData.getValues()).getAverage();
-                newData = var.getTsData().minus(mean);
+                newData = result.getTsData().minus(mean);
                 break;
             case Seasonal:
                 TsData dataMean = result.getTsData().select(settings.getSpan());
@@ -161,7 +164,7 @@ public class TransRegCalculationTool {
                 double[] seasonalMean = new double[dataMean.getFrequency().intValue()];
                 int[] seasonal_n = new int[dataMean.getFrequency().intValue()];
 
-                // Aufaddieren und ZÃƒÆ’Ã‚Â¤hlen der Elemente
+                // Aufaddieren und Zaehlen der Elemente
                 int position = dataMean.getStart().getPosition();
                 for (int i = 0; i < dataMean.getLength(); i++) {
                     seasonalMean[position] += dataMean.get(i);

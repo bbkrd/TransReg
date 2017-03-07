@@ -266,7 +266,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     public String getTimespan() {
-        return getTsData().getStart().toString() + " to " + getTsData().getEnd().toString();
+        return getTsData().getStart().toString() + " to " + getTsData().getLastPeriod().toString();
     }
 
     public String getTimestamp() {
@@ -365,6 +365,13 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             this.childrenIDs.clear();
         }
         return result;
+    }
+
+    // for CalculationTool:doCenteruser
+    public TransRegVar copy() {
+        TransRegVar t = new TransRegVar(getName(), getMoniker(), getOriginalData());
+        t.setSettings(currentSettings.copy());
+        return t;
     }
 
 //<editor-fold defaultstate="collapsed" desc="TransRegVarConverter">
