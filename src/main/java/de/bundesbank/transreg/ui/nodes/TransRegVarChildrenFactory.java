@@ -26,6 +26,9 @@ public class TransRegVarChildrenFactory extends ChildFactory.Detachable<TransReg
 
     @Override
     protected boolean createKeys(List<TransRegVar> list) {
+        if(children.isEmpty()){
+            return true;
+        }
         return list.addAll(children);
     }
 

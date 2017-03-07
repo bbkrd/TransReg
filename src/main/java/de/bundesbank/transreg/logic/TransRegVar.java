@@ -64,7 +64,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     private Boolean appear = true;
     private Boolean x = false;
-
+    
 //<editor-fold defaultstate="collapsed" desc="Constructors"> 
     // for test classes
     public TransRegVar(TsData d) {
@@ -250,8 +250,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             case GROUP:
                 return getGroupStatus().name();
             case CENTERUSER:
-                return "centeruser = " + currentSettings.getCenteruser().getMethod().name();
-//                return currentSettings.getCenteruser().getMethod().toString();
+                return "Centeruser = " + currentSettings.getCenteruser().getMethod().name();
         }
 
         return null;

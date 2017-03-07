@@ -8,7 +8,6 @@ package de.bundesbank.transreg.ui.nodes;
 import de.bundesbank.transreg.logic.TransRegCalculationTool;
 import de.bundesbank.transreg.logic.TransRegVar;
 import ec.tstoolkit.timeseries.simplets.TsData;
-import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -34,13 +33,13 @@ public class TransRegVarPropertySetter {
     public TransRegVarPropertySetter(TransRegVar model) {
 
         this.var = model;
-        this.activeProperty = new ActiveProperty();
-        this.levelProperty = new LevelProperty();
-        this.freqProperty = new FrequencyProperty();
-        this.timespanProperty = new TsPeriodProperty();
+            this.activeProperty = new ActiveProperty();
+            this.levelProperty = new LevelProperty();
+            this.freqProperty = new FrequencyProperty();
+            this.timespanProperty = new TsPeriodProperty();
 //        this.dataProperty = new DataProperty();
-        this.timestampProperty = new TimestampProperty();
-        this.centeruserProperty = new CenteruserTestProperty();
+            this.timestampProperty = new TimestampProperty();
+            this.centeruserProperty = new CenteruserTestProperty();
 
         if (model.hasChildren()) {
             this.appearanceProperty = new AppearanceProperty();
@@ -132,22 +131,22 @@ public class TransRegVarPropertySetter {
     public FrequencyProperty getFreqProperty() {
         return freqProperty;
     }
-    
+
     public class FrequencyProperty extends PropertySupport.ReadOnly<String> {
-        
+
         public FrequencyProperty() {
             super(TransRegVar.PROP_FREQUENCY, String.class, "Frequency", null);
         }
-        
+
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-        
+
         @Override
         public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         }
-        
+
         @Override
         public String toString() {
             return var.getFrequency().toString();
@@ -159,22 +158,22 @@ public class TransRegVarPropertySetter {
     public LevelProperty getLevelProperty() {
         return levelProperty;
     }
-    
+
     public class LevelProperty extends PropertySupport.ReadOnly<String> {
-        
+
         public LevelProperty() {
             super(TransRegVar.PROP_LEVEL, String.class, "Level", null);
         }
-        
+
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-        
+
         @Override
         public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         }
-        
+
         @Override
         public String toString() {
             return var.getLevelName(); //To change body of generated methods, choose Tools | Templates.
@@ -186,18 +185,18 @@ public class TransRegVarPropertySetter {
     public TsPeriodProperty getTimespanProperty() {
         return timespanProperty;
     }
-    
+
     public class TsPeriodProperty extends PropertySupport.ReadOnly<String> {
-        
+
         public TsPeriodProperty() {
             super(TransRegVar.PROP_TIMESPAN, String.class, "TsPeriod", null);
         }
-        
+
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-        
+
         @Override
         public String toString() {
             return var.getTimespan();
@@ -209,18 +208,18 @@ public class TransRegVarPropertySetter {
     public TimestampProperty getTimestampProperty() {
         return timestampProperty;
     }
-    
+
     public class TimestampProperty extends PropertySupport.ReadOnly<String> {
-        
+
         public TimestampProperty() {
             super(TransRegVar.PROP_TIMESTAMP, String.class, "Timestamp", null);
         }
-        
+
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-        
+
         @Override
         public String toString() {
             return var.getTimestamp();
@@ -232,18 +231,18 @@ public class TransRegVarPropertySetter {
     public CenteruserTestProperty getCenteruserTestProperty() {
         return centeruserProperty;
     }
-    
+
     public class CenteruserTestProperty extends PropertySupport.ReadOnly<String> {
-        
+
         public CenteruserTestProperty() {
             super(TransRegVar.PROP_CENTERUSER, String.class, "Centeruser Test", null);
         }
-        
+
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
             return toString();
         }
-        
+
         @Override
         public String toString() {
             return TransRegCalculationTool.testCenteruser(var.getTsData());

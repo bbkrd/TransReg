@@ -21,9 +21,12 @@ import static ec.ui.view.tsprocessing.DefaultProcessingViewer.BUTTONS;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
@@ -161,33 +164,31 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
          *   3. only root is modifiable, so all children have to be updated
          *   4. update view
          */
-        outlineview.getOutlineview().getOutline().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    TransRegVar var = outlineview.getSelectedVariable();
-                    if (var != null) {
-                        // update settings
-                        TransRegSettingsUI ui = new TransRegSettingsUI(var.getSettings());
-                        // update all children
-                        var.updateSettings(var.getSettings());
-                        if (var.isRoot()) {
-                            // only Root is modifiable
-                            ui.setReadOnly(false);
-                            calc.setEnabled(true);
-                        } else {
-                            ui.setReadOnly(true);
-                            calc.setEnabled(false);
-                        }
-                        // update ui
-                        PropertiesPanelFactory.INSTANCE.update(propertyPanel, ui, null);
-                        propertyPanel.setVisible(true);
+        outlineview.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            // if evt.equals
+            if (evt.getPropertyName().equals(TransRegVarOutlineView.CHANGE_SELECTED_VAR)) {
+                TransRegVar var = (TransRegVar) evt.getNewValue();
+                if (var != null) {
+                    // update settings
+                    TransRegSettingsUI ui1 = new TransRegSettingsUI(var.getSettings());
+                    // update all children
+                    var.updateSettings(var.getSettings());
+                    if (var.isRoot()) {
+                        // only Root is modifiable
+                        ui1.setReadOnly(false);
+                        calc.setEnabled(true);
                     } else {
-                        propertyPanel.setVisible(false);
+                        ui1.setReadOnly(true);
+                        calc.setEnabled(false);
                     }
+                    // update ui
+                    PropertiesPanelFactory.INSTANCE.update(propertyPanel, ui1, null);
+                    propertyPanel.setVisible(true);
+                } else {
+                    propertyPanel.setVisible(false);
                 }
             }
         });
-//</editor-fold>
+        //</editor-fold>
     }
 }
