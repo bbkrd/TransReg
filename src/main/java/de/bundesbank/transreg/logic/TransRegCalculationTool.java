@@ -55,8 +55,8 @@ public class TransRegCalculationTool {
         }
         return rslt;
 
-    }    
-    
+    }
+
     public static ArrayList<TransRegVar> calculate(TransRegVar var) {
         LocalDateTime stamp = LocalDateTime.now();
         var.setTimestamp(stamp);
@@ -195,6 +195,13 @@ public class TransRegCalculationTool {
             default:
 //                newData = new TsData(var.getOriginalData().getStart(), var.getOriginalData().getValues());
         }
+        // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
+        for (int i = 0; i < newData.getLength(); i++) {
+            if (((Double)newData.get(i)).equals(defaultValue)) {
+                newData.set(i, 0.0);
+            }
+        }
+
         result.setCalculatedData(newData);
 
         //VaterKind Bez.
