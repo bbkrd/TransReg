@@ -6,15 +6,10 @@
 package de.bundesbank.transreg.admin;
 
 import de.bundesbank.transreg.logic.TransRegVar;
-import ec.tstoolkit.algorithm.ProcessingContext;
-import ec.tstoolkit.information.Information;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
-import ec.tstoolkit.timeseries.regression.ITsVariable;
 import ec.tstoolkit.timeseries.regression.TsVariables;
-import static ec.tstoolkit.timeseries.regression.TsVariables.LINKER;
 import ec.tstoolkit.utilities.DefaultNameValidator;
-import java.util.List;
 
 /**
  *

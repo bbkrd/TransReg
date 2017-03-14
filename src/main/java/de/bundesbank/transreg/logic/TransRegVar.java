@@ -384,11 +384,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             String name = info.get(NAME, String.class);
             TsMoniker monk = info.get(MONIKER, TsMoniker.class);
             TsData original = info.get(ORIGINAL, TsData.class);
-
             String level = info.get(LEVEL, String.class);
-
             String stamp = info.get(TIMESTAMP, String.class);
-
+            GroupsEnum group = GroupsEnum.valueOf(info.get(GROUPSTATUS, String.class));
+            
             //read methode, auf null prÃ¼fen
             int frequency = data.getFrequency().intValue();
             TransRegSettings cur = new TransRegSettings(frequency);
@@ -408,6 +407,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
             TransRegVar result = new TransRegVar(name, monk, original, data, cur, myID);
             result.setLevel(NodesLevelEnum.fromString(level));
+            result.setGroupStatus(group);
+            
             if (stamp != null) {
                 result.setTimestamp(stamp);
             }
@@ -442,7 +443,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             info.set(DATA, t.getTsData());
             info.set(ORIGINAL, t.getOriginalData());
             info.set(LEVEL, t.getLevel().toString());
-
+            info.set(GROUPSTATUS, t.getGroupStatus().toString());
+            
             if (t.getTimestamp() != null) {
                 info.set(TIMESTAMP, t.getTimestamp());
             }
@@ -483,7 +485,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 PARENT = "parent",
                 CHILDREN = "children",
                 LEVEL = "level",
-                TIMESTAMP = "timestamp";
+                TIMESTAMP = "timestamp",
+                GROUPSTATUS = "groupsstatus";
     }
 //</editor-fold>
 

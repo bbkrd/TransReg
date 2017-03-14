@@ -26,11 +26,6 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        saveMethodComboBox = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -51,23 +46,6 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         lowerLimitExpField = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridLayout(3, 1));
-
-        jPanel1.setLayout(new java.awt.GridLayout(3, 2));
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel2.text")); // NOI18N
-        jPanel1.add(jLabel2);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel13, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel13.text")); // NOI18N
-        jPanel1.add(jLabel13);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel1.text")); // NOI18N
-        jPanel1.add(jLabel1);
-
-        saveMethodComboBox.setModel(new javax.swing.DefaultComboBoxModel(SaveMethodEnum.values()));
-        jPanel1.add(saveMethodComboBox);
-
-        add(jPanel1);
 
         jPanel2.setLayout(new java.awt.GridLayout(5, 2));
 
@@ -134,7 +112,7 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
 
     void load() {
         String saveMethod = NbPreferences.forModule(TransRegOptionsPanelController.class).get(TRANSREG_SAVE_METHOD, SaveMethodEnum.TRANSREG.toString());
-        saveMethodComboBox.setSelectedItem(SaveMethodEnum.fromString(saveMethod));
+//        saveMethodComboBox.setSelectedItem(SaveMethodEnum.fromString(saveMethod));
 
         int nr_v = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_GROUPS, 2);
         maxNumberOfGroupsComboBox.setSelectedItem(nr_v-2);
@@ -153,10 +131,10 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
     void store() {
 
         // SaveMethodEnum
-        NbPreferences.forModule(TransRegOptionsPanelController.class).
-                put(TRANSREG_SAVE_METHOD, 
-                        saveMethodComboBox.getSelectedItem().toString()
-                );
+//        NbPreferences.forModule(TransRegOptionsPanelController.class).
+//                put(TRANSREG_SAVE_METHOD, 
+//                        saveMethodComboBox.getSelectedItem().toString()
+//                );
         
         // Number of groups, vertical
         NbPreferences.forModule(TransRegOptionsPanelController.class).
@@ -189,28 +167,23 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField lowerLimitExpField;
     private javax.swing.JComboBox maxNumberOfGroupsComboBox;
-    private javax.swing.JComboBox saveMethodComboBox;
     private javax.swing.JTextField upperLimitExpField;
     // End of variables declaration//GEN-END:variables
 }

@@ -188,7 +188,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         ov.getOutline().setRootVisible(false);
         ov.setDropTarget(true);
         ov.setAllowedDropActions(DnDConstants.ACTION_COPY_OR_MOVE);
-        ov.setTransferHandler(new TsVariableTransferHandler());
+        ov.setTransferHandler(new TransRegTransferHandler());
 
         // set columns
         ov.setPropertyColumns(
@@ -269,7 +269,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     }
 
     //<editor-fold defaultstate="collapsed" desc="TransferHandler">
-    private class TsVariableTransferHandler extends TransferHandler {
+    private class TransRegTransferHandler extends TransferHandler {
 
         @Override
         public int getSourceActions(JComponent c) {

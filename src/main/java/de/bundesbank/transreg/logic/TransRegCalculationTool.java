@@ -96,7 +96,7 @@ public class TransRegCalculationTool {
         TransRegVar result = var.copy();
         String name = var.getName() + "_group";
         result.setName(name);
-        result.setLevel(NodesLevelEnum.CENTERUSER);
+//        result.setLevel(NodesLevelEnum.CENTERUSER);
         ArrayList<TransRegVar> results = new ArrayList();
 
         GroupsSettings settings = var.getSettings().getGroups();
