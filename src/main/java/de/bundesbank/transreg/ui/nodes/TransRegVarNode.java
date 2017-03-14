@@ -50,7 +50,7 @@ public class TransRegVarNode extends TransRegVarNodeAdapter {
         Sheet sheet = super.createSheet();
         Sheet.Set set = super.createDefaultSetter();
         set.put(modelPropertySetter.getAppearanceProperty());
-        set.put(modelPropertySetter.getAppearanceProperty());
+//        set.put(modelPropertySetter.getAppearanceProperty());
 
         sheet.put(set);
         

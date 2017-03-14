@@ -33,27 +33,73 @@ public class TransRegCalculationTool {
     // Fuer test
     public static String testCenteruser(TsData data) {
 
+        // standard mean
         DataBlock block = new DataBlock(data);
         double mean = block.sum() / block.getLength();
+
+        // seasonal mean
+        double[] seasonalMeans = new double[data.getFrequency().intValue()];
+        int[] seasonal_n = new int[data.getFrequency().intValue()];
+
+        // Aufaddieren und Zaehlen der Elemente
+        int position = data.getStart().getPosition();
+        for (int i = 0; i < data.getLength(); i++) {
+            seasonalMeans[position] += data.get(i);
+            seasonal_n[position]++;
+
+            if (((position + 1) % data.getFrequency().intValue()) == 0) {
+                position = 0;
+            } else {
+                position++;
+            }
+        }
+        double seasonalMean = 0.0;
+        //Durchschnitt berechnen
+        for (int i = 0; i < seasonal_n.length; i++) {
+            seasonalMeans[i] = seasonalMeans[i] / seasonal_n[i];
+            //euklidische Norm berechenn (1)
+            seasonalMean += (seasonalMeans[i] * seasonalMeans[i]);
+        }
+
+        // euklidische Norm (2)
+        seasonalMean = Math.sqrt(seasonalMean);
 
         Preferences node = NbPreferences.forModule(TransRegOptionsPanelController.class);
         double upper = node.getDouble(TransRegOptionsPanelController.TRANSREG_UPPER_LIMIT, 1E-4);
         double lower = node.getDouble(TransRegOptionsPanelController.TRANSREG_LOWER_LIMIT, 1E-12);
 
-        String rslt;
+        StringBuilder rslt = new StringBuilder();
         if (Math.abs(mean) <= upper) {
-            rslt = "Probably centred";
-//            vermutlich zentriert
+
             if (Math.abs(mean) <= lower) {
                 // auf jeden fall zentiert
-                rslt = "Centred";
+                rslt.append("Centred");
+            } else {
+                // vermutlich zentriert
+                rslt.append("Probably centred");
             }
 
         } else {
             // nicht zentriert
-            rslt = "Not centred";
+            rslt.append("Not centred");
         }
-        return rslt;
+
+        rslt.append(" and ");
+
+        if (Math.abs(seasonalMean) <= upper) {
+            if (Math.abs(seasonalMean) <= lower) {
+                // auf jeden fall zentiert
+                rslt.append("seasonal centred");
+            } else {
+                // vermutlich zentriert
+                rslt.append("probably seasonal centred");
+            }
+        } else {
+            // nicht zentriert
+            rslt.append("not seasonal centred");
+        }
+
+        return rslt.toString();
 
     }
 
@@ -197,7 +243,7 @@ public class TransRegCalculationTool {
         }
         // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
         for (int i = 0; i < newData.getLength(); i++) {
-            if (((Double)newData.get(i)).equals(defaultValue)) {
+            if (((Double) newData.get(i)).equals(defaultValue)) {
                 newData.set(i, 0.0);
             }
         }
