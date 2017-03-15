@@ -8,6 +8,7 @@ package de.bundesbank.transreg.ui;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import de.bundesbank.transreg.admin.TransRegDocument;
+import de.bundesbank.transreg.admin.TransRegTransferHandler;
 import de.bundesbank.transreg.logic.TransRegCalculationTool;
 import de.bundesbank.transreg.logic.TransRegVar;
 import de.bundesbank.transreg.ui.propertyEditor.TransRegSettingsUI;
@@ -19,6 +20,10 @@ import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.ui.WorkspaceTopComponent;
 import static ec.ui.view.tsprocessing.DefaultProcessingViewer.BUTTONS;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -30,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.awt.ActionID;
@@ -62,6 +68,8 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
     private PropertySheetPanel propertyPanel;
     private TransRegVarOutlineView outlineview;
 
+    private JLabel dropDataLabel;
+
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
     }
@@ -88,25 +96,9 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
     }
 
     private void initComponents() {
-
         setLayout(new java.awt.BorderLayout());
 
-        toolBarRepresentation = NbComponents.newInnerToolbar();
-        runButton = new JButton(DemetraUiIcon.COMPILE_16);
-        runButton.setToolTipText("Refresh & calculate");
-        toolBarRepresentation.add(runButton);
-        toolBarRepresentation.setFloatable(false);
-        toolBarRepresentation.addSeparator();
-
-        // TODO: aus SaBatchUI, SpecVorauswahl anpassen an TransReg
-        JPopupMenu preSelectionPopup = new JPopupMenu();
-        JButton preSelectionButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, preSelectionPopup));
-
-        TransRegDocument regressors = getDocument().getElement();
-
-        outlineview = new TransRegVarOutlineView(regressors);
-
-        //<editor-fold defaultstate="collapsed" desc="Buttons">
+        //<editor-fold defaultstate="collapsed" desc="Calc-Button">
         JPanel buttonPanel = new JPanel();
         buttonPanel.setName(BUTTONS);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -142,28 +134,28 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         buttonPanel.add(calc);
         //</editor-fold>
 
-        //<editor-fold defaultstate="collapsed" desc="Default TransRegSettingsPropertyPanel">
+        //<editor-fold defaultstate="collapsed" desc="TransRegSettingsPropertyPanel">
         TransRegSettingsUI settingsUI = new TransRegSettingsUI();
         settingsUI.setReadOnly(true);
         propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(settingsUI);
         propertyPanel.setVisible(false);
-
-        // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
-//        propertyPanel.add
-        //</editor-fold>
         propertyPanel.add(buttonPanel, BorderLayout.SOUTH);
-        add(toolBarRepresentation, BorderLayout.NORTH);
         add(propertyPanel, BorderLayout.EAST);
-        add(outlineview);
+        // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="OutlineView">
+        TransRegDocument regressors = getDocument().getElement();
+        outlineview = new TransRegVarOutlineView(regressors);
         //<editor-fold defaultstate="collapsed" desc="Selected Row">
         /*
-         *   If selected row in outlineview is changed -> valueChanged method
-         *   1. get selected variable (var)
-         *   2. update the (modified) settings from the view
-         *   3. only root is modifiable, so all children have to be updated
-         *   4. update view
-         */
+        *   If selected row in outlineview is changed -> valueChanged method
+        *   1. get selected variable (var)
+        *   2. update the (modified) settings from the view
+        *   3. only root is modifiable, so all children have to be updated
+        *   4. update view
+        */
         outlineview.addPropertyChangeListener((PropertyChangeEvent evt) -> {
             // if evt.equals
             if (evt.getPropertyName().equals(TransRegVarOutlineView.CHANGE_SELECTED_VAR)) {
@@ -190,5 +182,31 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             }
         });
         //</editor-fold>
+        add(outlineview);
+//</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Toolbar">
+        toolBarRepresentation = NbComponents.newInnerToolbar();
+        
+        dropDataLabel = new JLabel(" Drop data here");
+        dropDataLabel.setVisible(true);
+        dropDataLabel.setTransferHandler(new TransRegTransferHandler(outlineview));
+        
+        toolBarRepresentation.add(dropDataLabel);
+        toolBarRepresentation.addSeparator();
+        
+        runButton = new JButton(DemetraUiIcon.COMPILE_16);
+        runButton.setToolTipText("Refresh & calculate");
+        
+        toolBarRepresentation.add(runButton);
+        toolBarRepresentation.setFloatable(false);
+        toolBarRepresentation.addSeparator();
+        
+        // TODO: aus SaBatchUI, SpecVorauswahl anpassen an TransReg
+        JPopupMenu preSelectionPopup = new JPopupMenu();
+        JButton preSelectionButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, preSelectionPopup));
+        
+        add(toolBarRepresentation, BorderLayout.NORTH);
+//</editor-fold>
     }
 }
