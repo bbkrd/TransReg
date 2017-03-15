@@ -216,7 +216,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     public static void appendTsVariables(TsCollection coll, TransRegVarOutlineView c) {
         for (Ts s : coll) {
             TransRegVar v;
-            String name = s.getName().replaceAll("\\s+", "").replaceAll("\\\\", "");
+            String name = s.getName().replaceAll("\\n", "").replaceAll("\\\\", "");
             if (s.getMoniker().isAnonymous()) {
                 v = new TransRegVar(name, s.getTsData());
             } else {
