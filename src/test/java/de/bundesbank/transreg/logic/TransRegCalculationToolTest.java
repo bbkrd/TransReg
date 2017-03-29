@@ -7,8 +7,10 @@ package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.util.CenteruserEnum;
 import de.bundesbank.transreg.util.GroupsEnum;
+import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.Month;
+import ec.tstoolkit.timeseries.TsPeriodSelector;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import ec.tstoolkit.timeseries.simplets.TsPeriod;
@@ -325,5 +327,5 @@ public class TransRegCalculationToolTest {
 
         // group2 + centeruser = sesonal
     }
-
+    
 }

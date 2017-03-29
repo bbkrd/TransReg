@@ -33,7 +33,7 @@ public class TransRegTransferHandler extends TransferHandler{
 
         @Override
         protected Transferable createTransferable(JComponent c) {
-            return null;
+            return super.createTransferable(c);
         }
 
         @Override
@@ -52,6 +52,7 @@ public class TransRegTransferHandler extends TransferHandler{
                 col.query(TsInformationType.All);
                 if (!col.isEmpty()) {
                     TransRegVarOutlineView.appendTsVariables(col, view);
+                    view.revalidate();
                 }
                 return true;
             }
