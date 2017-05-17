@@ -216,10 +216,22 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 v = new TransRegVar(name, s.getMoniker(), s.getTsData());
             }
             // in myModel
+            String nextName = getNextName(name, c.vars);
+            v.setName(nextName);
             c.myModels.add(v);
-            c.vars.set(name, v);
+            c.vars.set(nextName, v);
+
         }
         c.setNodes();
+    }
+
+    private static String getNextName(String name, TransRegDocument vars) {
+        int counter = 0;
+        String nextName = name;
+        while (vars.get(nextName) != null) {
+            nextName = name + "_" + ++counter;
+        }
+        return nextName;
     }
 //</editor-fold>
 
