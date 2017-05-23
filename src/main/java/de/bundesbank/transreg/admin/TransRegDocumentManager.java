@@ -29,7 +29,7 @@ public class TransRegDocumentManager extends AbstractWorkspaceItemManager<TransR
     @Override
     public WorkspaceItem<TransRegDocument> create(Workspace ws) {
         WorkspaceItem<TransRegDocument> nvars = super.create(ws);
-        ProcessingContext.getActiveContext().getTsVariableManagers().set(nvars.getDisplayName(), nvars.getElement());
+//        ProcessingContext.getActiveContext().getTsVariableManagers().set(nvars.getDisplayName(), nvars.getElement());
         return nvars;
     }
 
