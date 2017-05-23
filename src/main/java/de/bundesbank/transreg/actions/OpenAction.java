@@ -5,15 +5,17 @@
  */
 package de.bundesbank.transreg.actions;
 
+import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
-import ec.nbdemetra.ui.nodes.SingleNodeAction;
+import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
-import ec.nbdemetra.ws.nodes.ItemWsNode;
+import ec.nbdemetra.ws.nodes.WsNode;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
@@ -21,35 +23,23 @@ import org.openide.util.NbBundle.Messages;
         id = "de.bundesbank.transreg.actions.OpenAction"
 )
 @ActionRegistration(
-        displayName = "#CTL_OpenAction", lazy = false
-)
+        displayName = "#CTL_OpenAction")
 @ActionReferences({
     @ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1700, separatorBefore = 1699)
 })
 @Messages("CTL_OpenAction=Open")
-public final class OpenAction extends SingleNodeAction<ItemWsNode>  {
+public final class OpenAction implements ActionListener {
 
-    public OpenAction() {
-        super(ItemWsNode.class);
-    }
+    private final WsNode context;
     
-     @Override
-    protected boolean enable(ItemWsNode context) {
-        WorkspaceItem<?> cur = context.getItem();
-        return cur != null;
-    }
-    
-     @Override
-    protected void performAction(ItemWsNode context) {
-    }
-    
-    @Override
-    public String getName() {
-        return Bundle.CTL_OpenAction();
+    public OpenAction(WsNode context) {
+        this.context = context;
     }
 
     @Override
-    public HelpCtx getHelpCtx() {
-        return null;
+    public void actionPerformed(ActionEvent e) {
+        WorkspaceItem<TransRegDocument> doc = context.getWorkspace().searchDocument(context.lookup(), TransRegDocument.class);
+        TransRegDocumentManager mgr = WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
+        mgr.openDocument(doc);
     }
 }
