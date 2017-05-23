@@ -388,7 +388,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             String stamp = info.get(TIMESTAMP, String.class);
             GroupsEnum group = GroupsEnum.valueOf(info.get(GROUPSTATUS, String.class));
             
-            //read methode, auf null prÃ¼fen
+            //read methode, auf null pruefen
             int frequency = data.getFrequency().intValue();
             TransRegSettings cur = new TransRegSettings(frequency);
             InformationSet curInfo = info.getSubSet(SETTINGS);

@@ -5,12 +5,14 @@
  */
 package de.bundesbank.transreg.admin;
 
+import ec.demetra.workspace.WorkspaceFamily;
+import static ec.demetra.workspace.WorkspaceFamily.parse;
+import ec.demetra.workspace.file.FileFormat;
+import ec.demetra.workspace.file.spi.FamilyHandler;
+import ec.demetra.workspace.file.util.InformationSetSupport;
 import ec.nbdemetra.ws.AbstractFileItemRepository;
-import static ec.nbdemetra.ws.AbstractFileItemRepository.loadInfo;
-import static ec.nbdemetra.ws.AbstractFileItemRepository.saveInfo;
 import ec.nbdemetra.ws.IWorkspaceItemRepository;
 import ec.nbdemetra.ws.WorkspaceItem;
-import ec.tstoolkit.algorithm.ProcessingContext;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -20,46 +22,37 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = IWorkspaceItemRepository.class)
 public class TransRegFileRepository extends AbstractFileItemRepository<TransRegDocument> {
 
-    public static final String REPOSITORY = "TransReg";
+    public static final WorkspaceFamily TRANSREG = parse("Utilities@TransReg");
 
     @Override
     public boolean load(WorkspaceItem<TransRegDocument> item) {
-        String sfile = this.fullName(item, REPOSITORY, false);
-        if (sfile == null) {
-            return false;
-        }
-        TransRegDocument doc = loadInfo(sfile, TransRegDocument.class);
-        item.setElement(doc);
-        if (doc != null) {
-            item.getOwner().getContext().getTsVariableManagers().set(item.getDisplayName(), doc);
-        }
-        item.resetDirty();
-        return doc != null;
+        return loadFile(item, (TransRegDocument o) -> {
+            item.setElement(o);
+            item.resetDirty();
+        });
     }
 
     @Override
     public boolean save(WorkspaceItem<TransRegDocument> item) {
-        String sfile = this.fullName(item, REPOSITORY, true);
-        if (sfile == null) {
-            return false;
-        }
-        if (saveInfo(sfile, item.getElement())) {
+        return storeFile(item, item.getElement(), () -> {
             item.resetDirty();
             item.getElement().resetDirty();
-            return true;
-        } else {
-            return false;
-        }
+        });
     }
 
     @Override
     public boolean delete(WorkspaceItem<TransRegDocument> doc) {
-        return delete(doc, REPOSITORY);
+        return deleteFile(doc);
     }
 
-    @Override
     public Class<TransRegDocument> getSupportedType() {
         return TransRegDocument.class;
     }
+    
+   @ServiceProvider(service = FamilyHandler.class)
+    public static final class TransRegs implements FamilyHandler {
 
+        @lombok.experimental.Delegate
+        private final FamilyHandler delegate = InformationSetSupport.of(TransRegDocument::new, "TransReg").asHandler(TRANSREG, FileFormat.GENERIC);
+    }
 }
