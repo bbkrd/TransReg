@@ -9,6 +9,7 @@ import de.bundesbank.transreg.ui.TransRegVarOutlineView;
 import ec.tss.TsCollection;
 import ec.tss.TsInformationType;
 import ec.tss.datatransfer.TssTransferSupport;
+import ec.ui.list.JTsVariableList;
 import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -47,15 +48,11 @@ public class TransRegTransferHandler extends TransferHandler{
 
         @Override
         public boolean importData(TransferHandler.TransferSupport support) {
-            TsCollection col = TssTransferSupport.getDefault().toTsCollection(support.getTransferable());
-            if (col != null) {
-                col.query(TsInformationType.All);
-                if (!col.isEmpty()) {
-                    TransRegVarOutlineView.appendTsVariables(col, view);
-                    view.revalidate();
-                }
-                return true;
-            }
-            return false;
+             return TssTransferSupport.getDefault()
+                    .toTsCollectionStream(support.getTransferable())
+                    .peek(o -> o.load(TsInformationType.All))
+                    .filter(o -> !o.isEmpty())
+                    .peek(view::appendTsVariables)
+                    .count() > 0;
         }
 }

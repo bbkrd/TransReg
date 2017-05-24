@@ -42,7 +42,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             PROP_TIMESTAMP = "timestamp",
             PROP_CENTERUSER = "centeruser";
 
-//    private String name;
     private GroupsEnum groupStatus = GroupsEnum.Group1;
     private NodesLevelEnum level = NodesLevelEnum.ORIGINAL;
     private TransRegSettings currentSettings;
@@ -52,8 +51,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     private TsData calculatedData;
     private final TsMoniker moniker;
 
-//    private List<TransRegVar> children = new ArrayList<>();
-//    private TransRegVar parent;
     private UUID id;
     private List<UUID> childrenIDs = new ArrayList<>();
     private UUID parentID;
@@ -108,17 +105,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         this.id = id;
     }
 //</editor-fold>
-
-//    @Override
-//    public String getName() {
-//        return super.getName();
-//    }
-//
-//    @Override
-//    public void setName(String s) {
-//        
-//        name = s;
-//    }
 
     public void rename(String s) {
         this.setName(s);
@@ -192,7 +178,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     public void removeChild(TransRegVar child) {
-//        getChildren().remove(child);
         childrenIDs.remove(child.getID());
     }
 
@@ -331,10 +316,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         return true;
     }
 
-//    public TransRegVar copy() {
-//        // TODO: ID auch kopieren?
-//        return new TransRegVar(this.getDescription(getDefinitionFrequency()) + "_copy", moniker, calculatedData.clone(), calculatedData.clone(), currentSettings.copy(), this.getID());
-//    }
     public TsVariable convert() {
         return new TsVariable(getName(), calculatedData);
     }

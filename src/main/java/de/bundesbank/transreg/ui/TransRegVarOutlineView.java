@@ -206,7 +206,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     }
 
     //<editor-fold defaultstate="collapsed" desc="TransferHandler">
-    public static void appendTsVariables(TsCollection coll, TransRegVarOutlineView c) {
+    public void appendTsVariables(TsCollection coll) {
         for (Ts s : coll) {
             TransRegVar v;
             String name = s.getName().replaceAll("\\n", "").replaceAll("\\\\", "");
@@ -216,13 +216,13 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 v = new TransRegVar(name, s.getMoniker(), s.getTsData());
             }
             // in myModel
-            String nextName = getNextName(name, c.vars);
+            String nextName = getNextName(name, vars);
             v.setName(nextName);
-            c.myModels.add(v);
-            c.vars.set(nextName, v);
+            myModels.add(v);
+            vars.set(nextName, v);
 
         }
-        c.setNodes();
+        setNodes();
     }
 
     private static String getNextName(String name, TransRegDocument vars) {
