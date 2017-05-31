@@ -35,6 +35,7 @@ public class TransRegVarNodeAdapter extends AbstractNode {
 //        set.put(modelPropertySetter.getDataProperty());
         set.put(modelPropertySetter.getCenteruserTestProperty());
         set.put(modelPropertySetter.getTimestampProperty());
+        set.put(modelPropertySetter.getCalculationspanProperty());
 
         return set;
     }

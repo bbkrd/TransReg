@@ -7,7 +7,6 @@ package de.bundesbank.transreg.settings;
 
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
-import java.time.LocalDateTime;
 
 /**
  *

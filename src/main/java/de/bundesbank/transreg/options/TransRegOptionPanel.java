@@ -89,6 +89,11 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         jPanel4.add(jLabel11);
 
         upperLimitExpField.setText(org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.upperLimitExpField.text")); // NOI18N
+        upperLimitExpField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upperLimitExpFieldActionPerformed(evt);
+            }
+        });
         jPanel4.add(upperLimitExpField);
 
         jPanel3.add(jPanel4);
@@ -110,6 +115,10 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         add(jPanel3);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void upperLimitExpFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upperLimitExpFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_upperLimitExpFieldActionPerformed
+
     void load() {
         String saveMethod = NbPreferences.forModule(TransRegOptionsPanelController.class).get(TRANSREG_SAVE_METHOD, SaveMethodEnum.TRANSREG.toString());
 //        saveMethodComboBox.setSelectedItem(SaveMethodEnum.fromString(saveMethod));
@@ -122,10 +131,10 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
 
         double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, 1E-4);
         
-        upperLimitExpField.setText(((int) Math.log10(upper))+"");
+        upperLimitExpField.setText(((int) Math.log10(-1*upper))+"");
 
         double lower = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_LOWER_LIMIT, 1E-12);
-        lowerLimitExpField.setText(((int) Math.log10(lower))+"");
+        lowerLimitExpField.setText(((int) Math.log10(-1*lower))+"");
     }
 
     void store() {
@@ -152,13 +161,13 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         // upper limit exponent 
         NbPreferences.forModule(TransRegOptionsPanelController.class).
                 putDouble(TRANSREG_UPPER_LIMIT, 
-                        Double.parseDouble("1E"+upperLimitExpField.getText())
+                        Double.parseDouble("1E-"+upperLimitExpField.getText())
                 );
         
         // lower limit exponent
         NbPreferences.forModule(TransRegOptionsPanelController.class).
                 putDouble(TRANSREG_LOWER_LIMIT, 
-                        Double.parseDouble("1E"+lowerLimitExpField.getText())
+                        Double.parseDouble("1E-"+lowerLimitExpField.getText())
                 );
     }
 

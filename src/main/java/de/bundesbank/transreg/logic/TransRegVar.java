@@ -40,7 +40,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             PROP_TIMESPAN = "timespan",
             PROP_DATA = "data",
             PROP_TIMESTAMP = "timestamp",
-            PROP_CENTERUSER = "centeruser";
+            PROP_CENTERUSER = "centeruser",
+            PROP_CALC_SPAN = "calculation span",
+            PROP_CALC_MEAN = "calculated mean";
 
     private GroupsEnum groupStatus = GroupsEnum.Group1;
     private NodesLevelEnum level = NodesLevelEnum.ORIGINAL;
@@ -249,6 +251,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         return getOriginalData().getFrequency();
     }
 
+    public String getCalculationSpan(){
+        return currentSettings.getCenteruser().getSpan().toString();
+    }
+    
     public String getTimespan() {
         return getTsData().getStart().toString() + " to " + getTsData().getLastPeriod().toString();
     }

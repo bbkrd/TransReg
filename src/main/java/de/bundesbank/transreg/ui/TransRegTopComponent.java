@@ -19,6 +19,7 @@ import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.ui.WorkspaceTopComponent;
 import static ec.ui.view.tsprocessing.DefaultProcessingViewer.BUTTONS;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -180,6 +181,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
         dropDataLabel = new JLabel("Drop data here");
         dropDataLabel.setFont(new JLabel().getFont().deriveFont(Font.ITALIC));
+        dropDataLabel.setPreferredSize(new Dimension(50, 40));
         dropDataLabel.setVisible(true);
         dropDataLabel.setTransferHandler(new TransRegTransferHandler(outlineview));
 

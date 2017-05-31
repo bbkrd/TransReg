@@ -29,6 +29,8 @@ public class TransRegVarPropertySetter {
     private DataProperty dataProperty;
     private TimestampProperty timestampProperty;
     private CenteruserTestProperty centeruserProperty;
+    private CalculationSpanProperty calculationspanProperty;
+    private CalculatedMeanProperty calculatedMeanProperty;
 
     public TransRegVarPropertySetter(TransRegVar model) {
 
@@ -40,6 +42,7 @@ public class TransRegVarPropertySetter {
 //        this.dataProperty = new DataProperty();
             this.timestampProperty = new TimestampProperty();
             this.centeruserProperty = new CenteruserTestProperty();
+            this.calculationspanProperty = new CalculationSpanProperty();
 
         if (model.hasChildren()) {
             this.appearanceProperty = new AppearanceProperty();
@@ -250,4 +253,49 @@ public class TransRegVarPropertySetter {
     }
 //</editor-fold>
 
+//<editor-fold defaultstate="collapsed" desc="Calculation span">
+    public CalculationSpanProperty getCalculationspanProperty() {
+        return calculationspanProperty;
+    }
+
+    public class CalculationSpanProperty extends PropertySupport.ReadOnly<String> {
+
+        public CalculationSpanProperty() {
+            super(TransRegVar.PROP_CALC_SPAN, String.class, "TsPeriod", null);
+        }
+
+        @Override
+        public String getValue() throws IllegalAccessException, InvocationTargetException {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return var.getCalculationSpan();
+        }
+    }
+//</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Calculated mean">
+    public CalculatedMeanProperty getCalculatedMeanProperty() {
+        return calculatedMeanProperty;
+    }
+
+    public class CalculatedMeanProperty extends PropertySupport.ReadOnly<String> {
+
+        public CalculatedMeanProperty() {
+            super(TransRegVar.PROP_CALC_MEAN, String.class, "TsPeriod", null);
+        }
+
+        @Override
+        public String getValue() throws IllegalAccessException, InvocationTargetException {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
+            return "";
+        }
+    }
+//</editor-fold>
 }
