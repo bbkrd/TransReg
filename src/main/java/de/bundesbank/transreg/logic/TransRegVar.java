@@ -5,6 +5,7 @@
  */
 package de.bundesbank.transreg.logic;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.util.GroupsEnum;
@@ -53,6 +54,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     private TsData calculatedData;
     private final TsMoniker moniker;
 
+    private List<Double> mean;
+
     private UUID id;
     private List<UUID> childrenIDs = new ArrayList<>();
     private UUID parentID;
@@ -63,7 +66,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     private Boolean appear = true;
     private Boolean x = false;
-    
+
 //<editor-fold defaultstate="collapsed" desc="Constructors"> 
     // for test classes
     public TransRegVar(TsData d) {
@@ -251,17 +254,17 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         return getOriginalData().getFrequency();
     }
 
-    public String getCalculationSpan(){
+    public String getCalculationSpan() {
         return currentSettings.getCenteruser().getSpan().toString();
     }
-    
+
     public String getTimespan() {
         return getTsData().getStart().toString() + " to " + getTsData().getLastPeriod().toString();
     }
 
     public String getTimestamp() {
         if (timestamp != null) {
-            return timestamp.toString();
+            return timestamp;
         }
         return "";
     }
@@ -269,11 +272,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp.toString();
     }
-    
-     public void setTimestamp(String timestamp) {
+
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
-    
 
     public boolean isRoot() {
         /*
@@ -353,6 +355,28 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         return result;
     }
 
+    public void setMean(double mean) {
+        this.mean = new ArrayList<>();
+        this.mean.add(mean);
+    }
+
+    public void setMean(double[] mean) {
+        this.mean = new ArrayList<>();
+        for (double d : mean) {
+            this.mean.add(d);
+        }
+    }
+
+    public String getMean() {
+        String text = " ";
+        if (mean != null) {
+            for (double d : mean) {
+                text = text + d + " ";
+            }
+        }
+        return text;
+    }
+
     // for CalculationTool:doCenteruser
     public TransRegVar copy() {
         TransRegVar t = new TransRegVar(getName(), getMoniker(), getOriginalData());
@@ -374,7 +398,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             String level = info.get(LEVEL, String.class);
             String stamp = info.get(TIMESTAMP, String.class);
             GroupsEnum group = GroupsEnum.valueOf(info.get(GROUPSTATUS, String.class));
-            
+
             //read methode, auf null pruefen
             int frequency = data.getFrequency().intValue();
             TransRegSettings cur = new TransRegSettings(frequency);
@@ -395,11 +419,20 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             TransRegVar result = new TransRegVar(name, monk, original, data, cur, myID);
             result.setLevel(NodesLevelEnum.fromString(level));
             result.setGroupStatus(group);
-            
+
             if (stamp != null) {
                 result.setTimestamp(stamp);
             }
 
+            String mean = info.get(MEAN, String.class);
+            if (mean != null) {
+                String[] s = mean.trim().split("\\s+");
+                double[] means = new double[s.length];
+                for (int i = 0; i<s.length; i++) {
+                    means[i] = Double.parseDouble(s[i]);
+                }
+                result.setMean(means);
+            }            
             String parentID = info.get(PARENT, String.class);
             if (parentID != null) {
                 result.setParentID(UUID.fromString(parentID));
@@ -431,7 +464,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             info.set(ORIGINAL, t.getOriginalData());
             info.set(LEVEL, t.getLevel().toString());
             info.set(GROUPSTATUS, t.getGroupStatus().toString());
-            
+
             if (t.getTimestamp() != null) {
                 info.set(TIMESTAMP, t.getTimestamp());
             }
@@ -445,6 +478,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                     s = s + child.getID() + " ";
                 }
                 info.set(CHILDREN, s);
+            }
+            if (!t.getMean().trim().isEmpty()) {
+                info.set(MEAN, t.getMean());
             }
 
             InformationSet settings = t.getSettings().write(verbose);
@@ -473,7 +509,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 CHILDREN = "children",
                 LEVEL = "level",
                 TIMESTAMP = "timestamp",
-                GROUPSTATUS = "groupsstatus";
+                GROUPSTATUS = "groupsstatus",
+                MEAN = "mean";
     }
 //</editor-fold>
 

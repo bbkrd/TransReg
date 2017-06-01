@@ -201,13 +201,15 @@ public class TransRegCalculationTool {
         switch (settings.getMethod()) {
             case Mean:
                 TsData selectedData = result.getTsData().select(settings.getSpan());
-                double mean = new DescriptiveStatistics(selectedData.getValues()).getAverage();
+                double mean = new DescriptiveStatistics(selectedData).getAverage();
+                result.setMean(mean);
                 newData = result.getTsData().minus(mean);
                 break;
             case Seasonal:
                 TsData dataMean = result.getTsData().select(settings.getSpan());
 
                 double[] seasonalMean = new double[dataMean.getFrequency().intValue()];
+                result.setMean(seasonalMean);
                 int[] seasonal_n = new int[dataMean.getFrequency().intValue()];
 
                 // Aufaddieren und Zaehlen der Elemente

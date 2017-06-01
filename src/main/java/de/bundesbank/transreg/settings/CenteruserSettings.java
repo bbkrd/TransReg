@@ -17,8 +17,8 @@ import ec.tstoolkit.timeseries.TsPeriodSelector;
  */
 public class CenteruserSettings implements InformationSetSerializable {
 
-    TsPeriodSelector span;
-    CenteruserEnum method;
+    private TsPeriodSelector span;
+    private CenteruserEnum method;
 
     public CenteruserSettings() {
         //Defaults:
@@ -51,10 +51,7 @@ public class CenteruserSettings implements InformationSetSerializable {
         if(!method.equals(CenteruserEnum.None)){
             return false;
         }
-        if (!span.getType().equals(PeriodSelectorType.All)) {
-            return false;
-        }
-        return true;
+        return span.getType().equals(PeriodSelectorType.All);
     }
 
     public CenteruserSettings copy() {
