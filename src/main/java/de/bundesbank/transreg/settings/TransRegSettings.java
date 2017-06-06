@@ -75,21 +75,11 @@ public class TransRegSettings implements InformationSetSerializable {
 
         return copy;
     }
-
-//    public String getInfo() {
-//        return centeruser.getInfo() + " " + groups.getInfo() + " " + horizontal.getInfo();
-//    }
     
     //<editor-fold defaultstate="collapsed" desc="for Workspace">  
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
-//        if (timestamp != null) {
-//            InformationSet t = new InformationSet();
-//            t.add(TIMESTAMP, timestamp.toString());
-//            info.add(TIMESTAMP, t);
-//        }
-
         InformationSet tmp = centeruser.write(verbose);
         info.add(CENTERUSER, tmp);
 
@@ -105,15 +95,7 @@ public class TransRegSettings implements InformationSetSerializable {
 
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
-
-//        InformationSet tmp = info.getSubSet(TIMESTAMP);
-//        if (tmp != null) {
-//            String s = tmp.get(TIMESTAMP, String.class);
-//            if (s != null) {
-//                timestamp = LocalDateTime.parse(s);
-//            }
-//        }
-
+        
         return true;
     }
 
