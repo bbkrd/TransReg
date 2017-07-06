@@ -30,13 +30,9 @@ public class TransRegCalculationTool {
 
     private static final double defaultValue = Double.NaN;
 
-    // Fuer test
+    // Pre Test
     public static String testCenteruser(TsData data) {
-
-        // standard mean
-        DataBlock block = new DataBlock(data);
-        double mean = block.sum() / block.getLength();
-
+        
         // seasonal mean
         double[] seasonalMeans = new double[data.getFrequency().intValue()];
         int[] seasonal_n = new int[data.getFrequency().intValue()];
@@ -63,45 +59,33 @@ public class TransRegCalculationTool {
 
         // euklidische Norm (2)
         seasonalMean = Math.sqrt(seasonalMean);
-
+        
+        
         Preferences node = NbPreferences.forModule(TransRegOptionsPanelController.class);
         double upper = node.getDouble(TransRegOptionsPanelController.TRANSREG_UPPER_LIMIT, 1E-4);
         double lower = node.getDouble(TransRegOptionsPanelController.TRANSREG_LOWER_LIMIT, 1E-12);
-
-        StringBuilder rslt = new StringBuilder();
-        if (Math.abs(mean) <= upper) {
-
-            if (Math.abs(mean) <= lower) {
-                // auf jeden fall zentiert
-                rslt.append("Centred");
-            } else {
-                // vermutlich zentriert
-                rslt.append("Probably centred");
-            }
-
-        } else {
-            // nicht zentriert
-            rslt.append("Not centred");
+        
+        if(seasonalMean <= lower){
+            return "Centred (seasonal means)";
         }
-
-        rslt.append(" and ");
-
-        if (Math.abs(seasonalMean) <= upper) {
-            if (Math.abs(seasonalMean) <= lower) {
-                // auf jeden fall zentiert
-                rslt.append("seasonal centred");
-            } else {
-                // vermutlich zentriert
-                rslt.append("probably seasonal centred");
-            }
-        } else {
-            // nicht zentriert
-            rslt.append("not seasonal centred");
+        if(seasonalMean<=upper){
+            return "Probaly centred (seasonal means)";
         }
-
-        return rslt.toString();
-
+        
+         // standard mean
+        DataBlock block = new DataBlock(data);
+        double mean = block.sum() / block.getLength();
+        
+        if(mean <= lower){
+            return "Centred (global mean)";
+        }
+        if(mean <= upper){
+            return "Probaly centred (global mean)";
+        }
+        
+        return "Not centred";
     }
+    
 
     public static ArrayList<TransRegVar> calculate(TransRegVar var) {
         LocalDateTime stamp = LocalDateTime.now();
