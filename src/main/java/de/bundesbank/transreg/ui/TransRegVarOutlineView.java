@@ -137,7 +137,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 TransRegVar.PROP_TIMESPAN, "Period",
                 TransRegVar.PROP_CENTERUSER, "Pre test",
                 TransRegVar.PROP_TIMESTAMP, "Timestamp",
-                TransRegVar.PROP_CALC_SPAN, "Calculation span",
+                TransRegVar.PROP_CALC_SPAN, "Mean Calculation Span",
                 TransRegVar.PROP_CALC_MEAN, "Calculated Mean"
         //                TransRegVar.PROP_DATA, "TsData"
         );
