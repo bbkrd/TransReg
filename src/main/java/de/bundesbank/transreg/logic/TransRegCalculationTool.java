@@ -32,7 +32,7 @@ public class TransRegCalculationTool {
 
     // Pre Test
     public static String testCenteruser(TsData data) {
-        
+
         // seasonal mean
         double[] seasonalMeans = new double[data.getFrequency().intValue()];
         int[] seasonal_n = new int[data.getFrequency().intValue()];
@@ -59,33 +59,31 @@ public class TransRegCalculationTool {
 
         // euklidische Norm (2)
         seasonalMean = Math.sqrt(seasonalMean);
-        
-        
+
         Preferences node = NbPreferences.forModule(TransRegOptionsPanelController.class);
         double upper = node.getDouble(TransRegOptionsPanelController.TRANSREG_UPPER_LIMIT, 1E-4);
         double lower = node.getDouble(TransRegOptionsPanelController.TRANSREG_LOWER_LIMIT, 1E-12);
-        
-        if(seasonalMean <= lower){
+
+        if (seasonalMean <= lower) {
             return "Centred (seasonal means)";
         }
-        if(seasonalMean<=upper){
+        if (seasonalMean <= upper) {
             return "Probaly centred (seasonal means)";
         }
-        
-         // standard mean
+
+        // standard mean
         DataBlock block = new DataBlock(data);
         double mean = block.sum() / block.getLength();
-        
-        if(mean <= lower){
+
+        if (mean <= lower) {
             return "Centred (global mean)";
         }
-        if(mean <= upper){
+        if (mean <= upper) {
             return "Probaly centred (global mean)";
         }
-        
+
         return "Not centred";
     }
-    
 
     public static ArrayList<TransRegVar> calculate(TransRegVar var) {
         LocalDateTime stamp = LocalDateTime.now();
@@ -193,7 +191,6 @@ public class TransRegCalculationTool {
                 TsData dataMean = result.getTsData().select(settings.getSpan());
 
                 double[] seasonalMean = new double[dataMean.getFrequency().intValue()];
-                result.setMean(seasonalMean);
                 int[] seasonal_n = new int[dataMean.getFrequency().intValue()];
 
                 // Aufaddieren und Zaehlen der Elemente
@@ -212,6 +209,7 @@ public class TransRegCalculationTool {
                 for (int i = 0; i < seasonal_n.length; i++) {
                     seasonalMean[i] = seasonalMean[i] / seasonal_n[i];
                 }
+                result.setMean(seasonalMean);
                 // von OriginalZR abziehen
 //                newData = var.getTsData();
                 position = newData.getStart().getPosition();

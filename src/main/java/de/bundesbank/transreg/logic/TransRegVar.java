@@ -371,6 +371,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         String text = " ";
         if (mean != null) {
             for (double d : mean) {
+                d = Math.round(d*10)/10;
                 text = text + d + " ";
             }
         }
