@@ -6,9 +6,12 @@
 package de.bundesbank.transreg.options;
 
 import static de.bundesbank.transreg.options.TransRegOptionsPanelController.*;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.util.NbPreferences;
 
-final class TransRegOptionPanel extends javax.swing.JPanel {
+final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeListener {
 
     private final TransRegOptionsPanelController controller;
 
@@ -16,6 +19,8 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         this.controller = controller;
         initComponents();
         // TODO listen to changes in form fields and call controller.changed()
+        jSpinner1.addChangeListener(this);
+        jSpinner2.addChangeListener(this);
     }
 
     /**
@@ -26,26 +31,31 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
         maxNumberOfGroupsComboBox = new javax.swing.JComboBox();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        upperLimitExpField = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
-        lowerLimitExpField = new javax.swing.JTextField();
+        javax.swing.JLabel jLabel14 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel15 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel10 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel8 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel11 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
+        javax.swing.JLabel jLabel9 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel5 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel12 = new javax.swing.JLabel();
+        jSpinner2 = new javax.swing.JSpinner();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        warning = new javax.swing.JLabel();
 
-        setLayout(new java.awt.GridLayout(3, 1));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel1.text")); // NOI18N
+
+        setLayout(new java.awt.GridLayout(4, 1));
 
         jPanel2.setLayout(new java.awt.GridLayout(5, 2));
 
@@ -88,13 +98,8 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel11.text")); // NOI18N
         jPanel4.add(jLabel11);
 
-        upperLimitExpField.setText(org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.upperLimitExpField.text")); // NOI18N
-        upperLimitExpField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                upperLimitExpFieldActionPerformed(evt);
-            }
-        });
-        jPanel4.add(upperLimitExpField);
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(4, 0, 99, 1));
+        jPanel4.add(jSpinner1);
 
         jPanel3.add(jPanel4);
 
@@ -107,92 +112,82 @@ final class TransRegOptionPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel12.text")); // NOI18N
         jPanel5.add(jLabel12);
 
-        lowerLimitExpField.setText(org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.lowerLimitExpField.text")); // NOI18N
-        jPanel5.add(lowerLimitExpField);
+        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(12, 1, 100, 1));
+        jPanel5.add(jSpinner2);
 
         jPanel3.add(jPanel5);
 
         add(jPanel3);
+
+        jPanel1.setLayout(new java.awt.GridLayout(1, 1));
+
+        warning.setForeground(new java.awt.Color(255, 0, 0));
+        org.openide.awt.Mnemonics.setLocalizedText(warning, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.warning.text")); // NOI18N
+        jPanel1.add(warning);
+
+        add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void upperLimitExpFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upperLimitExpFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_upperLimitExpFieldActionPerformed
-
     void load() {
-        String saveMethod = NbPreferences.forModule(TransRegOptionsPanelController.class).get(TRANSREG_SAVE_METHOD, SaveMethodEnum.TRANSREG.toString());
-//        saveMethodComboBox.setSelectedItem(SaveMethodEnum.fromString(saveMethod));
 
         int nr_v = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_GROUPS, 2);
-        maxNumberOfGroupsComboBox.setSelectedItem(nr_v-2);
+        maxNumberOfGroupsComboBox.setSelectedItem(nr_v - 2);
 
 //        int nr_h = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_HORIZONTAL_GROUPS, 2);
 //        maxNumberOfHorizontalGroupsComboBox.setSelectedItem(nr_h-2);
-
         double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, 1E-4);
-        
-        upperLimitExpField.setText(((int) Math.log10(-1*upper))+"");
+        int u = -1 * (int) Math.log10(upper);
+        jSpinner1.setValue(u);
 
         double lower = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_LOWER_LIMIT, 1E-12);
-        lowerLimitExpField.setText(((int) Math.log10(-1*lower))+"");
+        int l = -1 * (int) Math.log10(lower);
+        jSpinner2.setValue(l);
     }
 
     void store() {
 
-        // SaveMethodEnum
-//        NbPreferences.forModule(TransRegOptionsPanelController.class).
-//                put(TRANSREG_SAVE_METHOD, 
-//                        saveMethodComboBox.getSelectedItem().toString()
-//                );
-        
-        // Number of groups, vertical
+        // Number of groups
         NbPreferences.forModule(TransRegOptionsPanelController.class).
-                putInt(TRANSREG_GROUPS, 
+                putInt(TRANSREG_GROUPS,
                         Integer.parseInt(maxNumberOfGroupsComboBox.getSelectedItem().toString())
                 );
-        
-//        // Number of groups, horizontal
-//        NbPreferences.forModule(TransRegOptionsPanelController.class).
-//                putInt(TRANSREG_HORIZONTAL_GROUPS, 
-//                        Integer.parseInt( maxNumberOfHorizontalGroupsComboBox.getSelectedItem().toString())
-//                );
-        
-        // Try catch block wegen parsen?
-        // upper limit exponent 
+
+        // Tresholds
+        int u = ((SpinnerNumberModel) jSpinner1.getModel()).getNumber().intValue();
+        double upper = Math.pow(10, -u);
         NbPreferences.forModule(TransRegOptionsPanelController.class).
-                putDouble(TRANSREG_UPPER_LIMIT, 
-                        Double.parseDouble("1E-"+upperLimitExpField.getText())
-                );
-        
-        // lower limit exponent
+                putDouble(TRANSREG_UPPER_LIMIT, upper);
+
+        int l = ((SpinnerNumberModel) jSpinner2.getModel()).getNumber().intValue();
+        double lower = Math.pow(10, -l);
         NbPreferences.forModule(TransRegOptionsPanelController.class).
-                putDouble(TRANSREG_LOWER_LIMIT, 
-                        Double.parseDouble("1E-"+lowerLimitExpField.getText())
-                );
+                putDouble(TRANSREG_LOWER_LIMIT, lower);
+
     }
 
     boolean valid() {
-        return true;
+        int upper = ((SpinnerNumberModel) jSpinner1.getModel()).getNumber().intValue();
+        int lower = ((SpinnerNumberModel) jSpinner2.getModel()).getNumber().intValue();
+
+        if (lower > upper) {
+            warning.setText("");
+            return true;
+        }
+        warning.setText(warningText);
+        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JTextField lowerLimitExpField;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JComboBox maxNumberOfGroupsComboBox;
-    private javax.swing.JTextField upperLimitExpField;
+    javax.swing.JLabel warning;
     // End of variables declaration//GEN-END:variables
+
+    private static final String warningText = "WARNING: Upper treshold is smaller than lower.";
+    
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        controller.changed();
+    }
 }
