@@ -6,10 +6,8 @@
 package de.bundesbank.transreg.admin;
 
 import de.bundesbank.transreg.ui.TransRegVarOutlineView;
-import ec.tss.TsCollection;
 import ec.tss.TsInformationType;
 import ec.tss.datatransfer.TssTransferSupport;
-import ec.ui.list.JTsVariableList;
 import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;

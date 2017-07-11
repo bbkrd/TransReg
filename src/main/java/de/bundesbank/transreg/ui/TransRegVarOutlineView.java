@@ -19,6 +19,7 @@ import ec.nbdemetra.ui.tsaction.ITsAction;
 import ec.tss.Ts;
 import ec.tss.TsCollection;
 import ec.tss.TsFactory;
+import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.timeseries.regression.ITsVariable;
 import ec.tstoolkit.timeseries.regression.TsVariables;
 import ec.tstoolkit.timeseries.simplets.TsData;
@@ -215,7 +216,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     public void appendTsVariables(TsCollection coll) {
         for (Ts s : coll) {
             TransRegVar v;
-            String name = s.getName().replaceAll("\\n", "").replaceAll("\\\\", "");
+            String name = MultiLineNameUtil.join(s.getName());
             if (s.getMoniker().isAnonymous()) {
                 v = new TransRegVar(name, s.getTsData());
             } else {
@@ -235,7 +236,8 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         int counter = 0;
         String nextName = name;
         while (vars.get(nextName) != null) {
-            nextName = name + "_" + ++counter;
+            nextName = name + "\n" + ++counter;
+            nextName = MultiLineNameUtil.join(nextName);
         }
         return nextName;
     }

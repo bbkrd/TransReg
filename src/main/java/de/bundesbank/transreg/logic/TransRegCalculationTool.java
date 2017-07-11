@@ -12,6 +12,7 @@ import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import static de.bundesbank.transreg.util.CenteruserEnum.*;
 import de.bundesbank.transreg.util.GroupsEnum;
+import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.data.DescriptiveStatistics;
 import ec.tstoolkit.timeseries.simplets.TsData;
@@ -122,7 +123,8 @@ public class TransRegCalculationTool {
 
     private static ArrayList<TransRegVar> doGroups(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "_group";
+        String name = var.getName() + "\n" +"group";
+        name = MultiLineNameUtil.join(name);
         result.setName(name);
 //        result.setLevel(NodesLevelEnum.CENTERUSER);
         ArrayList<TransRegVar> results = new ArrayList();
@@ -174,7 +176,8 @@ public class TransRegCalculationTool {
 
     private static TransRegVar doCenteruser(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "_centred";
+        String name = var.getName() + "\n"+"centred";
+        name = MultiLineNameUtil.join(name);
         result.setName(name);
         result.setLevel(NodesLevelEnum.CENTERUSER);
 
