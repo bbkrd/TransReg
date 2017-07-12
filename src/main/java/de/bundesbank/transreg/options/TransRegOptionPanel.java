@@ -121,6 +121,7 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 1));
 
+        warning.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         warning.setForeground(new java.awt.Color(255, 0, 0));
         org.openide.awt.Mnemonics.setLocalizedText(warning, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.warning.text")); // NOI18N
         jPanel1.add(warning);
@@ -173,7 +174,7 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
             warning.setText("");
             return true;
         }
-        warning.setText(warningText);
+        warning.setText(WARNING_TEXT);
         return false;
     }
 
@@ -181,10 +182,10 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
     private javax.swing.JComboBox maxNumberOfGroupsComboBox;
-    javax.swing.JLabel warning;
+    private javax.swing.JLabel warning;
     // End of variables declaration//GEN-END:variables
 
-    private static final String warningText = "WARNING: Upper treshold is smaller than lower.";
+    private static final String WARNING_TEXT = "WARNING: Upper treshold is smaller than lower.";
     
     @Override
     public void stateChanged(ChangeEvent e) {
