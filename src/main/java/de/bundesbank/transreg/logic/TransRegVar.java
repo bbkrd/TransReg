@@ -5,10 +5,12 @@
  */
 package de.bundesbank.transreg.logic;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.util.GroupsEnum;
+import ec.tss.Ts;
+import ec.tss.TsFactory;
+import ec.tss.TsInformationType;
 import ec.tss.TsMoniker;
 import ec.tstoolkit.information.InformationConverter;
 import ec.tstoolkit.information.InformationSet;
@@ -296,22 +298,33 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     // TODO: ueberarbeiten
     @Override
     public boolean refresh() {
-//
-//        if (this.getMoniker() != null) {
-//            Ts s = TsFactory.instance.createTs(null, this.getMoniker(), TsInformationType.Data);
-//            if (s.hasData() == TsStatus.Undefined) {
-//                s.load(TsInformationType.Data);
-//            }
-//
-//            TsData data = s.getTsData();
-//            if (data == null) {
-//                return false;
-//            }
-//            setData(data);
-//            calculate();
-//            return true;
-//        }
-        return false;
+
+        // load refreshed data
+        Ts ts = TsFactory.instance.createTs(null, moniker, TsInformationType.Data);
+        if (ts.getTsData() == null) {
+            return false;
+        }
+        setDescription(ts.getName());
+        setData(ts.getTsData());
+
+        if (!this.getLevel().equals(NodesLevelEnum.ORIGINAL)) {
+            // calculate with settings
+
+            TransRegVar root = new TransRegVar(ts.getTsData());
+            root.setSettings(currentSettings);
+            ArrayList<TransRegVar> vars = TransRegCalculationTool.calculate(root);
+
+            // find the variable
+            for (TransRegVar t : vars) {
+                if (t.getLevelName().equals(this.getLevelName())) {
+                    // get calculated Data
+                    this.setCalculatedData(t.getTsData().clone());
+                    return true;
+                }
+            }
+        }
+        this.setCalculatedData(ts.getTsData());
+        return true;
     }
 
     public boolean updateSettings(TransRegSettings settings) {
@@ -371,7 +384,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         String text = " ";
         if (mean != null) {
             for (double d : mean) {
-                d = Math.round(d*10)/10;
+                d = Math.round(d * 10) / 10;
                 text = text + d + " ";
             }
         }
@@ -429,11 +442,11 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             if (mean != null) {
                 String[] s = mean.trim().split("\\s+");
                 double[] means = new double[s.length];
-                for (int i = 0; i<s.length; i++) {
+                for (int i = 0; i < s.length; i++) {
                     means[i] = Double.parseDouble(s[i]);
                 }
                 result.setMean(means);
-            }            
+            }
             String parentID = info.get(PARENT, String.class);
             if (parentID != null) {
                 result.setParentID(UUID.fromString(parentID));

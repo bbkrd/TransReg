@@ -7,9 +7,14 @@ package de.bundesbank.transreg.actions;
 
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
+import de.bundesbank.transreg.logic.TransRegVar;
 import ec.nbdemetra.ui.nodes.SingleNodeAction;
+import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
+import ec.tstoolkit.timeseries.regression.ITsVariable;
+import ec.tstoolkit.utilities.IDynamicObject;
+import java.util.Collection;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -30,7 +35,6 @@ import org.openide.util.NbBundle.Messages;
 @Messages("CTL_RefreshAction=Refresh")
 public final class RefreshAction extends SingleNodeAction<ItemWsNode> {
 
-
     public RefreshAction() {
         super(ItemWsNode.class);
     }
@@ -39,18 +43,12 @@ public final class RefreshAction extends SingleNodeAction<ItemWsNode> {
     protected void performAction(ItemWsNode context) {
         WorkspaceItem<TransRegDocument> cur = (WorkspaceItem<TransRegDocument>) context.getItem();
         if (cur != null && !cur.isReadOnly()) {
-//            {
-//                Collection<ITsVariable> indices = cur.getElement().getIndices().variables();
-//                indices.stream()
-//                        .filter((variable) -> (variable instanceof IDynamicObject))
-//                        .forEach(dynamicVariable -> ((IDynamicObject) dynamicVariable).refresh());
-//            }
-//            {
-//                Collection<ITsVariable> weights = cur.getElement().getWeights().variables();
-//                weights.stream()
-//                        .filter((variable) -> (variable instanceof IDynamicObject))
-//                        .forEach(dynamicVariable -> ((IDynamicObject) dynamicVariable).refresh());
-//            }
+            Collection<ITsVariable> vars = cur.getElement().variables();
+
+            vars.stream()
+                    .filter((variable) -> (variable instanceof TransRegVar))
+                    .forEach(dynamicVariable -> ((TransRegVar) dynamicVariable).refresh());
+
         }
     }
 
