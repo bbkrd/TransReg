@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -71,7 +72,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
 //<editor-fold defaultstate="collapsed" desc="Constructors"> 
     // for test classes
-    public TransRegVar(TsData d) {
+    public TransRegVar(@Nonnull TsData d) {
         super(d);
         moniker = null;
         calculatedData = d.clone();
@@ -81,7 +82,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         variables.put(id, this);
     }
 
-    public TransRegVar(String s, TsData d) {
+    public TransRegVar(String s, @Nonnull TsData d) {
         super(s, d);
         moniker = null;
         calculatedData = d.clone();
@@ -92,7 +93,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     //CalculationTool: doGroups
-    public TransRegVar(String s, TsMoniker m, TsData d) {
+    public TransRegVar(String s, TsMoniker m, @Nonnull TsData d) {
         super(s, d);
         moniker = m;
         calculatedData = d.clone();

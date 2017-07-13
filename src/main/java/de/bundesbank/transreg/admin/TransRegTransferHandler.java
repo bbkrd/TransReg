@@ -17,40 +17,53 @@ import static javax.swing.TransferHandler.COPY;
  *
  * @author s4504gn
  */
-public class TransRegTransferHandler extends TransferHandler{
-    
+public class TransRegTransferHandler extends TransferHandler {
+
     TransRegVarOutlineView view;
-    
-    public TransRegTransferHandler(TransRegVarOutlineView c){
+
+    public TransRegTransferHandler(TransRegVarOutlineView c) {
         view = c;
     }
-    
-        @Override
-        public int getSourceActions(JComponent c) {
-            return COPY;
-        }
 
-        @Override
-        protected Transferable createTransferable(JComponent c) {
-            return super.createTransferable(c);
-        }
+    @Override
+    public int getSourceActions(JComponent c) {
+        return COPY;
+    }
 
-        @Override
-        public boolean canImport(TransferHandler.TransferSupport support) {
-            boolean result = TssTransferSupport.getDefault().canImport(support.getDataFlavors());
-            if (result && support.isDrop()) {
-                support.setDropAction(COPY);
-            }
-            return result;
-        }
+    @Override
+    protected Transferable createTransferable(JComponent c) {
+        return super.createTransferable(c);
+    }
 
-        @Override
-        public boolean importData(TransferHandler.TransferSupport support) {
-             return TssTransferSupport.getDefault()
-                    .toTsCollectionStream(support.getTransferable())
-                    .peek(o -> o.load(TsInformationType.All))
-                    .filter(o -> !o.isEmpty())
-                    .peek(view::appendTsVariables)
-                    .count() > 0;
+    @Override
+    public boolean canImport(TransferHandler.TransferSupport support) {
+        boolean result = TssTransferSupport.getDefault().canImport(support.getDataFlavors());
+        if (result && support.isDrop()) {
+            support.setDropAction(COPY);
         }
+        return result;
+    }
+
+    @Override
+    public boolean importData(TransferHandler.TransferSupport support) {
+        return TssTransferSupport.getDefault()
+                .toTsCollectionStream(support.getTransferable())
+                .peek(o -> o.load(TsInformationType.All))
+                .filter(o -> !o.isEmpty())
+                .peek(view::appendTsVariables)
+                .count() > 0;
+
+//        long count = TssTransferSupport.getDefault()
+//                .toTsCollectionStream(support.getTransferable())
+//                .peek(o -> o.load(TsInformationType.All))
+//                .filter(o -> !o.isEmpty())
+//                .peek(view::appendTsVariables)
+//                .count();
+//        if (count > 0) {
+//            view.refresh();
+//            return true;
+//        }
+//        return false;
+
+    }
 }

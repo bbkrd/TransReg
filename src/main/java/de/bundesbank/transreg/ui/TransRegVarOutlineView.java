@@ -217,6 +217,9 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         for (Ts s : coll) {
             TransRegVar v;
             String name = MultiLineNameUtil.join(s.getName());
+            if(s.getTsData()==null){
+                continue;
+            }
             if (s.getMoniker().isAnonymous()) {
                 v = new TransRegVar(name, s.getTsData());
             } else {
@@ -227,7 +230,6 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             v.setName(nextName);
             myModels.add(v);
             vars.set(nextName, v);
-
         }
         setNodes();
     }
