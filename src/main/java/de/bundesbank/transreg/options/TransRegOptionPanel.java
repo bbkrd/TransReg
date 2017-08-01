@@ -6,6 +6,7 @@
 package de.bundesbank.transreg.options;
 
 import static de.bundesbank.transreg.options.TransRegOptionsPanelController.*;
+import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -19,8 +20,11 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
         this.controller = controller;
         initComponents();
         // TODO listen to changes in form fields and call controller.changed()
-        jSpinner1.addChangeListener(this);
-        jSpinner2.addChangeListener(this);
+        upperSpinner.addChangeListener(this);
+        lowerSpinner.addChangeListener(this);
+        
+        ((JSpinner.DefaultEditor)upperSpinner.getEditor()).getTextField().setEditable(false);
+        ((JSpinner.DefaultEditor)lowerSpinner.getEditor()).getTextField().setEditable(false);
     }
 
     /**
@@ -45,11 +49,11 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
         javax.swing.JLabel jLabel8 = new javax.swing.JLabel();
         javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
         javax.swing.JLabel jLabel11 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        upperSpinner = new javax.swing.JSpinner();
         javax.swing.JLabel jLabel9 = new javax.swing.JLabel();
         javax.swing.JPanel jPanel5 = new javax.swing.JPanel();
         javax.swing.JLabel jLabel12 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
+        lowerSpinner = new javax.swing.JSpinner();
         javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         warning = new javax.swing.JLabel();
 
@@ -98,8 +102,9 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel11.text")); // NOI18N
         jPanel4.add(jLabel11);
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(4, 0, 99, 1));
-        jPanel4.add(jSpinner1);
+        upperSpinner.setModel(new javax.swing.SpinnerNumberModel(4, 0, 99, 1));
+        upperSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(upperSpinner, ""));
+        jPanel4.add(upperSpinner);
 
         jPanel3.add(jPanel4);
 
@@ -112,8 +117,11 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel12.text")); // NOI18N
         jPanel5.add(jLabel12);
 
-        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(12, 1, 100, 1));
-        jPanel5.add(jSpinner2);
+        lowerSpinner.setModel(new javax.swing.SpinnerNumberModel(12, 1, 100, 1));
+        lowerSpinner.setToolTipText(org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.lowerSpinner.toolTipText")); // NOI18N
+        lowerSpinner.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        lowerSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(lowerSpinner, ""));
+        jPanel5.add(lowerSpinner);
 
         jPanel3.add(jPanel5);
 
@@ -138,11 +146,11 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
 //        maxNumberOfHorizontalGroupsComboBox.setSelectedItem(nr_h-2);
         double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, 1E-4);
         int u = -1 * (int) Math.log10(upper);
-        jSpinner1.setValue(u);
+        upperSpinner.setValue(u);
 
         double lower = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_LOWER_LIMIT, 1E-12);
         int l = -1 * (int) Math.log10(lower);
-        jSpinner2.setValue(l);
+        lowerSpinner.setValue(l);
     }
 
     void store() {
@@ -154,12 +162,12 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
                 );
 
         // Tresholds
-        int u = ((SpinnerNumberModel) jSpinner1.getModel()).getNumber().intValue();
+        int u = ((SpinnerNumberModel) upperSpinner.getModel()).getNumber().intValue();
         double upper = Math.pow(10, -u);
         NbPreferences.forModule(TransRegOptionsPanelController.class).
                 putDouble(TRANSREG_UPPER_LIMIT, upper);
 
-        int l = ((SpinnerNumberModel) jSpinner2.getModel()).getNumber().intValue();
+        int l = ((SpinnerNumberModel) lowerSpinner.getModel()).getNumber().intValue();
         double lower = Math.pow(10, -l);
         NbPreferences.forModule(TransRegOptionsPanelController.class).
                 putDouble(TRANSREG_LOWER_LIMIT, lower);
@@ -167,26 +175,31 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
     }
 
     boolean valid() {
-        int upper = ((SpinnerNumberModel) jSpinner1.getModel()).getNumber().intValue();
-        int lower = ((SpinnerNumberModel) jSpinner2.getModel()).getNumber().intValue();
+        int upper = ((SpinnerNumberModel) upperSpinner.getModel()).getNumber().intValue();
+        int lower = ((SpinnerNumberModel) lowerSpinner.getModel()).getNumber().intValue();
 
         if (lower > upper) {
             warning.setText("");
             return true;
         }
-        warning.setText(WARNING_TEXT);
+        if (lower == upper) {
+            warning.setText(WARNING_TEXT_EQUALS);
+            return false;
+        }
+        warning.setText(WARNING_TEXT_SMALLER);
         return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
+    private javax.swing.JSpinner lowerSpinner;
     private javax.swing.JComboBox maxNumberOfGroupsComboBox;
+    private javax.swing.JSpinner upperSpinner;
     private javax.swing.JLabel warning;
     // End of variables declaration//GEN-END:variables
 
-    private static final String WARNING_TEXT = "WARNING: Upper treshold is smaller than lower.";
-    
+    private static final String WARNING_TEXT_SMALLER = "WARNING: Upper treshold is smaller than lower.";
+    private static final String WARNING_TEXT_EQUALS = "WARNING: Lower treshold is not smaller than upper.";
+
     @Override
     public void stateChanged(ChangeEvent e) {
         controller.changed();

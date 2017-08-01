@@ -29,7 +29,7 @@ import org.openide.util.NbPreferences;
  */
 public class TransRegCalculationTool {
 
-    private static final double defaultValue = Double.NaN;
+    private static final double DEFAULT_VALUE = Double.NaN;
 
     // Pre Test
     public static String testCenteruser(TsData data) {
@@ -123,7 +123,7 @@ public class TransRegCalculationTool {
 
     private static ArrayList<TransRegVar> doGroups(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "\n" +"group";
+        String name = var.getName() + "\n" +"Group";
         name = MultiLineNameUtil.join(name);
         result.setName(name);
 //        result.setLevel(NodesLevelEnum.CENTERUSER);
@@ -131,10 +131,8 @@ public class TransRegCalculationTool {
 
         GroupsSettings settings = var.getSettings().getGroups();
         GroupsEnum[] groups_array = settings.getGroups();
-        int start = var.getTsData().getStart().getPosition();
-        int freq = var.getTsData().getFrequency().intValue(); // 12 oder 4
 
-        // Iteration ueber alle moeglichen gruppen
+        // Iteration ueber alle moeglichen gruppen, 0-basierend
         for (int i = 0; i <= settings.getMaxGroupNumber(); i++) {
             // copy assigned variable
             TransRegVar cur = new TransRegVar(name + (i + 1), var.getMoniker(), var.getOriginalData());
@@ -146,23 +144,17 @@ public class TransRegCalculationTool {
             cur.setGroupStatus(currentGroup);
 
             // iterator for GroupsEnum[] from settings, synchronized to the Observations position
-            int i_groups_array = start;
             Iterator<TsObservation> iterator = var.getTsData().iterator();
             while (iterator.hasNext()) {
                 TsObservation obs = iterator.next();
-                double value = defaultValue;
-                GroupsEnum group_status_for_current_obs = groups_array[i_groups_array];
+                double value = DEFAULT_VALUE;
+                GroupsEnum group_status_for_current_obs = groups_array[obs.getPeriod().getPosition()];
                 if (group_status_for_current_obs.equals(currentGroup)) {
                     value = obs.getValue();
-                    cur.getTsData().set(obs.getPeriod(), obs.getValue());
+                    cur.getTsData().set(obs.getPeriod(), value);
                 }
                 // modifiy calculatedData 
                 cur.getTsData().set(obs.getPeriod(), value);
-                // increase iterator, but groupsEnum[] depends on frequency
-                i_groups_array++;
-                if (i_groups_array > (freq - 1)) {
-                    i_groups_array = 0;
-                }
             }
 
             // Vater Kind Beziehung
@@ -176,7 +168,7 @@ public class TransRegCalculationTool {
 
     private static TransRegVar doCenteruser(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "\n"+"centred";
+        String name = var.getName() + "\n"+"Centred";
         name = MultiLineNameUtil.join(name);
         result.setName(name);
         result.setLevel(NodesLevelEnum.CENTERUSER);
@@ -230,7 +222,7 @@ public class TransRegCalculationTool {
         }
         // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
         for (int i = 0; i < newData.getLength(); i++) {
-            if (((Double) newData.get(i)).equals(defaultValue)) {
+            if (((Double) newData.get(i)).equals(DEFAULT_VALUE)) {
                 newData.set(i, 0.0);
             }
         }

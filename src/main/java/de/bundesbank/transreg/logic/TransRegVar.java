@@ -78,7 +78,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
         id = UUID.randomUUID();
-        setName("var");
+        super.setName("var");
         variables.put(id, this);
     }
 
@@ -87,7 +87,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = null;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        setName(s);
+        super.setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
     }
@@ -98,7 +98,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = m;
         calculatedData = d.clone();
         currentSettings = new TransRegSettings(d.getFrequency().intValue());
-        setName(s);
+        super.setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
     }
@@ -109,7 +109,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         moniker = m;
         calculatedData = calculated;
         currentSettings = current;
-        setName(s);
+        super.setName(s);
         this.id = id;
     }
 //</editor-fold>
@@ -243,7 +243,16 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             case GROUP:
                 return getGroupStatus().name();
             case CENTERUSER:
-                return "Centeruser = " + currentSettings.getCenteruser().getMethod().name();
+                String s = "Centred ";
+                switch(currentSettings.getCenteruser().getMethod()){
+                    case Mean:
+                        s += "(global mean)";
+                        break;
+                    case Seasonal:
+                        s+="(seasonal means)";
+                        break;
+                }
+                return s;
         }
 
         return null;
