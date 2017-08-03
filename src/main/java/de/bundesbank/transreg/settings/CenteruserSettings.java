@@ -23,7 +23,7 @@ public class CenteruserSettings implements InformationSetSerializable {
     public CenteruserSettings() {
         //Defaults:
         span = new TsPeriodSelector();
-        method = CenteruserEnum.None;
+        method = CenteruserEnum.Seasonal;
     }
 
     public CenteruserSettings(CenteruserEnum method, TsPeriodSelector span) {
@@ -48,7 +48,7 @@ public class CenteruserSettings implements InformationSetSerializable {
     }
 
     public boolean isDefault() {
-        if(!method.equals(CenteruserEnum.None)){
+        if(!method.equals(CenteruserEnum.Seasonal)){
             return false;
         }
         return span.getType().equals(PeriodSelectorType.All);
