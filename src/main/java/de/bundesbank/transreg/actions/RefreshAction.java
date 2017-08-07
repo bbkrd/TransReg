@@ -8,13 +8,14 @@ package de.bundesbank.transreg.actions;
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import de.bundesbank.transreg.logic.TransRegVar;
+import de.bundesbank.transreg.ui.TransRegTopComponent;
 import ec.nbdemetra.ui.nodes.SingleNodeAction;
-import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
 import ec.tstoolkit.timeseries.regression.ITsVariable;
-import ec.tstoolkit.utilities.IDynamicObject;
+import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.JOptionPane;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -45,10 +46,23 @@ public final class RefreshAction extends SingleNodeAction<ItemWsNode> {
         if (cur != null && !cur.isReadOnly()) {
             Collection<ITsVariable> vars = cur.getElement().variables();
 
-            vars.stream()
-                    .filter((variable) -> (variable instanceof TransRegVar))
-                    .forEach(dynamicVariable -> ((TransRegVar) dynamicVariable).refresh());
+            ArrayList<ITsVariable> delete = new ArrayList<>();
+            vars.stream().filter((var) -> (var instanceof TransRegVar)).forEach((var) -> {
+                boolean refreshed = ((TransRegVar) var).refresh();
+                if (!refreshed) {
+                    delete.add(var);
+                }
+            });
 
+            for(ITsVariable var : delete){
+                vars.remove(var);
+                JOptionPane.showMessageDialog(null, 
+                        "Variable "+((TransRegVar)var).getName()+ " is deleted.", 
+                        "Warning", 
+                        JOptionPane.WARNING_MESSAGE);
+            }
+            
+            ((TransRegTopComponent)cur.getView()).refresh();
         }
     }
 
