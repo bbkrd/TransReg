@@ -302,7 +302,7 @@ public class TransRegVarPropertySetter {
 
         @Override
         public String toString() {
-            return var.getMean();
+            return var.getMeanString();
         }
     }
 //</editor-fold>
