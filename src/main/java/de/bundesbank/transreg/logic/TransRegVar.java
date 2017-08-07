@@ -244,12 +244,12 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 return getGroupStatus().name();
             case CENTERUSER:
                 String s = "Centred ";
-                switch(currentSettings.getCenteruser().getMethod()){
+                switch (currentSettings.getCenteruser().getMethod()) {
                     case Mean:
                         s += "(global mean)";
                         break;
                     case Seasonal:
-                        s+="(seasonal means)";
+                        s += "(seasonal means)";
                         break;
                 }
                 return s;
@@ -305,7 +305,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         return this.getParent().getRoot();
     }
 
-    // TODO: ueberarbeiten
     @Override
     public boolean refresh() {
 
@@ -314,8 +313,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         if (ts.getTsData() == null) {
             return false;
         }
-        setDescription(ts.getName());
-        setData(ts.getTsData());
+        this.setDescription(ts.getName());
+        this.setData(ts.getTsData());
+        this.setTimestamp(LocalDateTime.now());
 
         if (!this.getLevel().equals(NodesLevelEnum.ORIGINAL)) {
             // calculate with settings
@@ -327,8 +327,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             // find the variable
             for (TransRegVar t : vars) {
                 if (t.getLevelName().equals(this.getLevelName())) {
-                    // get calculated Data
+                    // get calculated Data 
                     this.setCalculatedData(t.getTsData().clone());
+                    this.setMean(t.getMean());
                     return true;
                 }
             }
@@ -390,11 +391,19 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         }
     }
 
-    public String getMean() {
+    public void setMean(List<Double> mean) {
+        this.mean = mean;
+    }
+
+    public List<Double> getMean() {
+        return mean;
+    }
+
+    public String getMeanString() {
         String text = " ";
         if (mean != null) {
             for (double d : mean) {
-                d = Math.round(d * 10) / 10;
+                d = Math.round(d * 10) / 10.0;
                 text = text + d + " ";
             }
         }
@@ -503,8 +512,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 }
                 info.set(CHILDREN, s);
             }
-            if (!t.getMean().trim().isEmpty()) {
-                info.set(MEAN, t.getMean());
+            if (!t.getMeanString().trim().isEmpty()) {
+                info.set(MEAN, t.getMeanString());
             }
 
             InformationSet settings = t.getSettings().write(verbose);

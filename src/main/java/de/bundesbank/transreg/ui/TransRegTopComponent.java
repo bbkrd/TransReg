@@ -115,9 +115,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                         vars.set(child.getName(), child);
                     }
                     outlineview.refresh();
-
                     outlineview.repaint();
-                    outlineview.updateUI();
                 }
             }
         });
@@ -134,7 +132,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
         //</editor-fold>
-        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
@@ -189,5 +186,11 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
         add(toolBarRepresentation, BorderLayout.NORTH);
 //</editor-fold>
+    }
+
+    @Override
+    public void refresh() {
+        outlineview.refresh();
+        outlineview.repaint();
     }
 }
