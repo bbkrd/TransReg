@@ -77,7 +77,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
 
     @NbBundle.Messages({
         "groupsSettingsUI.groupsDesc.name=Groups",
-        "groupsSettingsUI.groupsDesc.desc=Erklärung"
+        "groupsSettingsUI.groupsDesc.desc= Assign periods to period-specific regresion variables."
     })
     private EnhancedPropertyDescriptor groupsDesc() {
         try {
@@ -103,7 +103,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
 
     @NbBundle.Messages({
         "groupsSettingsUI.enableDesc.name=Groups by period",
-        "groupsSettingsUI.enableDesc.desc=Erklärung"
+        "groupsSettingsUI.enableDesc.desc= Mark checkbox to split regression variable into period-specific variants."
     })
     private EnhancedPropertyDescriptor enableDesc() {
         try {

@@ -71,7 +71,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
 
     @Messages({
         "centeruserSettingsUI.methodDesc.name=Method",
-        "centeruserSettingsUI.methodDesc.desc=Erklärung"
+        "centeruserSettingsUI.methodDesc.desc=Type of sample mean used for centring"
     })
     private EnhancedPropertyDescriptor methodDesc() {
         try {
@@ -96,8 +96,8 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
     }
 
     @NbBundle.Messages({
-        "centeruserSettingsUI.spanDesc.name=Mean Calculation Span",
-        "centeruserSettingsUI.spanDesc.desc=Specify the way the time span is defined"
+        "centeruserSettingsUI.spanDesc.name=Mean calculation span",
+        "centeruserSettingsUI.spanDesc.desc=Span used to calculate the sample mean specified by method."
     })
     private EnhancedPropertyDescriptor spanDesc() {
         try {
