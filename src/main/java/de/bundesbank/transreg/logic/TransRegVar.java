@@ -326,11 +326,12 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
             // find the variable
             for (TransRegVar t : vars) {
-                if (t.getLevelName().equals(this.getLevelName())) {
-                    // get calculated Data 
-                    this.setCalculatedData(t.getTsData().clone());
-                    this.setMean(t.getMean());
-                    return true;
+                if (t.getGroupStatus().equals(this.getGroupStatus())) {
+                    if (t.getLevel().equals(this.getLevel())) {
+                        this.setCalculatedData(t.getTsData().clone());
+                        this.setMean(t.getMean());
+                        return true;
+                    }
                 }
             }
         }
@@ -415,6 +416,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         TransRegVar t = new TransRegVar(getName(), getMoniker(), getOriginalData());
         t.setCalculatedData(this.getTsData().clone());
         t.setSettings(currentSettings.copy());
+        t.setGroupStatus(this.getGroupStatus());
         return t;
     }
 

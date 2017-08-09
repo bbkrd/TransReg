@@ -71,7 +71,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
 
     @Messages({
         "centeruserSettingsUI.methodDesc.name=Method",
-        "centeruserSettingsUI.methodDesc.desc=Type of sample mean used for centring"
+        "centeruserSettingsUI.methodDesc.desc=Type of sample mean used for centring."
     })
     private EnhancedPropertyDescriptor methodDesc() {
         try {
