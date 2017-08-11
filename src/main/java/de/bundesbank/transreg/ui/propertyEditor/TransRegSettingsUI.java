@@ -73,7 +73,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
     @Messages({
         "transregSettingsUI.centeruserDesc.name=CENTRING",
-        "transregSettingsUI.centeruserDesc.desc=Erklärung"
+        "transregSettingsUI.centeruserDesc.desc= "
     })
     private EnhancedPropertyDescriptor centeruserDesc() {
         try {
@@ -97,7 +97,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
     @Messages({
         "transregSettingsUI.groupsDesc.name=GROUPING",
-        "transregSettingsUI.groupsDesc.desc=Erklärung"
+        "transregSettingsUI.groupsDesc.desc= "
     })
     private EnhancedPropertyDescriptor groupsDesc() {
         try {
@@ -121,7 +121,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
     @Messages({
         "transregSettingsUI.horizontalDesc.name=Horizontal GROUPS",
-        "transregSettingsUI.horizontalDesc.desc=Erklärung"
+        "transregSettingsUI.horizontalDesc.desc= "
     })
     private EnhancedPropertyDescriptor horizontalDesc() {
         try {
