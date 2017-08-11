@@ -63,7 +63,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     private List<UUID> childrenIDs = new ArrayList<>();
     private UUID parentID;
 
-    public static final HashMap<UUID, TransRegVar> variables = new HashMap<>();
+    public static final HashMap<UUID, TransRegVar> variables = new HashMap<>(); // warum static und final
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -401,14 +401,14 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 
     public String getMeanString() {
-        String text = " ";
+        StringBuilder text = new StringBuilder();
         if (mean != null) {
             for (double d : mean) {
                 d = Math.round(d * 10) / 10.0;
-                text = text + d + " ";
+                text.append(d + " ");
             }
         }
-        return text;
+        return text.toString();
     }
 
     // for CalculationTool:doCenteruser
@@ -500,19 +500,18 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             info.set(LEVEL, t.getLevel().toString());
             info.set(GROUPSTATUS, t.getGroupStatus().toString());
 
-            if (t.getTimestamp() != null) {
-                info.set(TIMESTAMP, t.getTimestamp());
-            }
+            info.set(TIMESTAMP, t.getTimestamp());
 
             if (!t.isRoot()) {
                 info.set(PARENT, t.getParent().getID().toString());
             }
+            
             if (t.hasChildren()) {
-                String s = "";
+                StringBuilder s = new StringBuilder();
                 for (TransRegVar child : t.getChildren()) {
-                    s = s + child.getID() + " ";
+                    s.append(child.getID()).append(" ");
                 }
-                info.set(CHILDREN, s);
+                info.set(CHILDREN, s.toString());
             }
             if (!t.getMeanString().trim().isEmpty()) {
                 info.set(MEAN, t.getMeanString());

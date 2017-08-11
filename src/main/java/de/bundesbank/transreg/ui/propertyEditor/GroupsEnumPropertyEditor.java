@@ -54,7 +54,7 @@ public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {
     @Override
     public void setValue(Object value) {
         if (null != value && value instanceof GroupsEnum[]) {
-            groups = (GroupsEnum[]) value;
+            groups = (GroupsEnum[]) value; // auch clone
             ((GroupsEnumEditor) editor).setArray(groups);
         }
     }

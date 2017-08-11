@@ -99,9 +99,6 @@ public class TransRegSettings implements InformationSetSerializable {
         return true;
     }
 
-    private static String TIMESTAMP = "timestamp",
-            CENTERUSER = "centeruser",
-            GROUPS = "groups",
-            HORIZONTAL = "horizontal";
+    private static String CENTERUSER = "centeruser", GROUPS = "groups";
 //</editor-fold>
 }

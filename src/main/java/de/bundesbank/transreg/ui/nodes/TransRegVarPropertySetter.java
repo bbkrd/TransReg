@@ -26,7 +26,6 @@ public class TransRegVarPropertySetter {
     private LevelProperty levelProperty;
     private FrequencyProperty freqProperty;
     private TsPeriodProperty timespanProperty;
-    private DataProperty dataProperty;
     private TimestampProperty timestampProperty;
     private CenteruserTestProperty centeruserProperty;
     private CalculationSpanProperty calculationspanProperty;
@@ -39,7 +38,6 @@ public class TransRegVarPropertySetter {
         this.levelProperty = new LevelProperty();
         this.freqProperty = new FrequencyProperty();
         this.timespanProperty = new TsPeriodProperty();
-//        this.dataProperty = new DataProperty();
         this.timestampProperty = new TimestampProperty();
         this.centeruserProperty = new CenteruserTestProperty();
         this.calculationspanProperty = new CalculationSpanProperty();
@@ -103,30 +101,6 @@ public class TransRegVarPropertySetter {
 
         @Override
         public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        }
-    }
-//</editor-fold>
-
-// funktioniert nicht
-//<editor-fold defaultstate="collapsed" desc="DataProperty">
-    public DataProperty getDataProperty() {
-        return dataProperty;
-    }
-
-    public class DataProperty extends PropertySupport.ReadOnly<TsData> {
-
-        public DataProperty() {
-            super(TransRegVar.PROP_DATA, TsData.class, "TsData", null);
-        }
-
-        @Override
-        public TsData getValue() throws IllegalAccessException, InvocationTargetException {
-            return var.getTsData();
-        }
-
-        @Override
-        public String toString() {
-            return "Hallo";
         }
     }
 //</editor-fold>
@@ -252,7 +226,7 @@ public class TransRegVarPropertySetter {
             if (!var.getLevel().equals(NodesLevelEnum.CENTERUSER)) {
                 return TransRegCalculationTool.testCenteruser(var.getTsData());
             }
-            return null;
+            return "";
         }
     }
 //</editor-fold>

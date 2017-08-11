@@ -44,7 +44,7 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     public GroupsEnum[] getGroups() {
-        return groups;
+        return groups.clone(); 
     }
 
     public void setGroups(GroupsEnum[] g) {
@@ -92,14 +92,14 @@ public class GroupsSettings implements InformationSetSerializable {
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (GroupsEnum g : groups) {
-            result += g.name() + " ";
+            result.append(g.name()).append(" ");
         }
-        return result.trim();
+        return result.toString().trim();
     }
 
-    private static String GROUPS = "groups", STATUS = "status", ENABLE = "enable";
+    private static String GROUPS = "groups", ENABLE = "enable";
 
     @Override
     public InformationSet write(boolean verbose) {

@@ -77,7 +77,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             ID_COLUMN_CALC_MEAN = 7;
 //            ID_COLUMN_DATA = 4;
 
-    public static String CHANGE_SELECTED_VAR = "change_selected_var";
+    public static final String CHANGE_SELECTED_VAR = "change_selected_var";
     
     private TransRegDocument vars;
     private List<TransRegVar> myModels = new ArrayList<>();
@@ -95,7 +95,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         outlineview = buildView();
         
         registerActions();
-//        registerInputs();
+        registerInputs();
         enableOpenOnDoubleClick();
         enablePopupMenu();
         
@@ -585,7 +585,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 public void keyReleased(KeyEvent e) {
                 }
             });
-            textField.setInputVerifier(new InputVerifier() {
+            textField.setInputVerifier(new InputVerifier() { // keine Anonyme Klasse
                 @Override
                 public boolean verify(JComponent input) {
                     JTextField txt = (JTextField) input;
@@ -609,62 +609,4 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         }
     }
 //</editor-fold>
-
-    private void createDummyTree() {
-        TsData data = new TsData(new TsDomain(new TsPeriod(TsFrequency.Monthly), 120));
-        TransRegVar t1 = new TransRegVar("Reg1", data);
-        vars.set(t1.getName(), t1);
-        TransRegVar t1_g1 = new TransRegVar("Reg1_g1", data);
-        t1_g1.setLevel(NodesLevelEnum.GROUP);
-        vars.set(t1_g1.getName(), t1_g1);
-//        TransRegVar t1_g1_a = new TransRegVar("t1_g1_a", data);
-//        t1_g1_a.setLevel(NodesLevelEnum.ACTIVE);
-//        vars.set(t1_g1_a.getName(), t1_g1_a);
-        TransRegVar t1_g1_center = new TransRegVar("Reg1_g1_centered", data);
-        t1_g1_center.setLevel(NodesLevelEnum.CENTERUSER);
-        vars.set(t1_g1_center.getName(), t1_g1_center);
-        
-        TransRegVar t1_g2 = new TransRegVar("Reg1_g2", data);
-        t1_g2.setGroupStatus(GroupsEnum.Group2);
-//        t1_g2.getSettings().getGroups().setMyGroup(GroupsEnum.Group2);
-        t1_g2.setLevel(NodesLevelEnum.GROUP);
-        vars.set(t1_g2.getName(), t1_g2);
-        
-        t1_g1.addChild(t1_g1_center);
-//        t1_g1.addChild(t1_g1_a);
-        t1.addChild(t1_g1);
-        t1.addChild(t1_g2);
-        myModels.add(t1);
-        
-        TransRegVar t2 = new TransRegVar("Reg2", data);
-        vars.set(t2.getName(), t2);
-        TransRegVar t2_g1 = new TransRegVar("Reg2_g1", data);
-        t2_g1.setLevel(NodesLevelEnum.GROUP);
-        vars.set(t2_g1.getName(), t2_g1);
-//        TransRegVar t1_g1_a = new TransRegVar("t1_g1_a", data);
-//        t1_g1_a.setLevel(NodesLevelEnum.ACTIVE);
-//        vars.set(t1_g1_a.getName(), t1_g1_a);
-        TransRegVar t2_g1_center = new TransRegVar("Reg2_g1_centered", data);
-        t2_g1_center.setLevel(NodesLevelEnum.CENTERUSER);
-        vars.set(t2_g1_center.getName(), t2_g1_center);
-        
-        TransRegVar t2_g2 = new TransRegVar("Reg2_g2", data);
-        t2_g2.setGroupStatus(GroupsEnum.Group2);
-//        t2_g2.getSettings().getGroups().setMyGroup(GroupsEnum.Group2);
-        t2_g2.setLevel(NodesLevelEnum.GROUP);
-        vars.set(t2_g2.getName(), t2_g2);
-        
-        TransRegVar t2_g2_center = new TransRegVar("Reg2_g2_centered", data);
-        t2_g2_center.setLevel(NodesLevelEnum.CENTERUSER);
-        vars.set(t2_g2_center.getName(), t2_g2_center);
-        
-        t2_g1.addChild(t2_g1_center);
-        t2_g2.addChild(t2_g2_center);
-//        t1_g1.addChild(t1_g1_a);
-        t2.addChild(t2_g1);
-        t2.addChild(t2_g2);
-        myModels.add(t2);
-        
-        setNodes();
-    }
 }
