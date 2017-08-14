@@ -18,7 +18,7 @@ public class GroupsSettings implements InformationSetSerializable {
 
     // TODO: myGroup entfernen?
 //    private GroupsEnum myGroup = GroupsEnum.Group1;
-    private GroupsEnum[] groups;
+    private GroupsEnum[] groups = new GroupsEnum[]{GroupsEnum.Group1};
     private boolean enable = false;
 
     public boolean isEnabled() {

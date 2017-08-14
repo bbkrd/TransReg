@@ -51,6 +51,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     private GroupsEnum groupStatus = GroupsEnum.Group1;
     private NodesLevelEnum level = NodesLevelEnum.ORIGINAL;
     private TransRegSettings currentSettings;
+    
+    private String preTestResult; 
 
     // wird gesetzt wenn calculate() aufgerufen wurde 
     private String timestamp;
@@ -80,6 +82,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         id = UUID.randomUUID();
         super.setName("var");
         variables.put(id, this);
+        preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);
     }
 
     public TransRegVar(String s, @Nonnull TsData d) {
@@ -90,6 +93,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         super.setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
+        preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);
     }
 
     //CalculationTool: doGroups
@@ -101,6 +105,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         super.setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
+        preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);
     }
 
     //Encoding
@@ -111,9 +116,14 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         currentSettings = current;
         super.setName(s);
         this.id = id;
+        preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);
     }
 //</editor-fold>
 
+    public String getPreTestResult(){
+        return preTestResult;
+    }
+    
     public void rename(String s) {
         this.setName(s);
         this.setDescription(s);
@@ -336,6 +346,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             }
         }
         this.setCalculatedData(ts.getTsData());
+        preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);
         return true;
     }
 

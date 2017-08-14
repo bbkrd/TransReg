@@ -224,7 +224,7 @@ public class TransRegVarPropertySetter {
         @Override
         public String toString() {
             if (!var.getLevel().equals(NodesLevelEnum.CENTERUSER)) {
-                return TransRegCalculationTool.testCenteruser(var.getTsData());
+                return var.getPreTestResult();
             }
             return "";
         }
