@@ -10,8 +10,6 @@ import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import ec.nbdemetra.ui.nodes.SingleNodeAction;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;

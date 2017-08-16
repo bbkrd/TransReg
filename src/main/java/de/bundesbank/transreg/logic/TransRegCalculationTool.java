@@ -41,8 +41,11 @@ public class TransRegCalculationTool {
         // Aufaddieren und Zaehlen der Elemente
         int position = data.getStart().getPosition();
         for (int i = 0; i < data.getLength(); i++) {
-            seasonalMeans[position] += data.get(i);
-            seasonal_n[position]++;
+            double value = data.get(i);
+            if (Double.isFinite(value)) {
+                seasonalMeans[position] += value;
+                seasonal_n[position]++;
+            }
 
             if (((position + 1) % data.getFrequency().intValue()) == 0) {
                 position = 0;
@@ -74,7 +77,7 @@ public class TransRegCalculationTool {
 
         // standard mean
         DataBlock block = new DataBlock(data);
-        double mean = block.sum() / block.getLength();
+        double mean = block.average();
 
         if (mean <= lower) {
             return "Centred (global mean)";
@@ -123,7 +126,7 @@ public class TransRegCalculationTool {
 
     private static ArrayList<TransRegVar> doGroups(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "\n" +"Group";
+        String name = var.getName() + "\n" + "Group";
         name = MultiLineNameUtil.join(name);
         result.setName(name);
 //        result.setLevel(NodesLevelEnum.CENTERUSER);
@@ -168,7 +171,7 @@ public class TransRegCalculationTool {
 
     private static TransRegVar doCenteruser(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "\n"+"Centred";
+        String name = var.getName() + "\n" + "Centred";
         name = MultiLineNameUtil.join(name);
         result.setName(name);
         result.setLevel(NodesLevelEnum.CENTERUSER);
@@ -191,8 +194,11 @@ public class TransRegCalculationTool {
                 // Aufaddieren und Zaehlen der Elemente
                 int position = dataMean.getStart().getPosition();
                 for (int i = 0; i < dataMean.getLength(); i++) {
-                    seasonalMean[position] += dataMean.get(i);
-                    seasonal_n[position]++;
+                    double value = dataMean.get(i);
+                    if (Double.isFinite(value)) {
+                        seasonalMean[position] += dataMean.get(i);
+                        seasonal_n[position]++;
+                    }
 
                     if (((position + 1) % dataMean.getFrequency().intValue()) == 0) {
                         position = 0;
