@@ -37,20 +37,14 @@ public class TransRegCalculationTool {
         // seasonal mean
         double[] seasonalMeans = new double[data.getFrequency().intValue()];
         int[] seasonal_n = new int[data.getFrequency().intValue()];
-
-        // Aufaddieren und Zaehlen der Elemente
-        int position = data.getStart().getPosition();
-        for (int i = 0; i < data.getLength(); i++) {
-            double value = data.get(i);
+       
+        Iterator<TsObservation> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            TsObservation obs = iterator.next();
+            double value = obs.getValue();
             if (Double.isFinite(value)) {
-                seasonalMeans[position] += value;
-                seasonal_n[position]++;
-            }
-
-            if (((position + 1) % data.getFrequency().intValue()) == 0) {
-                position = 0;
-            } else {
-                position++;
+                seasonalMeans[obs.getPeriod().getPosition()] += value;
+                seasonal_n[obs.getPeriod().getPosition()]++;
             }
         }
         double seasonalMean = 0.0;
@@ -191,36 +185,26 @@ public class TransRegCalculationTool {
                 double[] seasonalMean = new double[dataMean.getFrequency().intValue()];
                 int[] seasonal_n = new int[dataMean.getFrequency().intValue()];
 
-                // Aufaddieren und Zaehlen der Elemente
-                int position = dataMean.getStart().getPosition();
-                for (int i = 0; i < dataMean.getLength(); i++) {
-                    double value = dataMean.get(i);
+                Iterator<TsObservation> iterator = var.getTsData().iterator();
+                while (iterator.hasNext()) {
+                    TsObservation obs = iterator.next();
+                    double value = obs.getValue();
                     if (Double.isFinite(value)) {
-                        seasonalMean[position] += dataMean.get(i);
-                        seasonal_n[position]++;
-                    }
-
-                    if (((position + 1) % dataMean.getFrequency().intValue()) == 0) {
-                        position = 0;
-                    } else {
-                        position++;
+                        seasonalMean[obs.getPeriod().getPosition()] += value;
+                        seasonal_n[obs.getPeriod().getPosition()]++;
                     }
                 }
+
                 //Durchschnitt berechnen
                 for (int i = 0; i < seasonal_n.length; i++) {
                     seasonalMean[i] = seasonalMean[i] / seasonal_n[i];
                 }
                 result.setMean(seasonalMean);
                 // von OriginalZR abziehen
-//                newData = var.getTsData();
-                position = newData.getStart().getPosition();
-                for (int i = 0; i < newData.getLength(); i++) {
-                    newData.set(i, (newData.get(i) - seasonalMean[position]));
-                    if (((position + 1) % newData.getFrequency().intValue()) == 0) {
-                        position = 0;
-                    } else {
-                        position++;
-                    }
+                iterator = var.getTsData().iterator();
+                while (iterator.hasNext()) {
+                    TsObservation obs = iterator.next();
+                    newData.set(obs.getPeriod(), (obs.getValue() - seasonalMean[obs.getPeriod().getPosition()]));
                 }
                 break;
             default:
