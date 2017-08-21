@@ -7,10 +7,8 @@ package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.util.CenteruserEnum;
 import de.bundesbank.transreg.util.GroupsEnum;
-import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.Month;
-import ec.tstoolkit.timeseries.TsPeriodSelector;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import ec.tstoolkit.timeseries.simplets.TsPeriod;
@@ -283,8 +281,6 @@ public class TransRegCalculationToolTest {
 
         assertEquals(expResult, result.get(0).getTsData());
 
-        //iii) max groups
-        // TODO
     }
 
     @Test
@@ -327,5 +323,79 @@ public class TransRegCalculationToolTest {
 
         // group2 + centeruser = sesonal
     }
-    
+
+    @Test
+    public void testMissingValues_mean() {
+
+        double[] d1 = new double[]{1, Double.NaN, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            Double.NaN, 2};
+
+        TsPeriod start = new TsPeriod(TsFrequency.Monthly, 1999, 0);
+        TsData inputData = new TsData(start, d1, true);
+
+        ArrayList<TransRegVar> result;
+        TsData expResult;
+
+        /*
+         ************************
+         * 1. centeruser = mean *
+         ************************
+         */
+        TransRegVar v = new TransRegVar(inputData);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Mean);
+        result = TransRegCalculationTool.calculate(v);
+
+        // expected
+        double[] r = new double[]{-5.5, 0.0, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+            -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+            -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+            -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+            -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+            -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+            0.0, -4.5};
+
+        expResult = new TsData(start, r, true);
+
+        assertEquals(expResult, result.get(0).getTsData());
+    }
+
+    @Test
+    public void testMissingValues_seasonal() {
+        /*
+         ***************************
+         * 2. centeruser = seasonal* 
+         ***************************
+         */
+
+        double[] d1 = new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, Double.NaN,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+            Double.NaN, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+        TsPeriod start = new TsPeriod(TsFrequency.Monthly, 1999, 0);
+        TsData inputData = new TsData(start, d1, true);
+
+        ArrayList<TransRegVar> result;
+        TsData expResult;
+   
+        TransRegVar v = new TransRegVar(inputData);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Seasonal);
+        result = TransRegCalculationTool.calculate(v);
+
+        //expected
+        double[] r = new double[]{-1.5, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 0.0,
+            -0.5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1.5,
+            0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.5,
+            1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5,
+            0.0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1.5};
+
+        expResult = new TsData(start, r, true);
+
+        assertEquals(expResult, result.get(0).getTsData());
+    }
 }

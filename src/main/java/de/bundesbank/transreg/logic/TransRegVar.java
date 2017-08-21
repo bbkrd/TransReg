@@ -69,9 +69,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    private Boolean appear = true;
-    private Boolean x = false;
-
+    private boolean appear = true;
+    
 //<editor-fold defaultstate="collapsed" desc="Constructors"> 
     // for test classes
     public TransRegVar(@Nonnull TsData d) {
@@ -143,14 +142,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     public void setID(UUID id) {
         this.id = id;
-    }
-
-    public Boolean getX() {
-        return x;
-    }
-
-    public void setX(Boolean val) {
-        x = val;
     }
 
     public Boolean getAppear() {
@@ -414,10 +405,11 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     public String getMeanString() {
         StringBuilder text = new StringBuilder();
         if (mean != null) {
-            for (double d : mean) {
-                d = Math.round(d * 10) / 10.0;
-                text.append(d + " ");
-            }
+            mean.stream()
+                    .map((d) -> Math.round(d * 10) / 10.0)
+                    .forEach((d) -> {
+                        text.append(d).append(" ");
+                    });
         }
         return text.toString();
     }

@@ -27,7 +27,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
         CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(CenteruserEnum.class);
     }
 
-    private CenteruserSettings core;
+    private final CenteruserSettings core;
     private boolean readOnly = false;
 
     public CenteruserSettingsUI() {

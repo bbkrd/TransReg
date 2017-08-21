@@ -21,7 +21,6 @@ import org.openide.util.Exceptions;
 public class TransRegVarPropertySetter {
 
     private TransRegVar var;
-    private ActiveProperty activeProperty;
     private AppearanceProperty appearanceProperty;
     private LevelProperty levelProperty;
     private FrequencyProperty freqProperty;
@@ -34,7 +33,6 @@ public class TransRegVarPropertySetter {
     public TransRegVarPropertySetter(TransRegVar model) {
 
         this.var = model;
-        this.activeProperty = new ActiveProperty();
         this.levelProperty = new LevelProperty();
         this.freqProperty = new FrequencyProperty();
         this.timespanProperty = new TsPeriodProperty();
@@ -59,29 +57,6 @@ public class TransRegVarPropertySetter {
             });
         }
     }
-
-//<editor-fold defaultstate="collapsed" desc="ActiveProperty">
-    public ActiveProperty getActiveProperty() {
-        return activeProperty;
-    }
-
-    public class ActiveProperty extends PropertySupport.ReadOnly<Boolean> {
-
-        public ActiveProperty() {
-            super(TransRegVar.PROP_X, Boolean.class, "Active", null);
-        }
-
-        @Override
-        public Boolean getValue() throws IllegalAccessException, InvocationTargetException {
-            return var.getX();
-        }
-
-        @Override
-        public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-
-        }
-    }
-//</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="AppearanceProperty">
     public AppearanceProperty getAppearanceProperty() {

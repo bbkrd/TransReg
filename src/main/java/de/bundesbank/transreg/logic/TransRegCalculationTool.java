@@ -89,9 +89,9 @@ public class TransRegCalculationTool {
             } else {
                 // if previous results
                 ArrayList<TransRegVar> tmp = new ArrayList<>();
-                for (TransRegVar cur : result) {
+                result.stream().forEach((cur) -> {
                     tmp.add(doCenteruser(cur));
-                }
+                });
                 result.addAll(tmp);
             }
         }
@@ -178,11 +178,7 @@ public class TransRegCalculationTool {
                 break;
         }
         // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
-        for (int i = 0; i < newData.getLength(); i++) {
-            if (((Double) newData.get(i)).equals(DEFAULT_VALUE)) {
-                newData.set(i, 0.0);
-            }
-        }
+        newData.setIf(Double::isNaN, () -> 0.0);
 
         result.setCalculatedData(newData);
 

@@ -41,28 +41,26 @@ public final class RefreshAction extends SingleNodeAction<ItemWsNode> {
     }
 
     @Override
-    protected void performAction(ItemWsNode context) {
-        WorkspaceItem<TransRegDocument> cur = (WorkspaceItem<TransRegDocument>) context.getItem();
+    protected void performAction(ItemWsNode context) {        WorkspaceItem<TransRegDocument> cur = (WorkspaceItem<TransRegDocument>) context.getItem();
         if (cur != null && !cur.isReadOnly()) {
             Collection<ITsVariable> vars = cur.getElement().variables();
 
             ArrayList<ITsVariable> delete = new ArrayList<>();
-            vars.stream().filter((var) -> (var instanceof TransRegVar)).forEach((var) -> {
-                boolean refreshed = ((TransRegVar) var).refresh();
-                if (!refreshed) {
-                    delete.add(var);
-                }
-            });
+            vars.stream()
+                    .filter(var -> (var instanceof TransRegVar))
+                    .filter(var -> !((TransRegVar) var).refresh())
+                    .forEach(var -> delete.add(var));
 
-            for(ITsVariable var : delete){
+            for (ITsVariable var : delete) {
                 vars.remove(var);
-                JOptionPane.showMessageDialog(null, 
-                        "Variable "+((TransRegVar)var).getName()+ " is deleted.", 
-                        "Warning", 
-                        JOptionPane.WARNING_MESSAGE);
+                //TODO: One MessageDialog
+                JOptionPane.showMessageDialog(null,
+                                              "Variable " + ((TransRegVar) var).getName() + " is deleted.",
+                                              "Warning",
+                                              JOptionPane.WARNING_MESSAGE);
             }
-            
-            ((TransRegTopComponent)cur.getView()).refresh();
+
+            ((TransRegTopComponent) cur.getView()).refresh();
         }
     }
 

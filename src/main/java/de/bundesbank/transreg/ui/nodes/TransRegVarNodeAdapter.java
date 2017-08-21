@@ -28,11 +28,9 @@ public class TransRegVarNodeAdapter extends AbstractNode {
 
         TransRegVar model = getLookup().lookup(TransRegVar.class);
         TransRegVarPropertySetter modelPropertySetter = new TransRegVarPropertySetter(model);
-        set.put(modelPropertySetter.getActiveProperty());
         set.put(modelPropertySetter.getLevelProperty());
         set.put(modelPropertySetter.getFreqProperty());
         set.put(modelPropertySetter.getTimespanProperty());
-//        set.put(modelPropertySetter.getDataProperty());
         set.put(modelPropertySetter.getCenteruserTestProperty());
         set.put(modelPropertySetter.getTimestampProperty());
         set.put(modelPropertySetter.getCalculationspanProperty());
