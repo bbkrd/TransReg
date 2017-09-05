@@ -144,11 +144,11 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         this.id = id;
     }
 
-    public Boolean getAppear() {
+    public boolean getAppear() {
         return appear;
     }
 
-    public void setAppear(Boolean appear) {
+    public void setAppear(boolean appear) {
         this.appear = appear;
     }
 
@@ -246,7 +246,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             case CENTERUSER:
                 String s = "Centred ";
                 switch (currentSettings.getCenteruser().getMethod()) {
-                    case Mean:
+                    case Global:
                         s += "(global mean)";
                         break;
                     case Seasonal:

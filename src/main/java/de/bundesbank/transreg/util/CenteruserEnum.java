@@ -12,8 +12,8 @@ package de.bundesbank.transreg.util;
 public enum CenteruserEnum {
     
     None("None"),
-    Global("Global mean"), 
-    Seasonal("Seasonal mean");
+    Global("Global"), 
+    Seasonal("Seasonal");
     
     private String name;
 

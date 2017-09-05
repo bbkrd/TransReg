@@ -48,7 +48,7 @@ public class TransRegCalculationToolTest {
          */
         // i) type = all
         TransRegVar v = new TransRegVar(inputData);
-        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Mean);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
         result = TransRegCalculationTool.calculate(v);
 
         // expected
@@ -73,7 +73,7 @@ public class TransRegCalculationToolTest {
 
         TsData inputData2 = new TsData(start, d2, true);
         v = new TransRegVar(inputData2);
-        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Mean);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
         v.getSettings().getCenteruser().getSpan().from(new Day(2000, Month.January, 0));
         result = TransRegCalculationTool.calculate(v);
 
@@ -98,7 +98,7 @@ public class TransRegCalculationToolTest {
 
         TsData inputData3 = new TsData(start, d3, true);
         v = new TransRegVar(inputData3);
-        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Mean);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
         v.getSettings().getCenteruser().getSpan().to(new Day(2003, Month.December, 30));
         result = TransRegCalculationTool.calculate(v);
 
@@ -123,7 +123,7 @@ public class TransRegCalculationToolTest {
 
         TsData inputData4 = new TsData(start, d4, true);
         v = new TransRegVar(inputData4);
-        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Mean);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
         v.getSettings().getCenteruser().getSpan().between(new Day(2000, Month.January, 0), new Day(2003, Month.December, 30));
         result = TransRegCalculationTool.calculate(v);
 
@@ -347,7 +347,7 @@ public class TransRegCalculationToolTest {
          ************************
          */
         TransRegVar v = new TransRegVar(inputData);
-        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Mean);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
         result = TransRegCalculationTool.calculate(v);
 
         // expected

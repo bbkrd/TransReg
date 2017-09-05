@@ -159,7 +159,7 @@ public class TransRegCalculationTool {
         TsData newData = result.getTsData().clone();
         CenteruserSettings settings = result.getSettings().getCenteruser();
         switch (settings.getMethod()) {
-            case Mean:
+            case Global:
                 TsData selectedData = result.getTsData().select(settings.getSpan());
                 double mean = new DescriptiveStatistics(selectedData).getAverage();
                 result.setMean(mean);

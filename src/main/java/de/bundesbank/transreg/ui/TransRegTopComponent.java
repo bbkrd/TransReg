@@ -22,7 +22,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
@@ -94,29 +93,25 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         JButton calc = new JButton("Calculate");
 
-        calc.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-                TransRegVar var = outlineview.getSelectedVariable();
-                if (var != null) {
-                    TransRegDocument vars = outlineview.getVars();
-                    if (var.hasChildren()) {
-                        // falls Kinder vorhanden sind: alle löschen + Abhängigkeiten
-                        // denn in calculate erfolgt kompletteneuberechnung
-                        ArrayList<TransRegVar> deleteVars = var.deleteChildren();
-                        for (TransRegVar t : deleteVars) {
-                            vars.remove(t);
-                        }
-                    }
-
-                    ArrayList<TransRegVar> calculated = TransRegCalculationTool.calculate(var);
-                    for (TransRegVar child : calculated) {
-                        vars.set(child.getName(), child);
-                    }
-                    outlineview.refresh();
-                    outlineview.repaint();
+        calc.addActionListener((ActionEvent e) -> {
+            TransRegVar var = outlineview.getSelectedVariable();
+            if (var != null) {
+                TransRegDocument vars = outlineview.getVars();
+                if (var.hasChildren()) {
+                    // falls Kinder vorhanden sind: alle löschen + Abhängigkeiten
+                    // denn in calculate erfolgt kompletteneuberechnung
+                    ArrayList<TransRegVar> deleteVars = var.deleteChildren();
+                    deleteVars.stream().forEach((t) -> {
+                        vars.remove(t);
+                    });
                 }
+                
+                ArrayList<TransRegVar> calculated = TransRegCalculationTool.calculate(var);
+                calculated.stream().forEach((child) -> {
+                    vars.set(child.getName(), child);
+                });
+                outlineview.refresh();
+                outlineview.repaint();
             }
         });
         buttonPanel.add(calc);
@@ -132,6 +127,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
         //</editor-fold>
+        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);

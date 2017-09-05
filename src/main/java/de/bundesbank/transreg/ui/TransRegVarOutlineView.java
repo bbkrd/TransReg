@@ -484,6 +484,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     }
 
 //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="VarName">
     private static final class VarName extends NotifyDescriptor.InputLine {
 

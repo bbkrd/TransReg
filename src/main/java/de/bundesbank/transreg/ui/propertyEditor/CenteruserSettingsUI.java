@@ -23,8 +23,10 @@ import org.openide.util.NbBundle.Messages;
  * @author s4504gn
  */
 public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSettings> {
-    static{
-        CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(CenteruserEnum.class);
+
+    static {
+//        CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(CenteruserEnum.class, null);
+        CustomPropertyEditorRegistry.INSTANCE.register(String.class, null);
     }
 
     private final CenteruserSettings core;
@@ -38,10 +40,10 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
         core = c;
     }
 
-    public void setReadOnly(boolean b){
+    public void setReadOnly(boolean b) {
         readOnly = b;
     }
-    
+
     @Override
     public CenteruserSettings getCore() {
         return core;
@@ -70,7 +72,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
     private static final int Method_ID = 1, Span_ID = 2;
 
     @Messages({
-        "centeruserSettingsUI.methodDesc.name=Method",
+        "centeruserSettingsUI.methodDesc.name=Sample mean",
         "centeruserSettingsUI.methodDesc.desc=Type of sample mean used for centring."
     })
     private EnhancedPropertyDescriptor methodDesc() {
@@ -96,7 +98,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
     }
 
     @NbBundle.Messages({
-        "centeruserSettingsUI.spanDesc.name=Mean calculation span",
+        "centeruserSettingsUI.spanDesc.name=Calculation span",
         "centeruserSettingsUI.spanDesc.desc=Span used to calculate the sample mean specified by method."
     })
     private EnhancedPropertyDescriptor spanDesc() {
