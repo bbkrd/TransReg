@@ -118,8 +118,8 @@ public class TransRegCalculationTool {
         // Iteration ueber alle moeglichen gruppen, 0-basierend
         for (int i = 0; i <= settings.getMaxGroupNumber(); i++) {
             // copy assigned variable
-            TransRegVar cur = new TransRegVar(name + (i + 1), var.getMoniker(), var.getOriginalData());
-            cur.setSettings(var.getSettings());
+            TransRegVar cur = new TransRegVar(name + (i + 1), result.getMoniker(), result.getOriginalData());
+            cur.setSettings(result.getSettings());
             cur.setLevel(NodesLevelEnum.GROUP);
 
             // new Group status for variable
@@ -127,7 +127,7 @@ public class TransRegCalculationTool {
             cur.setGroupStatus(currentGroup);
 
             // iterator for GroupsEnum[] from settings, synchronized to the Observations position
-            Iterator<TsObservation> iterator = var.getTsData().iterator();
+            Iterator<TsObservation> iterator = result.getTsData().iterator();
             while (iterator.hasNext()) {
                 TsObservation obs = iterator.next();
                 double value = DEFAULT_VALUE;
