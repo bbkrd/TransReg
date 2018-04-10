@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.bundesbank.transReg</groupId>
     <artifactId>TransReg</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>nbm</packaging>
     <build>
         <plugins>
@@ -116,7 +116,7 @@
             <artifactId>org-netbeans-swing-outline</artifactId>
             <version>RELEASE82</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -126,5 +126,6 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.hint.license>EUPL</netbeans.hint.license>
     </properties>
 </project>

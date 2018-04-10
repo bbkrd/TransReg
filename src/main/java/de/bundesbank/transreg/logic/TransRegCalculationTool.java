@@ -1,7 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright 2018 Deutsche Bundesbank
+ * 
+ * Licensed under the EUPL, Version 1.1 or – as soon they
+ * will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the
+ * Licence.
+ * You may obtain a copy of the Licence at:
+ * 
+ * http://ec.europa.eu/idabc/eupl.html
+ * 
+ * Unless required by applicable law or agreed to in
+ * writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ * See the Licence for the specific language governing
+ * permissions and limitations under the Licence.
  */
 package de.bundesbank.transreg.logic;
 
@@ -10,7 +25,8 @@ import de.bundesbank.transreg.settings.CenteruserSettings;
 import de.bundesbank.transreg.settings.GroupsSettings;
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
-import static de.bundesbank.transreg.util.CenteruserEnum.*;
+import static de.bundesbank.transreg.util.CenteruserEnum.Global;
+import static de.bundesbank.transreg.util.CenteruserEnum.Seasonal;
 import de.bundesbank.transreg.util.GroupsEnum;
 import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.data.DataBlock;
@@ -57,7 +73,7 @@ public class TransRegCalculationTool {
 
         // standard mean
         DataBlock block = new DataBlock(data);
-        double mean = block.average();
+        double mean = Math.abs(block.average());
 
         if (mean <= lower) {
             return "Centred (global mean)";
@@ -136,7 +152,7 @@ public class TransRegCalculationTool {
                     value = obs.getValue();
                     cur.getTsData().set(obs.getPeriod(), value);
                 }
-                // modifiy calculatedData 
+                // modifiy calculatedData
                 cur.getTsData().set(obs.getPeriod(), value);
             }
 
