@@ -20,7 +20,6 @@
  */
 package de.bundesbank.transreg.ui.propertyEditor;
 
-import de.bundesbank.transreg.settings.GroupsSettings;
 import de.bundesbank.transreg.settings.HorizontalSettings;
 import ec.tstoolkit.descriptors.EnhancedPropertyDescriptor;
 import ec.tstoolkit.descriptors.IObjectDescriptor;

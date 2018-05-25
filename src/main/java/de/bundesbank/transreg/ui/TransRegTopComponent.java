@@ -21,8 +21,8 @@
 package de.bundesbank.transreg.ui;
 
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
-import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import de.bundesbank.transreg.admin.TransRegDocument;
+import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import de.bundesbank.transreg.admin.TransRegTransferHandler;
 import de.bundesbank.transreg.logic.TransRegCalculationTool;
 import de.bundesbank.transreg.logic.TransRegVar;
