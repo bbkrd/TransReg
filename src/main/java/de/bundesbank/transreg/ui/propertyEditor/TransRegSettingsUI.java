@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -50,10 +50,10 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         core = new TransRegSettings(freq);
     }
 
-    public void setReadOnly(boolean b){
-        readOnly=b;
+    public void setReadOnly(boolean b) {
+        readOnly = b;
     }
-    
+
     @Override
     public TransRegSettings getCore() {
         return core;
@@ -62,7 +62,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        
+
         EnhancedPropertyDescriptor desc = groupsDesc(); // horizontalverticaldesc
         if (desc != null) {
             descs.add(desc);
@@ -71,7 +71,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 //        if (desc != null) {
 //            descs.add(desc);
 //        }
-        
+
         desc = centeruserDesc();
         if (desc != null) {
             descs.add(desc);
@@ -130,6 +130,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
     public GroupsSettingsUI getGroups() {
         GroupsSettingsUI ui = new GroupsSettingsUI(core.getGroups());
+        ui.setDefaultValue(core.getGroups().getDefaultValue());
         ui.setReadOnly(readOnly);
         return ui;
     }
@@ -151,7 +152,8 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
             return null;
         }
     }
-        public HorizontalSettingsUI getHorizontal() {
+
+    public HorizontalSettingsUI getHorizontal() {
         HorizontalSettingsUI ui = new HorizontalSettingsUI(core.getHorizontal());
         ui.setReadOnly(readOnly);
         return ui;

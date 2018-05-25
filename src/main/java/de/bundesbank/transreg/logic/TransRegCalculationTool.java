@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -44,8 +44,6 @@ import org.openide.util.NbPreferences;
  * @author s4504gn
  */
 public class TransRegCalculationTool {
-
-    private static final double DEFAULT_VALUE = Double.NaN;
 
     // Pre Test
     public static String testCenteruser(TsData data) {
@@ -146,12 +144,15 @@ public class TransRegCalculationTool {
             Iterator<TsObservation> iterator = result.getTsData().iterator();
             while (iterator.hasNext()) {
                 TsObservation obs = iterator.next();
-                double value = DEFAULT_VALUE;
-                GroupsEnum group_status_for_current_obs = groups_array[obs.getPeriod().getPosition()];
-                if (group_status_for_current_obs.equals(currentGroup)) {
+
+                double value;
+                GroupsEnum groupStatusForCurrentObservation = groups_array[obs.getPeriod().getPosition()];
+                if (groupStatusForCurrentObservation.equals(currentGroup)) {
                     value = obs.getValue();
-                    cur.getTsData().set(obs.getPeriod(), value);
+                } else {
+                    value = settings.getDefaultValue().getValue();
                 }
+
                 // modifiy calculatedData
                 cur.getTsData().set(obs.getPeriod(), value);
             }

@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -20,6 +20,7 @@
  */
 package de.bundesbank.transreg.settings;
 
+import de.bundesbank.transreg.util.GroupsDefaultValueEnum;
 import de.bundesbank.transreg.util.GroupsEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
@@ -35,6 +36,15 @@ public class GroupsSettings implements InformationSetSerializable {
 //    private GroupsEnum myGroup = GroupsEnum.Group1;
     private GroupsEnum[] groups = new GroupsEnum[]{GroupsEnum.Group1};
     private boolean enable = false;
+    private GroupsDefaultValueEnum defaultValue = GroupsDefaultValueEnum.ZERO;
+
+    public GroupsDefaultValueEnum getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(GroupsDefaultValueEnum g) {
+        defaultValue = g;
+    }
 
     public boolean isEnabled() {
         return enable;
@@ -59,7 +69,7 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     public GroupsEnum[] getGroups() {
-        return groups.clone(); 
+        return groups.clone();
     }
 
     public void setGroups(GroupsEnum[] g) {
@@ -74,6 +84,9 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     public boolean isDefault() {
+        if (defaultValue.equals(GroupsDefaultValueEnum.NaN)) {
+            return false;
+        }
         // Default ist definiert als alle Gruppen mit Status Group1
         boolean result = true;
         for (GroupsEnum g : groups) {
@@ -86,24 +99,10 @@ public class GroupsSettings implements InformationSetSerializable {
 
         GroupsSettings copy = new GroupsSettings();
         copy.setGroups(groups.clone());
+        copy.setDefaultValue(defaultValue);
 
         return copy;
     }
-
-//    public String getInfo() {
-//        if (enable) {
-//            return myGroup.toString();
-//        }
-//        return "";
-//    }
-
-//    public String getMyGroup() {
-//        return myGroup.toString();
-//    }
-//
-//    public void setMyGroup(GroupsEnum myGroup) {
-//        this.myGroup = myGroup;
-//    }
 
     @Override
     public String toString() {
@@ -114,7 +113,7 @@ public class GroupsSettings implements InformationSetSerializable {
         return result.toString().trim();
     }
 
-    private static String GROUPS = "groups", ENABLE = "enable";
+    private static String GROUPS = "groups", ENABLE = "enable", DEFAULTVALUE = "defaultvalue";
 
     @Override
     public InformationSet write(boolean verbose) {
@@ -126,8 +125,9 @@ public class GroupsSettings implements InformationSetSerializable {
             }
             info.add(GROUPS, groupsInfo);
         }
-//        info.add(STATUS, myGroup.name());
         info.add(ENABLE, enable);
+        info.add(DEFAULTVALUE, defaultValue);
+
         return info;
     }
 
@@ -140,19 +140,11 @@ public class GroupsSettings implements InformationSetSerializable {
                 groups[i] = GroupsEnum.valueOf(groupsInfo[i]);
             }
         }
-//        myGroup = GroupsEnum.valueOf(info.get(STATUS, String.class));
         enable = info.get(ENABLE, Boolean.class);
+        defaultValue = GroupsDefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
+
         return true;
     }
-
-//    public void setGroupsStatus(int i) {
-//        String tmp = "GroupsEnum.Group" + i;
-//        myGroup = GroupsEnum.valueOf(tmp);
-//    }
-
-//    public int getGroupNumber() {
-//        return myGroup.ordinal();
-//    }
 
     public int getMaxGroupNumber() {
         int result = 0;

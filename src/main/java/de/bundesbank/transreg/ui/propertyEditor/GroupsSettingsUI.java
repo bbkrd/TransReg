@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -21,6 +21,7 @@
 package de.bundesbank.transreg.ui.propertyEditor;
 
 import de.bundesbank.transreg.settings.GroupsSettings;
+import de.bundesbank.transreg.util.GroupsDefaultValueEnum;
 import de.bundesbank.transreg.util.GroupsEnum;
 import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyEditorRegistry;
 import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyRendererFactory;
@@ -43,6 +44,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
         CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(GroupsEnum.class, new GroupsEnumSelector());
         CustomPropertyEditorRegistry.INSTANCE.register(GroupsEnum[].class, new GroupsEnumPropertyEditor());
         CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(GroupsEnum[].class, new ArrayRenderer());
+        CustomPropertyEditorRegistry.INSTANCE.register(GroupsDefaultValueEnum.class, null);
     }
 
     private GroupsSettings core;
@@ -82,6 +84,12 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
         if (desc != null) {
             descs.add(desc);
         }
+
+        desc = defaultValueDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+
         return descs;
     }
 
@@ -97,7 +105,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     private EnhancedPropertyDescriptor groupsDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Groups", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 2);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 3);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.groupsSettingsUI_groupsDesc_name());
             desc.setShortDescription(Bundle.groupsSettingsUI_groupsDesc_desc());
@@ -123,7 +131,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     private EnhancedPropertyDescriptor enableDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Enable", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 1);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 2);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.groupsSettingsUI_enableDesc_name());
             desc.setShortDescription(Bundle.groupsSettingsUI_enableDesc_desc());
@@ -140,6 +148,32 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
 
     public void setEnable(boolean b) {
         core.setEnabled(b);
+    }
+
+    @NbBundle.Messages({
+        "groupsSettingsUI.defaultValueDesc.name=Default value for groups",
+        "groupsSettingsUI.defaultValueDesc.desc= ."
+    })
+    private EnhancedPropertyDescriptor defaultValueDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("DefaultValue", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 1);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.groupsSettingsUI_defaultValueDesc_name());
+            desc.setShortDescription(Bundle.groupsSettingsUI_defaultValueDesc_desc());
+            edesc.setReadOnly(readOnly);
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    public GroupsDefaultValueEnum getDefaultValue() {
+        return core.getDefaultValue();
+    }
+
+    public void setDefaultValue(GroupsDefaultValueEnum b) {
+        core.setDefaultValue(b);
     }
 }
 
