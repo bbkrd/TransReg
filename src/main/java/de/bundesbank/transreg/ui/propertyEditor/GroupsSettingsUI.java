@@ -151,8 +151,8 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     }
 
     @NbBundle.Messages({
-        "groupsSettingsUI.defaultValueDesc.name=Default value for groups",
-        "groupsSettingsUI.defaultValueDesc.desc= ."
+        "groupsSettingsUI.defaultValueDesc.name=Value for inactive periods",
+        "groupsSettingsUI.defaultValueDesc.desc=Value assigned to inactive periods of period-specific regression variables."
     })
     private EnhancedPropertyDescriptor defaultValueDesc() {
         try {
@@ -161,7 +161,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.groupsSettingsUI_defaultValueDesc_name());
             desc.setShortDescription(Bundle.groupsSettingsUI_defaultValueDesc_desc());
-            edesc.setReadOnly(readOnly);
+            edesc.setReadOnly(!(!readOnly && core.isEnabled()));
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
