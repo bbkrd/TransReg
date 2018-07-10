@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -21,7 +21,7 @@
 package de.bundesbank.transreg.ui.propertyEditor;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
-import de.bundesbank.transreg.util.GroupsEnum;
+import de.bundesbank.transreg.util.Group;
 import ec.nbdemetra.ui.NbComponents;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import ec.tstoolkit.timeseries.simplets.TsPeriod;
@@ -47,16 +47,16 @@ import javax.swing.table.TableCellEditor;
  *
  * @author s4504gn
  */
-public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {  
+public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {
 
-    private GroupsEnum[] groups;
+    private Group[] groups;
 
     public GroupsEnumPropertyEditor() {
         editor = new GroupsEnumEditor();
     }
 
-    void fireChanged(GroupsEnum[] groups) {
-        GroupsEnum[] old = this.groups;
+    void fireChanged(Group[] groups) {
+        Group[] old = this.groups;
         this.groups = groups;
         firePropertyChange(old, this.groups);
     }
@@ -68,15 +68,15 @@ public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof GroupsEnum[]) {
-            groups = (GroupsEnum[]) value; // auch clone
+        if (null != value && value instanceof Group[]) {
+            groups = (Group[]) value; // auch clone
             ((GroupsEnumEditor) editor).setArray(groups);
         }
     }
 
     class GroupsEnumEditor extends JPanel {
 
-        private GroupsEnum[] ops;
+        private Group[] ops;
 
         public GroupsEnumEditor() {
             final JButton button = new JButton("...");
@@ -88,58 +88,60 @@ public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {
                     final JTable table = new JTable(
                             new DefaultTableModel() {
 
-                                @Override
-                                public int getColumnCount() {
-                                    return 2;
-                                }
+                        @Override
+                        public int getColumnCount() {
+                            return 2;
+                        }
 
-                                @Override
-                                public String getColumnName(int column) {
-                                    if (column == 0) {
-                                        return "Period";
-                                    } else {
-                                        return "Group";
-                                    }
-                                }
+                        @Override
+                        public String getColumnName(int column) {
+                            if (column == 0) {
+                                return "Period";
+                            } else {
+                                return "Group";
+                            }
+                        }
 
-                                @Override
-                                public Class<?> getColumnClass(int columnIndex) {
-                                    if (columnIndex == 0) {
-                                        return String.class;
-                                    } else {
-                                        return GroupsEnum.class;
-                                    }
-                                }
+                        @Override
+                        public Class<?> getColumnClass(int columnIndex) {
+                            if (columnIndex == 0) {
+                                return String.class;
+                            } else {
+                                return Group.class;
+                            }
+                        }
 
-                                @Override
-                                public boolean isCellEditable(int row, int column) {
-                                    return column == 1;
-                                }
+                        @Override
+                        public boolean isCellEditable(int row, int column) {
+                            return column == 1;
+                        }
 
-                                @Override
-                                public int getRowCount() {
-                                    return ops.length;
-                                }
+                        @Override
+                        public int getRowCount() {
+                            return ops.length;
+                        }
 
-                                @Override
-                                public Object getValueAt(int row, int column) {
-                                    if (column == 0) {
-                                        return TsPeriod.formatPeriod(TsFrequency.valueOf(ops.length), row);
-                                    } else {
-                                        return ops[row];
-                                    }
-                                }
+                        @Override
+                        public Object getValueAt(int row, int column) {
+                            if (column == 0) {
+                                return TsPeriod.formatPeriod(TsFrequency.valueOf(ops.length), row);
+                            } else {
+                                return ops[row];
+                            }
+                        }
 
-                                @Override
-                                public void setValueAt(Object aValue, int row, int column) {
-                                    if (column == 1) {
-                                        ops[row] = (GroupsEnum) aValue;
-                                    }
-                                    fireTableCellUpdated(row, column);
-                                }
-                            });
+                        @Override
+                        public void setValueAt(Object aValue, int row, int column) {
+                            if (column == 1) {
+                                ops[row] = new Group((int) aValue);
+                            }
+                            fireTableCellUpdated(row, column);
+                        }
+                    });
 
-                    table.setDefaultEditor(GroupsEnum.class, new CustomGroupsEnumEditor()); 
+                    int maxNumber = ops.length; // aendern
+                    CustomGroupsEnumEditor editor = new CustomGroupsEnumEditor(maxNumber);
+                    table.setDefaultEditor(Group.class, editor);
                     table.setFillsViewportHeight(true);
                     pane.add(NbComponents.newJScrollPane(table), BorderLayout.CENTER);
 
@@ -168,7 +170,7 @@ public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {
             add(button, BorderLayout.CENTER);
         }
 
-        public void setArray(final GroupsEnum[] param) {
+        public void setArray(final Group[] param) {
             ops = param.clone();
         }
     }
@@ -176,16 +178,23 @@ public class GroupsEnumPropertyEditor extends AbstractPropertyEditor {
 
 class CustomGroupsEnumEditor extends AbstractCellEditor implements TableCellEditor {
 
-    private final JComboBox cb_;
+    private JComboBox cb_;
+    private int number;
 
-    public CustomGroupsEnumEditor() {
-        GroupsEnumSelector s = new GroupsEnumSelector();
-        cb_ = (JComboBox) s.getCustomEditor();
+    public CustomGroupsEnumEditor(int numbersOfGroups) {
+        number = numbersOfGroups;
+        Object[] x = new Object[numbersOfGroups];
+        for (int i = 0; i < numbersOfGroups; i++) {
+            x[i] = "Group " + (i + 1);
+        }
+        cb_ = new JComboBox(x);
     }
 
     @Override
     public Object getCellEditorValue() {
-        return cb_.getSelectedItem();
+        // s from Constructor: "Group x"
+        String s = (String) cb_.getSelectedItem();
+        return Integer.parseInt(s.substring(6));
     }
 
     @Override
@@ -193,4 +202,4 @@ class CustomGroupsEnumEditor extends AbstractCellEditor implements TableCellEdit
         cb_.setSelectedItem(value);
         return cb_;
     }
-}  
+}

@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -22,7 +22,6 @@ package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
-import de.bundesbank.transreg.util.GroupsEnum;
 import ec.tss.Ts;
 import ec.tss.TsFactory;
 import ec.tss.TsInformationType;
@@ -63,13 +62,13 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             PROP_CALC_SPAN = "calculation span",
             PROP_CALC_MEAN = "calculated mean";
 
-    private GroupsEnum groupStatus = GroupsEnum.Group1;
+    private int groupStatus = 1;
     private NodesLevelEnum level = NodesLevelEnum.ORIGINAL;
     private TransRegSettings currentSettings;
-    
-    private String preTestResult; 
 
-    // wird gesetzt wenn calculate() aufgerufen wurde 
+    private String preTestResult;
+
+    // wird gesetzt wenn calculate() aufgerufen wurde
     private String timestamp;
     private TsData calculatedData;
     private final TsMoniker moniker;
@@ -85,8 +84,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     private boolean appear = true;
-    
-//<editor-fold defaultstate="collapsed" desc="Constructors"> 
+
+//<editor-fold defaultstate="collapsed" desc="Constructors">
     // for test classes
     public TransRegVar(@Nonnull TsData d) {
         super(d);
@@ -134,20 +133,20 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
     }
 //</editor-fold>
 
-    public String getPreTestResult(){
+    public String getPreTestResult() {
         return preTestResult;
     }
-    
+
     public void rename(String s) {
         this.setName(s);
         this.setDescription(s);
     }
 
-    public GroupsEnum getGroupStatus() {
+    public int getGroupStatus() {
         return groupStatus;
     }
 
-    public void setGroupStatus(GroupsEnum groupStatus) {
+    public void setGroupStatus(int groupStatus) {
         this.groupStatus = groupStatus;
     }
 
@@ -257,7 +256,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 // TODO: HorizontalSetting noch nicht fertig, getter+setter anpassen und Fallunterscheidung
                 return "Active";
             case GROUP:
-                return getGroupStatus().name();
+                return "Group " + getGroupStatus();
             case CENTERUSER:
                 String s = "Centred ";
                 switch (currentSettings.getCenteruser().getMethod()) {
@@ -307,7 +306,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     public boolean isRoot() {
         /*
-         *   Variable is root? 
+         *   Variable is root?
          *   > important for generate first tree after load WS
          *   > either original variable or after deleting the original variable a "new root" without parent
          */
@@ -342,7 +341,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
             // find the variable
             for (TransRegVar t : vars) {
-                if (t.getGroupStatus().equals(this.getGroupStatus())) {
+                if (t.getGroupStatus() == (this.getGroupStatus())) {
                     if (t.getLevel().equals(this.getLevel())) {
                         this.setCalculatedData(t.getTsData().clone());
                         this.setMean(t.getMean());
@@ -450,7 +449,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             TsData original = info.get(ORIGINAL, TsData.class);
             String level = info.get(LEVEL, String.class);
             String stamp = info.get(TIMESTAMP, String.class);
-            GroupsEnum group = GroupsEnum.valueOf(info.get(GROUPSTATUS, String.class));
+            int group = info.get(GROUPSTATUS, int.class);
 
             //read methode, auf null pruefen
             int frequency = data.getFrequency().intValue();
@@ -516,14 +515,14 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             info.set(DATA, t.getTsData());
             info.set(ORIGINAL, t.getOriginalData());
             info.set(LEVEL, t.getLevel().toString());
-            info.set(GROUPSTATUS, t.getGroupStatus().toString());
+            info.set(GROUPSTATUS, t.getGroupStatus());
 
             info.set(TIMESTAMP, t.getTimestamp());
 
             if (!t.isRoot()) {
                 info.set(PARENT, t.getParent().getID().toString());
             }
-            
+
             if (t.hasChildren()) {
                 StringBuilder s = new StringBuilder();
                 for (TransRegVar child : t.getChildren()) {

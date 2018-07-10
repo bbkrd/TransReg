@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -37,9 +37,9 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
         // TODO listen to changes in form fields and call controller.changed()
         upperSpinner.addChangeListener(this);
         lowerSpinner.addChangeListener(this);
-        
-        ((JSpinner.DefaultEditor)upperSpinner.getEditor()).getTextField().setEditable(false);
-        ((JSpinner.DefaultEditor)lowerSpinner.getEditor()).getTextField().setEditable(false);
+
+        ((JSpinner.DefaultEditor) upperSpinner.getEditor()).getTextField().setEditable(false);
+        ((JSpinner.DefaultEditor) lowerSpinner.getEditor()).getTextField().setEditable(false);
     }
 
     /**
@@ -51,13 +51,6 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
     private void initComponents() {
 
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
-        maxNumberOfGroupsComboBox = new javax.swing.JComboBox();
-        javax.swing.JLabel jLabel14 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel15 = new javax.swing.JLabel();
         javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
         javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel10 = new javax.swing.JLabel();
@@ -75,29 +68,6 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel1.text")); // NOI18N
 
         setLayout(new java.awt.GridLayout(4, 1));
-
-        jPanel2.setLayout(new java.awt.GridLayout(5, 2));
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel3.text")); // NOI18N
-        jPanel2.add(jLabel3);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel6.text")); // NOI18N
-        jPanel2.add(jLabel6);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel4.text")); // NOI18N
-        jPanel2.add(jLabel4);
-
-        maxNumberOfGroupsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
-        jPanel2.add(maxNumberOfGroupsComboBox);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel14.text")); // NOI18N
-        jPanel2.add(jLabel14);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(TransRegOptionPanel.class, "TransRegOptionPanel.jLabel15.text")); // NOI18N
-        jPanel2.add(jLabel15);
-
-        add(jPanel2);
 
         jPanel3.setLayout(new java.awt.GridLayout(4, 2));
 
@@ -154,11 +124,6 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
 
     void load() {
 
-        int nr_v = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_GROUPS, 2);
-        maxNumberOfGroupsComboBox.setSelectedItem(nr_v - 2);
-
-//        int nr_h = NbPreferences.forModule(TransRegOptionsPanelController.class).getInt(TRANSREG_HORIZONTAL_GROUPS, 2);
-//        maxNumberOfHorizontalGroupsComboBox.setSelectedItem(nr_h-2);
         double upper = NbPreferences.forModule(TransRegOptionsPanelController.class).getDouble(TRANSREG_UPPER_LIMIT, 1E-4);
         int u = -1 * (int) Math.log10(upper);
         upperSpinner.setValue(u);
@@ -170,13 +135,7 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
 
     void store() {
 
-        // Number of groups
-        NbPreferences.forModule(TransRegOptionsPanelController.class).
-                putInt(TRANSREG_GROUPS,
-                        Integer.parseInt(maxNumberOfGroupsComboBox.getSelectedItem().toString())
-                );
-
-        // Tresholds
+        // Thresholds
         int u = ((SpinnerNumberModel) upperSpinner.getModel()).getNumber().intValue();
         double upper = Math.pow(10, -u);
         NbPreferences.forModule(TransRegOptionsPanelController.class).
@@ -207,7 +166,6 @@ final class TransRegOptionPanel extends javax.swing.JPanel implements ChangeList
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner lowerSpinner;
-    private javax.swing.JComboBox maxNumberOfGroupsComboBox;
     private javax.swing.JSpinner upperSpinner;
     private javax.swing.JLabel warning;
     // End of variables declaration//GEN-END:variables

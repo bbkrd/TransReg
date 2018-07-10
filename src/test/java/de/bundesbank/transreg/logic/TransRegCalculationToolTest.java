@@ -6,7 +6,7 @@
 package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.util.CenteruserEnum;
-import de.bundesbank.transreg.util.GroupsEnum;
+import de.bundesbank.transreg.util.Group;
 import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.Month;
 import ec.tstoolkit.timeseries.simplets.TsData;
@@ -140,10 +140,10 @@ public class TransRegCalculationToolTest {
 
         /*
          ***************************
-         * 2. centeruser = seasonal* 
+         * 2. centeruser = seasonal*
          ***************************
          */
-        // i) type = all 
+        // i) type = all
         v = new TransRegVar(inputData);
         v.getSettings().getCenteruser().setMethod(CenteruserEnum.Seasonal);
         result = TransRegCalculationTool.calculate(v);
@@ -252,10 +252,8 @@ public class TransRegCalculationToolTest {
         expResult_Dec = new TsData(start, r2, true);
 
         // Settings
-        GroupsEnum[] groups = new GroupsEnum[]{GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1,
-            GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1,
-            GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1,
-            GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group2};
+        Group g = new Group(1);
+        Group[] groups = new Group[]{g, g, g, g, g, g, g, g, g, g, g, new Group(2)};
 
         var.getSettings().getGroups().setGroups(groups);
         var.getSettings().getGroups().setEnabled(true);
@@ -269,10 +267,7 @@ public class TransRegCalculationToolTest {
         TsData expResult = new TsData(start, d1, true);
 
         // Settings
-        groups = new GroupsEnum[]{GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1,
-            GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1,
-            GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1,
-            GroupsEnum.Group1, GroupsEnum.Group1, GroupsEnum.Group1};
+        groups = new Group[]{g, g, g, g, g, g, g, g, g, g, g, g};
 
         var.getSettings().getGroups().setGroups(groups);
         var.getSettings().getGroups().setEnabled(true);
@@ -368,7 +363,7 @@ public class TransRegCalculationToolTest {
     public void testMissingValues_seasonal() {
         /*
          ***************************
-         * 2. centeruser = seasonal* 
+         * 2. centeruser = seasonal*
          ***************************
          */
 
@@ -382,7 +377,7 @@ public class TransRegCalculationToolTest {
 
         ArrayList<TransRegVar> result;
         TsData expResult;
-   
+
         TransRegVar v = new TransRegVar(inputData);
         v.getSettings().getCenteruser().setMethod(CenteruserEnum.Seasonal);
         result = TransRegCalculationTool.calculate(v);

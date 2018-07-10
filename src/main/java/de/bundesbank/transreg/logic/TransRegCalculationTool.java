@@ -27,7 +27,7 @@ import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import static de.bundesbank.transreg.util.CenteruserEnum.Global;
 import static de.bundesbank.transreg.util.CenteruserEnum.Seasonal;
-import de.bundesbank.transreg.util.GroupsEnum;
+import de.bundesbank.transreg.util.Group;
 import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.data.DescriptiveStatistics;
@@ -127,17 +127,17 @@ public class TransRegCalculationTool {
         ArrayList<TransRegVar> results = new ArrayList();
 
         GroupsSettings settings = var.getSettings().getGroups();
-        GroupsEnum[] groups_array = settings.getGroups();
+        Group[] groups_array = settings.getGroups();
 
         // Iteration ueber alle moeglichen gruppen, 0-basierend
-        for (int i = 0; i <= settings.getMaxGroupNumber(); i++) {
+        for (int i = 0; i < settings.getMaxGroupNumber(); i++) {
             // copy assigned variable
             TransRegVar cur = new TransRegVar(name + (i + 1), result.getMoniker(), result.getOriginalData());
             cur.setSettings(result.getSettings());
             cur.setLevel(NodesLevelEnum.GROUP);
 
             // new Group status for variable
-            GroupsEnum currentGroup = GroupsEnum.valueOf("Group" + (i + 1));
+            int currentGroup = i + 1;
             cur.setGroupStatus(currentGroup);
 
             // iterator for GroupsEnum[] from settings, synchronized to the Observations position
@@ -146,8 +146,8 @@ public class TransRegCalculationTool {
                 TsObservation obs = iterator.next();
 
                 double value;
-                GroupsEnum groupStatusForCurrentObservation = groups_array[obs.getPeriod().getPosition()];
-                if (groupStatusForCurrentObservation.equals(currentGroup)) {
+                Group groupStatusForCurrentObservation = groups_array[obs.getPeriod().getPosition()];
+                if (groupStatusForCurrentObservation.getNumber() == currentGroup) {
                     value = obs.getValue();
                 } else {
                     value = settings.getDefaultValue().getValue();

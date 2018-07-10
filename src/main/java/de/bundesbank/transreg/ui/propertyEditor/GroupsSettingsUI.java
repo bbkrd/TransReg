@@ -21,8 +21,8 @@
 package de.bundesbank.transreg.ui.propertyEditor;
 
 import de.bundesbank.transreg.settings.GroupsSettings;
+import de.bundesbank.transreg.util.Group;
 import de.bundesbank.transreg.util.GroupsDefaultValueEnum;
-import de.bundesbank.transreg.util.GroupsEnum;
 import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyEditorRegistry;
 import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyRendererFactory;
 import ec.tstoolkit.descriptors.EnhancedPropertyDescriptor;
@@ -41,13 +41,13 @@ import org.openide.util.NbBundle;
 public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
 
     static {
-        CustomPropertyEditorRegistry.INSTANCE.registerEnumEditor(GroupsEnum.class, new GroupsEnumSelector());
-        CustomPropertyEditorRegistry.INSTANCE.register(GroupsEnum[].class, new GroupsEnumPropertyEditor());
-        CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(GroupsEnum[].class, new ArrayRenderer());
+        CustomPropertyEditorRegistry.INSTANCE.register(Group[].class, new GroupsEnumPropertyEditor());
+        CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(Group[].class, new ArrayRenderer());
         CustomPropertyEditorRegistry.INSTANCE.register(GroupsDefaultValueEnum.class, null);
+        CustomPropertyEditorRegistry.INSTANCE.register(String.class, null);
     }
 
-    private GroupsSettings core;
+    private final GroupsSettings core;
     private boolean readOnly = false;
 
     public GroupsSettingsUI() {
@@ -116,11 +116,11 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
         }
     }
 
-    public GroupsEnum[] getGroups() {
+    public Group[] getGroups() {
         return core.getGroups();
     }
 
-    public void setGroups(GroupsEnum[] g) {
+    public void setGroups(Group[] g) {
         core.setGroups(g);
     }
 

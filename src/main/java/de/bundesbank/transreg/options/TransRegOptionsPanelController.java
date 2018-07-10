@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -38,9 +38,6 @@ import org.openide.util.Lookup;
 public final class TransRegOptionsPanelController extends OptionsPanelController {
 
     public static final String ID = "Demetra/TransReg";
-    public static final String TRANSREG_SAVE_METHOD = "transreg_save_method";
-    public static final String TRANSREG_GROUPS = "transreg_vertical_groups";
-//    public static final String TRANSREG_HORIZONTAL_GROUPS = "transreg_horizontal_groups";
     public static final String TRANSREG_UPPER_LIMIT = "transreg_upper_limit";
     public static final String TRANSREG_LOWER_LIMIT = "transreg_lower_limit";
 

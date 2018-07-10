@@ -23,7 +23,7 @@ public enum GroupsDefaultValueEnum {
     }
 
     public static GroupsDefaultValueEnum fromString(String text) {
-        if (text.equalsIgnoreCase(ZERO.name)) {
+        if (ZERO.name.equalsIgnoreCase(text)) {
             return ZERO;
         } else {
             return NaN;
