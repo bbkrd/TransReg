@@ -25,6 +25,8 @@ import de.bundesbank.transreg.util.GroupsDefaultValueEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -114,12 +116,12 @@ public class GroupsSettings implements InformationSetSerializable {
         return true;
     }
 
-    public int getMaxGroupNumber() {
-        int result = 0;
+    public Set<Group> getGivenGroups() {
+        Set<Group> result = new TreeSet<>((Group o1, Group o2)
+                -> o1.getNumber() - o2.getNumber()
+        );
         for (Group g : getGroups()) {
-            if (g.getNumber() > result) {
-                result = g.getNumber();
-            }
+            result.add(g);
         }
         return result;
     }

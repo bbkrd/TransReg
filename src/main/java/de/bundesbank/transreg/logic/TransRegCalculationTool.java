@@ -120,7 +120,7 @@ public class TransRegCalculationTool {
 
     private static ArrayList<TransRegVar> doGroups(TransRegVar var) {
         TransRegVar result = var.copy();
-        String name = var.getName() + "\n" + "Group";
+        String name = var.getName() + "\n"; // + "Group";
         name = MultiLineNameUtil.join(name);
         result.setName(name);
 //        result.setLevel(NodesLevelEnum.CENTERUSER);
@@ -130,14 +130,15 @@ public class TransRegCalculationTool {
         Group[] groups_array = settings.getGroups();
 
         // Iteration ueber alle moeglichen gruppen, 0-basierend
-        for (int i = 0; i < settings.getMaxGroupNumber(); i++) {
+        for (Group group : settings.getGivenGroups()) {
+//        for (int i = 0; i < settings.getMaxGroupNumber(); i++) {
             // copy assigned variable
-            TransRegVar cur = new TransRegVar(name + (i + 1), result.getMoniker(), result.getOriginalData());
+            TransRegVar cur = new TransRegVar(name + group.toString(), result.getMoniker(), result.getOriginalData());
             cur.setSettings(result.getSettings());
             cur.setLevel(NodesLevelEnum.GROUP);
 
             // new Group status for variable
-            int currentGroup = i + 1;
+            int currentGroup = group.getNumber(); //i + 1;
             cur.setGroupStatus(currentGroup);
 
             // iterator for GroupsEnum[] from settings, synchronized to the Observations position
