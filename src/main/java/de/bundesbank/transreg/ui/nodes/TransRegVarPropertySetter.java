@@ -115,7 +115,12 @@ public class TransRegVarPropertySetter {
 
         @Override
         public String toString() {
-            return var.getFrequency().toString();
+            String freq = var.getFrequency().toString();
+
+            if (var.getFrequency().HalfYearly.equals(var.getFrequency())) {
+                freq = "Biannual";
+            }
+            return freq;
         }
     }
 //</editor-fold>
