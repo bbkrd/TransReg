@@ -449,7 +449,21 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             TsData original = info.get(ORIGINAL, TsData.class);
             String level = info.get(LEVEL, String.class);
             String stamp = info.get(TIMESTAMP, String.class);
-            int group = info.get(GROUPSTATUS, int.class);
+            Integer group = info.get(GROUPSTATUS, Integer.class);
+
+            //Kompatibilitaet zu alten WS, bei dem noch Strings gespeichert wurden
+            if (group == null) {
+                group = 1;
+                String s = info.get(GROUPSTATUS, String.class);
+                if (s != null) {
+                    try {
+                        group = Integer.parseInt(s.substring(5));
+                    } catch (NumberFormatException ignore) {
+                        //Fehlerhafter WS
+                        throw new IllegalArgumentException("Group status cannot be parsed", ignore);
+                    }
+                }
+            }
 
             //read methode, auf null pruefen
             int frequency = data.getFrequency().intValue();
