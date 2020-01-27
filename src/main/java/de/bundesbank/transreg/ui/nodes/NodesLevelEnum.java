@@ -26,7 +26,7 @@ package de.bundesbank.transreg.ui.nodes;
  */
 public enum NodesLevelEnum {
 
-    ORIGINAL("Original"), GROUP("Group"), ACTIVE("Active"), CENTERUSER("Centeruser");
+    ORIGINAL("Original"), GROUP("Group"), ACTIVE("Active"), CENTERUSER("Centeruser"), EXTENDING("Extending"), LEADLAG("Lead/Lag");
 
     private String name;
 

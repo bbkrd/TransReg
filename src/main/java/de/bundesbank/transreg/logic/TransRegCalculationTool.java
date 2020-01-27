@@ -23,11 +23,13 @@ package de.bundesbank.transreg.logic;
 import de.bundesbank.transreg.options.TransRegOptionsPanelController;
 import de.bundesbank.transreg.settings.CenteruserSettings;
 import de.bundesbank.transreg.settings.GroupsSettings;
+import de.bundesbank.transreg.settings.LeadLagSettings;
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import static de.bundesbank.transreg.util.CenteruserEnum.Global;
 import static de.bundesbank.transreg.util.CenteruserEnum.Seasonal;
 import de.bundesbank.transreg.util.Group;
+import de.bundesbank.transreg.util.LeadLagEnum;
 import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.data.DescriptiveStatistics;
@@ -35,6 +37,7 @@ import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsObservation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.prefs.Preferences;
 import org.openide.util.NbPreferences;
@@ -83,39 +86,81 @@ public class TransRegCalculationTool {
         return "Not centred";
     }
 
-    public static ArrayList<TransRegVar> calculate(TransRegVar var) {
-        LocalDateTime stamp = LocalDateTime.now();
-        var.setTimestamp(stamp);
-        TransRegSettings settings = var.getSettings();
-        ArrayList<TransRegVar> result = new ArrayList<>();
+    public static HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculate(TransRegVar original) {
 
-        //1. Groups
+        LocalDateTime stamp = LocalDateTime.now();
+        TransRegSettings settings = original.getSettings();
+
+        HashMap<NodesLevelEnum, ArrayList<TransRegVar>> results = new HashMap<>();
+        ArrayList<TransRegVar> o = new ArrayList<>();
+        o.add(original);
+        results.put(NodesLevelEnum.ORIGINAL, o);
+
+        TransRegVar tmp = original;
+
+        // Lead/Lag
+        if (settings.getLeadLag().isEnabled()) {
+            ArrayList<TransRegVar> ex = new ArrayList<>();
+            tmp = doLeadLag(tmp);
+            ex.add(tmp);
+            results.put(NodesLevelEnum.LEADLAG, ex);
+        }
+
+        // Extending
+        if (settings.getExtending().isEnabled()) {
+            ArrayList<TransRegVar> ex = new ArrayList<>();
+            tmp = doExtending(tmp);
+            ex.add(tmp);
+            results.put(NodesLevelEnum.EXTENDING, ex);
+        }
+
+        // Groups
         if (settings.getGroups().isEnabled()) {
-            ArrayList<TransRegVar> groupVars = doGroups(var);
-            result.addAll(groupVars);
+            ArrayList<TransRegVar> groupVars = doGroups(tmp);
+            results.put(NodesLevelEnum.GROUP, groupVars);
         }
 
         //2. Centeruser
         if (settings.getCenteruser().isEnabled()) {
-            if (result.isEmpty()) {
-                // if no previuos step
-                result.add(doCenteruser(var));
-            } else {
-                // if previous results
-                ArrayList<TransRegVar> tmp = new ArrayList<>();
-                result.stream().forEach((cur) -> {
-                    tmp.add(doCenteruser(cur));
+            ArrayList<TransRegVar> tmps = new ArrayList<>();
+            if (results.containsKey(NodesLevelEnum.GROUP)) {
+                ArrayList<TransRegVar> groups = results.get(NodesLevelEnum.GROUP);
+                groups.stream().forEach((cur) -> {
+                    tmps.add(doCenteruser(cur));
                 });
-                result.addAll(tmp);
+            } else {
+
+                tmps.add(doCenteruser(tmp));
+            }
+            results.put(NodesLevelEnum.CENTERUSER, tmps);
+
+            /**
+             * TODO: TIMESTAMP
+             *
+             * result.stream().forEach((t) -> { t.setTimestamp(stamp); });
+             *
+             */
+        }
+
+        // set extending values to 0.0
+        if (settings.getExtending().isEnabled()) {
+            TsData dataExtending = results.get(NodesLevelEnum.EXTENDING).get(0).getTsData();
+            for (int index = dataExtending.getLength() - 1; index >= dataExtending.getLength() - settings.getExtending().getEnd(); index--) {
+                dataExtending.set(index, 0.0);
+            }
+            // TODO: groups? und centering
+            if (settings.getCenteruser().isEnabled()) {
+                ArrayList<TransRegVar> vars = results.get(NodesLevelEnum.CENTERUSER);
+                for (TransRegVar v : vars) {
+                    TsData centeruserData = v.getTsData();
+                    for (int index = centeruserData.getLength() - 1; index >= centeruserData.getLength() - settings.getExtending().getEnd(); index--) {
+                        centeruserData.set(index, 0.0);
+                    }
+                }
             }
         }
 
-        result.stream().forEach((t) -> {
-            t.setTimestamp(stamp);
-        });
-
-        return result;
-
+        return results;
     }
 
     private static ArrayList<TransRegVar> doGroups(TransRegVar var) {
@@ -133,7 +178,7 @@ public class TransRegCalculationTool {
         for (Group group : settings.getGivenGroups()) {
 //        for (int i = 0; i < settings.getMaxGroupNumber(); i++) {
             // copy assigned variable
-            TransRegVar cur = new TransRegVar(name + group.toString(), result.getMoniker(), result.getOriginalData());
+            TransRegVar cur = new TransRegVar(name + group.toString(), result.getMoniker(), result.getTsData());
             cur.setSettings(result.getSettings());
             cur.setLevel(NodesLevelEnum.GROUP);
 
@@ -199,6 +244,68 @@ public class TransRegCalculationTool {
         newData.setIf(Double::isNaN, () -> 0.0);
 
         result.setCalculatedData(newData);
+
+        //VaterKind Bez.
+        result.setParent(var);
+        var.addChild(result);
+
+        return result;
+    }
+
+    private static TransRegVar doExtending(TransRegVar var) {
+        TransRegVar result = var.copy();
+        String name = var.getName() + "\n" + "Extending";
+        name = MultiLineNameUtil.join(name);
+        result.setName(name);
+        int extend = result.getSettings().getExtending().getEnd();
+        TsData data = result.getTsData();
+        int period = data.getLastPeriod().getPosition(); // 0-based
+        int freq = data.getFrequency().intValue();
+        int lastIndexOriginalData = result.getOriginalData().getLength();
+
+        double[] seasonalMean = calcSeasonalMeans(var.getOriginalData());
+
+        data = data.extend(0, extend);
+
+        for (int index = lastIndexOriginalData; index < lastIndexOriginalData + extend; index++) {
+            period++;
+            if (period >= freq) {
+                period = 0;
+            }
+            data.set(index, seasonalMean[period]);
+        }
+
+        result.setCalculatedData(data);
+        result.setLevel(NodesLevelEnum.EXTENDING);
+
+        //VaterKind Bez.
+        result.setParent(var);
+        var.addChild(result);
+
+        return result;
+    }
+
+    private static TransRegVar doLeadLag(TransRegVar var) {
+        TransRegVar result = var.copy();
+
+        TsData data = result.getTsData();
+        LeadLagSettings settings = result.getSettings().getLeadLag();
+        int periods = settings.getnPeriods();
+        String ending;
+
+        if (LeadLagEnum.Lag.equals(settings.getMethod())) {
+            data = data.lag(periods);
+            ending = "Lag";
+        } else {
+            data = data.lead(periods);
+            ending = "Lead";
+        }
+        result.setCalculatedData(data);
+
+        String name = var.getName() + "\n" + ending;
+        name = MultiLineNameUtil.join(name);
+        result.setName(name);
+        result.setLevel(NodesLevelEnum.LEADLAG);
 
         //VaterKind Bez.
         result.setParent(var);

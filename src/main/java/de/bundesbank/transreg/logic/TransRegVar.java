@@ -252,9 +252,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         switch (level) {
             case ORIGINAL:
                 return "Original";
-            case ACTIVE:
-                // TODO: HorizontalSetting noch nicht fertig, getter+setter anpassen und Fallunterscheidung
-                return "Active";
+            case LEADLAG:
+                return "Lead/Lag";
+            case EXTENDING:
+                return "extended";
             case GROUP:
                 return "Group " + getGroupStatus();
             case CENTERUSER:
@@ -337,16 +338,14 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
             TransRegVar root = new TransRegVar(ts.getTsData());
             root.setSettings(currentSettings);
-            ArrayList<TransRegVar> vars = TransRegCalculationTool.calculate(root);
+            HashMap<NodesLevelEnum, ArrayList<TransRegVar>> results = TransRegCalculationTool.calculate(root);
 
             // find the variable
-            for (TransRegVar t : vars) {
+            for (TransRegVar t : results.get(this.getLevel())) {
                 if (t.getGroupStatus() == (this.getGroupStatus())) {
-                    if (t.getLevel().equals(this.getLevel())) {
-                        this.setCalculatedData(t.getTsData().clone());
-                        this.setMean(t.getMean());
-                        return true;
-                    }
+                    this.setCalculatedData(t.getTsData().clone());
+                    this.setMean(t.getMean());
+                    return true;
                 }
             }
         }

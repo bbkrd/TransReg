@@ -26,6 +26,7 @@ import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import de.bundesbank.transreg.admin.TransRegTransferHandler;
 import de.bundesbank.transreg.logic.TransRegCalculationTool;
 import de.bundesbank.transreg.logic.TransRegVar;
+import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.ui.propertyEditor.TransRegSettingsUI;
 import ec.nbdemetra.ui.NbComponents;
 import ec.nbdemetra.ui.properties.l2fprod.PropertiesPanelFactory;
@@ -39,6 +40,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -120,11 +122,14 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                         vars.remove(t);
                     });
                 }
-                
-                ArrayList<TransRegVar> calculated = TransRegCalculationTool.calculate(var);
-                calculated.stream().forEach((child) -> {
-                    vars.set(child.getName(), child);
-                });
+
+//                ArrayList<TransRegVar> calculated = TransRegCalculationTool.calculate(var);
+                HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
+                for (ArrayList<TransRegVar> v : calculated.values()) {
+                    v.stream().forEach((child) -> {
+                        vars.set(child.getName(), child);
+                    });
+                }
                 outlineview.refresh();
                 outlineview.repaint();
             }
@@ -142,7 +147,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
         //</editor-fold>
-        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);

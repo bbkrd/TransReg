@@ -63,14 +63,20 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
 
-        EnhancedPropertyDescriptor desc = groupsDesc(); // horizontalverticaldesc
+        EnhancedPropertyDescriptor desc = leadLagDesc();
         if (desc != null) {
             descs.add(desc);
         }
-//          desc = horizontalDesc();
-//        if (desc != null) {
-//            descs.add(desc);
-//        }
+
+        desc = extendingDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+
+        desc = groupsDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
 
         desc = centeruserDesc();
         if (desc != null) {
@@ -84,7 +90,31 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         return "TransReg Settings";
     }
 
-    private static final int Centeruser_ID = 2, Groups_ID = 1;
+    private static final int Centeruser_ID = 4, Groups_ID = 3, Extending_ID = 2, LeadLag_ID = 1;
+
+    @Messages({
+        "transregSettingsUI.leadLagDesc.name=Lead/Lag",
+        "transregSettingsUI.leadLagDesc.desc= "
+    })
+    private EnhancedPropertyDescriptor leadLagDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("LeadLag", this.getClass(), "getLeadLag", null);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, LeadLag_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.transregSettingsUI_leadLagDesc_name());
+            desc.setShortDescription(Bundle.transregSettingsUI_leadLagDesc_desc());
+            edesc.setReadOnly(readOnly);
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    public LeadLagSettingsUI getLeadLag() {
+        LeadLagSettingsUI ui = new LeadLagSettingsUI(core.getLeadLag());
+        ui.setReadOnly(readOnly);
+        return ui;
+    }
 
     @Messages({
         "transregSettingsUI.centeruserDesc.name=CENTRING",
@@ -136,16 +166,16 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     }
 
     @Messages({
-        "transregSettingsUI.horizontalDesc.name=Horizontal GROUPS",
-        "transregSettingsUI.horizontalDesc.desc= "
+        "transregSettingsUI.extendingDesc.name=EXTENDING",
+        "transregSettingsUI.extendingDesc.desc= "
     })
-    private EnhancedPropertyDescriptor horizontalDesc() {
+    private EnhancedPropertyDescriptor extendingDesc() {
         try {
-            PropertyDescriptor desc = new PropertyDescriptor("Horizontal", this.getClass(), "getHorizontal", null);
+            PropertyDescriptor desc = new PropertyDescriptor("Extending", this.getClass(), "getExtending", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Groups_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
-            desc.setDisplayName(Bundle.transregSettingsUI_horizontalDesc_name());
-            desc.setShortDescription(Bundle.transregSettingsUI_horizontalDesc_desc());
+            desc.setDisplayName(Bundle.transregSettingsUI_extendingDesc_name());
+            desc.setShortDescription(Bundle.transregSettingsUI_extendingDesc_desc());
             edesc.setReadOnly(readOnly);
             return edesc;
         } catch (IntrospectionException ex) {
@@ -153,8 +183,8 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         }
     }
 
-    public HorizontalSettingsUI getHorizontal() {
-        HorizontalSettingsUI ui = new HorizontalSettingsUI(core.getHorizontal());
+    public ExtendingSettingsUI getExtending() {
+        ExtendingSettingsUI ui = new ExtendingSettingsUI(core.getExtending());
         ui.setReadOnly(readOnly);
         return ui;
     }

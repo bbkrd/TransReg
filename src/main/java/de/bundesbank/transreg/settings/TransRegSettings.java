@@ -31,18 +31,24 @@ public class TransRegSettings implements InformationSetSerializable {
 
     private CenteruserSettings centeruser;
     private GroupsSettings groups;
-    private HorizontalSettings horizontal;
+//    private HorizontalSettings horizontal;
+    private ExtendingSettings extending;
+    private LeadLagSettings leadLag;
 
     public TransRegSettings() {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings();
-        horizontal = new HorizontalSettings();
+//        horizontal = new HorizontalSettings();
+        extending = new ExtendingSettings();
+        leadLag = new LeadLagSettings();
     }
 
     public TransRegSettings(int freq) {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings(freq);
-        horizontal = new HorizontalSettings();
+//        horizontal = new HorizontalSettings();
+        extending = new ExtendingSettings();
+        leadLag = new LeadLagSettings();
     }
 
     public CenteruserSettings getCenteruser() {
@@ -61,12 +67,12 @@ public class TransRegSettings implements InformationSetSerializable {
         this.groups = groups;
     }
 
-    public HorizontalSettings getHorizontal() {
-        return horizontal;
+    public LeadLagSettings getLeadLag() {
+        return leadLag;
     }
 
-    public void setHorizontal(HorizontalSettings horizontal) {
-        this.horizontal = horizontal;
+    public void setLeadLag(LeadLagSettings leadLag) {
+        this.leadLag = leadLag;
     }
 
     public boolean isDefault() {
@@ -76,9 +82,15 @@ public class TransRegSettings implements InformationSetSerializable {
         if (!groups.isDefault()) {
             return false;
         }
-//        if (!horizontal.isDefault()) {
-//            return false;
-//        }
+
+        if (!extending.isDefault()) {
+            return false;
+        }
+
+        if (!leadLag.isDefault()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -86,9 +98,18 @@ public class TransRegSettings implements InformationSetSerializable {
         TransRegSettings copy = new TransRegSettings();
         copy.setCenteruser(centeruser.copy());
         copy.setGroups(groups.copy());
-        copy.setHorizontal(horizontal.copy());
+        copy.setExtending(extending.copy());
+        copy.setLeadLag(leadLag.copy());
 
         return copy;
+    }
+
+    public ExtendingSettings getExtending() {
+        return extending;
+    }
+
+    public void setExtending(ExtendingSettings extending) {
+        this.extending = extending;
     }
 
     //<editor-fold defaultstate="collapsed" desc="for Workspace">
@@ -101,7 +122,12 @@ public class TransRegSettings implements InformationSetSerializable {
         tmp = groups.write(verbose);
         info.add(GROUPS, tmp);
 
-        //TODO: horizontal.write();
+        tmp = extending.write(verbose);
+        info.add(EXTENDING, tmp);
+
+        tmp = leadLag.write(verbose);
+        info.add(LEADLAG, tmp);
+
         return info;
     }
 
@@ -110,10 +136,12 @@ public class TransRegSettings implements InformationSetSerializable {
 
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
+        extending.read(info.getSubSet(EXTENDING));
+        leadLag.read(info.getSubSet(LEADLAG));
 
         return true;
     }
 
-    private static String CENTERUSER = "centeruser", GROUPS = "groups";
+    private static String CENTERUSER = "centeruser", GROUPS = "groups", EXTENDING = "extending", LEADLAG = "leadlag";
 //</editor-fold>
 }
