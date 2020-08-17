@@ -21,7 +21,7 @@
 package de.bundesbank.transreg.settings;
 
 import de.bundesbank.transreg.util.Group;
-import de.bundesbank.transreg.util.GroupsDefaultValueEnum;
+import de.bundesbank.transreg.util.DefaultValueEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
 import java.util.Arrays;
@@ -30,14 +30,14 @@ import java.util.TreeSet;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 @lombok.Data
 public class GroupsSettings implements InformationSetSerializable {
 
     private Group[] groups = new Group[]{new Group(1)};
     private boolean enabled = false;
-    private GroupsDefaultValueEnum defaultValue = GroupsDefaultValueEnum.ZERO;
+    private DefaultValueEnum defaultValue = DefaultValueEnum.ZERO;
 
     public GroupsSettings() {
 
@@ -61,7 +61,7 @@ public class GroupsSettings implements InformationSetSerializable {
     }
 
     public boolean isDefault() {
-        if (defaultValue.equals(GroupsDefaultValueEnum.NaN)) {
+        if (defaultValue.equals(DefaultValueEnum.NaN)) {
             return false;
         }
         // Default ist definiert als alle Gruppen mit Status Group1
@@ -111,7 +111,7 @@ public class GroupsSettings implements InformationSetSerializable {
             groups = groupsInfo;
         }
         enabled = info.get(ENABLE, Boolean.class);
-        defaultValue = GroupsDefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
+        defaultValue = DefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
 
         return true;
     }

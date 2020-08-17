@@ -46,17 +46,7 @@ public class LeadLagSettingsUI implements IObjectDescriptor<LeadLagSettings> {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = enableDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
-
-        desc = methodDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
-
-        desc = periodsDesc();
+        EnhancedPropertyDescriptor desc =  periodsDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -70,60 +60,8 @@ public class LeadLagSettingsUI implements IObjectDescriptor<LeadLagSettings> {
     }
 
     @NbBundle.Messages({
-        "leadLagSettingsUI.enableDesc.name=Enable",
-        "leadLagSettingsUI.enableDesc.desc= Mark checkbox to lead or lad the regressor."
-    })
-    private EnhancedPropertyDescriptor enableDesc() {
-        try {
-            PropertyDescriptor desc = new PropertyDescriptor("Enable", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 1);
-            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
-            desc.setDisplayName(Bundle.leadLagSettingsUI_enableDesc_name());
-            desc.setShortDescription(Bundle.leadLagSettingsUI_enableDesc_desc());
-            edesc.setReadOnly(readOnly);
-            return edesc;
-        } catch (IntrospectionException ex) {
-            return null;
-        }
-    }
-
-    public boolean isEnable() {
-        return core.isEnabled();
-    }
-
-    public void setEnable(boolean b) {
-        core.setEnabled(b);
-    }
-
-    @Messages({
-        "leadLagSettingsUI.methodDesc.name=Lead/Lag",
-        "leadLagSettingsUI.methodDesc.desc=..."
-    })
-    private EnhancedPropertyDescriptor methodDesc() {
-        try {
-            PropertyDescriptor desc = new PropertyDescriptor("Method", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, 2);
-            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
-            desc.setDisplayName(Bundle.leadLagSettingsUI_methodDesc_name());
-            desc.setShortDescription(Bundle.leadLagSettingsUI_methodDesc_desc());
-            edesc.setReadOnly(!(!readOnly && core.isEnabled()));
-            return edesc;
-        } catch (IntrospectionException ex) {
-            return null;
-        }
-    }
-
-    public LeadLagEnum getMethod() {
-        return core.getMethod();
-    }
-
-    public void setMethod(LeadLagEnum e) {
-        core.setMethod(e);
-    }
-
-    @NbBundle.Messages({
         "leadLagSettingsUI.endDesc.name=Number of periods",
-        "leadLagSettingsUI.endDesc.desc=..."
+        "leadLagSettingsUI.endDesc.desc=Negative value for lead, positive value for lag"
     })
     private EnhancedPropertyDescriptor periodsDesc() {
         try {
@@ -132,7 +70,7 @@ public class LeadLagSettingsUI implements IObjectDescriptor<LeadLagSettings> {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.leadLagSettingsUI_endDesc_name());
             desc.setShortDescription(Bundle.leadLagSettingsUI_endDesc_desc());
-            edesc.setReadOnly(!(!readOnly && core.isEnabled()));
+            edesc.setReadOnly(readOnly);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;

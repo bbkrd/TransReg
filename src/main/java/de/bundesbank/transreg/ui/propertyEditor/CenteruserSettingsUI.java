@@ -35,7 +35,7 @@ import org.openide.util.NbBundle.Messages;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSettings> {
 
@@ -76,6 +76,12 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
         if (desc != null) {
             descs.add(desc);
         }
+
+        desc = extendingDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+
         return descs;
     }
 
@@ -84,7 +90,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
         return "Center user";
     }
 
-    private static final int Method_ID = 1, Span_ID = 2;
+    private static final int Method_ID = 1, Span_ID = 2, Extending_ID = 3;
 
     @Messages({
         "centeruserSettingsUI.methodDesc.name=Sample mean",
@@ -134,4 +140,29 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
         return new TsPeriodSelectorUI(core.getSpan(), readOnly || core.getMethod().equals(CenteruserEnum.None));
     }
 
+    @NbBundle.Messages({
+        "centeruserSettingsUI.extendingDesc.name=Extending",
+        "centeruserSettingsUI.extendingDesc.desc=..."
+    })
+    private EnhancedPropertyDescriptor extendingDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("Extending", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Extending_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.centeruserSettingsUI_extendingDesc_name());
+            desc.setShortDescription(Bundle.centeruserSettingsUI_extendingDesc_desc());
+            edesc.setReadOnly(!(!readOnly && !(CenteruserEnum.None.equals(core.getMethod()))));
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    public int getExtending() {
+        return core.getExtendingPeriods();
+    }
+
+    public void setExtending(int e) {
+        core.setExtendingPeriods(e);
+    }
 }

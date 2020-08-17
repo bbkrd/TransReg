@@ -4,7 +4,7 @@ package de.bundesbank.transreg.util;
  *
  * @author s4504gn
  */
-public enum GroupsDefaultValueEnum {
+public enum DefaultValueEnum {
 
     ZERO("0.0", 0.0),
     NaN("NaN", Double.NaN);
@@ -12,7 +12,7 @@ public enum GroupsDefaultValueEnum {
     private final String name;
     private final double value;
 
-    private GroupsDefaultValueEnum(String name, double value) {
+    private DefaultValueEnum(String name, double value) {
         this.name = name;
         this.value = value;
     }
@@ -22,7 +22,7 @@ public enum GroupsDefaultValueEnum {
         return name;
     }
 
-    public static GroupsDefaultValueEnum fromString(String text) {
+    public static DefaultValueEnum fromString(String text) {
         if (ZERO.name.equalsIgnoreCase(text)) {
             return ZERO;
         } else {

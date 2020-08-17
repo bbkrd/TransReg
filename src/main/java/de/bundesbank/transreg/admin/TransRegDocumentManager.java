@@ -20,6 +20,7 @@
  */
 package de.bundesbank.transreg.admin;
 
+import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.TransRegTopComponent;
 import ec.nbdemetra.ws.AbstractWorkspaceItemManager;
 import ec.nbdemetra.ws.IWorkspaceItemManager;
@@ -29,6 +30,8 @@ import ec.nbdemetra.ws.WorkspaceItem;
 import ec.tstoolkit.utilities.Id;
 import ec.tstoolkit.utilities.LinearId;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.util.lookup.ServiceProvider;

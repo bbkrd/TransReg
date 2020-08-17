@@ -31,7 +31,7 @@ import org.openide.util.NbBundle.Messages;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
@@ -68,7 +68,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
             descs.add(desc);
         }
 
-        desc = extendingDesc();
+        desc = epochDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -90,7 +90,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         return "TransReg Settings";
     }
 
-    private static final int Centeruser_ID = 4, Groups_ID = 3, Extending_ID = 2, LeadLag_ID = 1;
+    private static final int Centeruser_ID = 5, Groups_ID = 4, Extending_ID = 2, LeadLag_ID = 1, Epoch_ID = 3;
 
     @Messages({
         "transregSettingsUI.leadLagDesc.name=Lead/Lag",
@@ -166,16 +166,16 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     }
 
     @Messages({
-        "transregSettingsUI.extendingDesc.name=EXTENDING",
-        "transregSettingsUI.extendingDesc.desc= "
+        "transregSettingsUI.epochDesc.name=EPOCH",
+        "transregSettingsUI.epochDesc.desc= "
     })
-    private EnhancedPropertyDescriptor extendingDesc() {
+    private EnhancedPropertyDescriptor epochDesc() {
         try {
-            PropertyDescriptor desc = new PropertyDescriptor("Extending", this.getClass(), "getExtending", null);
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Groups_ID);
+            PropertyDescriptor desc = new PropertyDescriptor("Epoch", this.getClass(), "getEpoch", null);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, Epoch_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
-            desc.setDisplayName(Bundle.transregSettingsUI_extendingDesc_name());
-            desc.setShortDescription(Bundle.transregSettingsUI_extendingDesc_desc());
+            desc.setDisplayName(Bundle.transregSettingsUI_epochDesc_name());
+            desc.setShortDescription(Bundle.transregSettingsUI_epochDesc_desc());
             edesc.setReadOnly(readOnly);
             return edesc;
         } catch (IntrospectionException ex) {
@@ -183,8 +183,8 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         }
     }
 
-    public ExtendingSettingsUI getExtending() {
-        ExtendingSettingsUI ui = new ExtendingSettingsUI(core.getExtending());
+    public EpochSettingsUI getEpoch() {
+        EpochSettingsUI ui = new EpochSettingsUI(core.getEpoch());
         ui.setReadOnly(readOnly);
         return ui;
     }

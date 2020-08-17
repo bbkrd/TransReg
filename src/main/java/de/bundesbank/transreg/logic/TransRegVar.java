@@ -22,12 +22,14 @@ package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
+import de.bundesbank.transreg.util.LeadLagEnum;
 import ec.tss.Ts;
 import ec.tss.TsFactory;
 import ec.tss.TsInformationType;
 import ec.tss.TsMoniker;
 import ec.tstoolkit.information.InformationConverter;
 import ec.tstoolkit.information.InformationSet;
+import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.regression.TsVariable;
 import static ec.tstoolkit.timeseries.regression.TsVariables.LINKER;
 import ec.tstoolkit.timeseries.simplets.TsData;
@@ -45,7 +47,7 @@ import javax.annotation.Nonnull;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegVar extends TsVariable implements IDynamicObject, Serializable {
 
@@ -91,7 +93,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         super(d);
         moniker = null;
         calculatedData = d.clone();
-        currentSettings = new TransRegSettings(d.getFrequency().intValue());
+        currentSettings = new TransRegSettings(d.getFrequency().intValue(),
+                d.getStart().firstday(),
+                d.getLastPeriod().lastday()
+        );
         id = UUID.randomUUID();
         super.setName("var");
         variables.put(id, this);
@@ -102,7 +107,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         super(s, d);
         moniker = null;
         calculatedData = d.clone();
-        currentSettings = new TransRegSettings(d.getFrequency().intValue());
+        currentSettings = new TransRegSettings(d.getFrequency().intValue(),
+                d.getStart().firstday(),
+                d.getLastPeriod().lastday()
+        );
         super.setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
@@ -114,7 +122,10 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         super(s, d);
         moniker = m;
         calculatedData = d.clone();
-        currentSettings = new TransRegSettings(d.getFrequency().intValue());
+        currentSettings = new TransRegSettings(d.getFrequency().intValue(),
+                d.getStart().firstday(),
+                d.getLastPeriod().lastday()
+        );
         super.setName(s);
         id = UUID.randomUUID();
         variables.put(id, this);
@@ -253,9 +264,13 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             case ORIGINAL:
                 return "Original";
             case LEADLAG:
-                return "Lead/Lag";
-            case EXTENDING:
-                return "extended";
+                if (LeadLagEnum.Lag.equals(currentSettings.getLeadLag().getnPeriods() > 0)) {
+                    return "Lag";
+                } else {
+                    return "Lead";
+                }
+            case EPOCH:
+                return "Epoch";
             case GROUP:
                 return "Group " + getGroupStatus();
             case CENTERUSER:
@@ -341,13 +356,24 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             HashMap<NodesLevelEnum, ArrayList<TransRegVar>> results = TransRegCalculationTool.calculate(root);
 
             // find the variable
-            for (TransRegVar t : results.get(this.getLevel())) {
-                if (t.getGroupStatus() == (this.getGroupStatus())) {
+            ArrayList<TransRegVar> v = results.get(this.getLevel());
+            int v_length = v.size();
+            for(int i =0; i < v_length; i++){
+                for(TransRegVar t : v){
+                    if (t.getGroupStatus() == (this.getGroupStatus())) {
                     this.setCalculatedData(t.getTsData().clone());
-                    this.setMean(t.getMean());
                     return true;
+                } 
                 }
             }
+            
+//            for (TransRegVar t : results.get(this.getLevel())) {
+//                if (t.getGroupStatus() == (this.getGroupStatus())) {
+//                    this.setCalculatedData(t.getTsData().clone());
+////                    this.setMean(t.getMean());
+//                    return true;
+//                }
+//            }
         }
         this.setCalculatedData(ts.getTsData());
         preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);
@@ -466,7 +492,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
             //read methode, auf null pruefen
             int frequency = data.getFrequency().intValue();
-            TransRegSettings cur = new TransRegSettings(frequency);
+            Day start = data.getStart().firstday();
+            Day end = data.getLastPeriod().lastday();
+            TransRegSettings cur = new TransRegSettings(frequency, start, end);
             InformationSet curInfo = info.getSubSet(SETTINGS);
             if (curInfo != null) {
                 cur.read(curInfo);

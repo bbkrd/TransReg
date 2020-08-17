@@ -22,11 +22,11 @@ package de.bundesbank.transreg.ui.nodes;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public enum NodesLevelEnum {
 
-    ORIGINAL("Original"), GROUP("Group"), ACTIVE("Active"), CENTERUSER("Centeruser"), EXTENDING("Extending"), LEADLAG("Lead/Lag");
+    ORIGINAL("Original"), GROUP("Group"), ACTIVE("Active"), CENTERUSER("Centeruser"), LEADLAG("Lead/Lag"), EPOCH("Epoch");
 
     private String name;
 

@@ -8,7 +8,7 @@ package de.bundesbank.transreg.logic;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.util.CenteruserEnum;
 import de.bundesbank.transreg.util.Group;
-import de.bundesbank.transreg.util.GroupsDefaultValueEnum;
+import de.bundesbank.transreg.util.DefaultValueEnum;
 import de.bundesbank.transreg.util.LeadLagEnum;
 import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.Month;
@@ -231,7 +231,7 @@ public class TransRegCalculationToolTest {
         TsData inputData = new TsData(start, d1, true);
         TransRegVar var = new TransRegVar(inputData);
         var.getSettings().getCenteruser().setMethod(CenteruserEnum.None);
-        var.getSettings().getGroups().setDefaultValue(GroupsDefaultValueEnum.NaN);
+        var.getSettings().getGroups().setDefaultValue(DefaultValueEnum.NaN);
 
         ArrayList<TransRegVar> result;
 
@@ -417,8 +417,7 @@ public class TransRegCalculationToolTest {
 
         TransRegVar v = new TransRegVar(inputData);
         v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
-        v.getSettings().getExtending().setEnabled(true);
-        v.getSettings().getExtending().setEnd(12);
+        v.getSettings().getCenteruser().setExtendingPeriods(12);
 
         HashMap<NodesLevelEnum, ArrayList<TransRegVar>> tmp = TransRegCalculationTool.calculate(v);
         ArrayList<TransRegVar> result = tmp.get(NodesLevelEnum.CENTERUSER);
@@ -432,45 +431,46 @@ public class TransRegCalculationToolTest {
 
         expResult = new TsData(start, r, true);
 
+        System.out.println(expResult.toString());
+        System.out.println(result.get(0).getTsData());
         assertEquals(expResult.getLength(), result.get(0).getTsData().getLength());
         assertEquals(expResult, result.get(0).getTsData());
     }
 
-    @Test
-    public void testExtending_basic() {
-
-        double[] d = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-
-        TsPeriod start = new TsPeriod(TsFrequency.Monthly, 1999, 0);
-        TsData inputData = new TsData(start, d, true);
-
-        ArrayList<TransRegVar> result;
-        TsData expResult;
-
-        TransRegVar v = new TransRegVar(inputData);
-        v.getSettings().getCenteruser().setMethod(CenteruserEnum.None);
-        v.getSettings().getExtending().setEnabled(true);
-        v.getSettings().getExtending().setEnd(12);
-
-        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EXTENDING);
-
-        double[] r = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-
-        expResult = new TsData(start, r, true);
-
-        assertEquals(expResult.getLength(), result.get(0).getTsData().getLength());
-        assertEquals(expResult, result.get(0).getTsData());
-    }
-
+//    //@Test
+//    public void testExtending_basic() {
+//
+//        double[] d = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+//
+//        TsPeriod start = new TsPeriod(TsFrequency.Monthly, 1999, 0);
+//        TsData inputData = new TsData(start, d, true);
+//
+//        ArrayList<TransRegVar> result;
+//        TsData expResult;
+//
+//        TransRegVar v = new TransRegVar(inputData);
+//        
+//        v.getSettings().getCenteruser().setMethod(CenteruserEnum.None);
+//        v.getSettings().getCenteruser().setExtendingPeriods(12);
+//
+//        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EXTENDING);
+//
+//        double[] r = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+//            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//
+//        expResult = new TsData(start, r, true);
+//
+//        assertEquals(expResult.getLength(), result.get(0).getTsData().getLength());
+//        assertEquals(expResult, result.get(0).getTsData());
+//    }
     @Test
     public void test_lead() {
 
@@ -488,8 +488,6 @@ public class TransRegCalculationToolTest {
 
         TransRegVar v = new TransRegVar(inputData);
         v.getSettings().getCenteruser().setMethod(CenteruserEnum.None);
-        v.getSettings().getLeadLag().setEnabled(true);
-        v.getSettings().getLeadLag().setMethod(LeadLagEnum.Lead);
         v.getSettings().getLeadLag().setnPeriods(12);
 
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.LEADLAG);
@@ -518,18 +516,43 @@ public class TransRegCalculationToolTest {
 
         TransRegVar v = new TransRegVar(inputData);
         v.getSettings().getCenteruser().setMethod(CenteruserEnum.None);
-        v.getSettings().getLeadLag().setEnabled(true);
-        v.getSettings().getLeadLag().setMethod(LeadLagEnum.Lag);
-        v.getSettings().getLeadLag().setnPeriods(12);
+        v.getSettings().getLeadLag().setnPeriods(-12);
 
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.LEADLAG);
 
         expResult = new TsData(
-                new TsPeriod(TsFrequency.Monthly, 1998, 0), 
-                d, 
+                new TsPeriod(TsFrequency.Monthly, 1998, 0),
+                d,
                 true
         );
 
         assertEquals(expResult, result.get(0).getTsData());
+    }
+
+    @Test
+    public void testDoGroupsWithExtending() {
+
+        double[] d1 = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+        TsPeriod start = new TsPeriod(TsFrequency.Monthly, 1999, 0);
+        TsData inputData = new TsData(start, d1, true);
+        TransRegVar var = new TransRegVar(inputData);
+        var.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
+        var.getSettings().getCenteruser().setExtendingPeriods(12);
+        var.getSettings().getGroups().setDefaultValue(DefaultValueEnum.NaN);
+        Group g = new Group(1);
+        Group[] groups = new Group[]{g, g, g, g, g, g, g, g, g, g, g, new Group(2)};
+
+        var.getSettings().getGroups().setGroups(groups);
+        var.getSettings().getGroups().setEnabled(true);
+
+        double[] result_group1 = TransRegCalculationTool.calculate(var).get(NodesLevelEnum.CENTERUSER).get(0).getTsData().internalStorage();
+        double[] result_group2 = TransRegCalculationTool.calculate(var).get(NodesLevelEnum.CENTERUSER).get(0).getTsData().internalStorage();
+    
+        
     }
 }

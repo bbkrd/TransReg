@@ -20,35 +20,61 @@
  */
 package de.bundesbank.transreg.settings;
 
+import de.bundesbank.transreg.util.CenteruserEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
+import ec.tstoolkit.timeseries.Day;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegSettings implements InformationSetSerializable {
 
     private CenteruserSettings centeruser;
     private GroupsSettings groups;
-//    private HorizontalSettings horizontal;
-    private ExtendingSettings extending;
     private LeadLagSettings leadLag;
+    private EpochSettings epoch;
+
+    public static final TransRegSettings DEFAULT;
+    public static final TransRegSettings TEST;
+
+    static {
+        DEFAULT = new TransRegSettings();
+        TEST = new TransRegSettings();
+        TEST.centeruser.setMethod(CenteruserEnum.Global);
+    }
+    
+     public static final TransRegSettings[] allSettings(){
+        return new TransRegSettings[]{DEFAULT, TEST};
+    }
 
     public TransRegSettings() {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings();
-//        horizontal = new HorizontalSettings();
-        extending = new ExtendingSettings();
         leadLag = new LeadLagSettings();
+        epoch = new EpochSettings();
     }
 
     public TransRegSettings(int freq) {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings(freq);
-//        horizontal = new HorizontalSettings();
-        extending = new ExtendingSettings();
         leadLag = new LeadLagSettings();
+        epoch = new EpochSettings();
+    }
+    
+    public TransRegSettings(Day start, Day end){
+        centeruser = new CenteruserSettings();
+        groups = new GroupsSettings();
+        leadLag = new LeadLagSettings();
+        epoch = new EpochSettings(start, end);
+    }
+    
+        public TransRegSettings(int freq, Day start, Day end){
+        centeruser = new CenteruserSettings();
+        groups = new GroupsSettings(freq);
+        leadLag = new LeadLagSettings();
+        epoch = new EpochSettings(start, end);
     }
 
     public CenteruserSettings getCenteruser() {
@@ -83,14 +109,13 @@ public class TransRegSettings implements InformationSetSerializable {
             return false;
         }
 
-        if (!extending.isDefault()) {
-            return false;
-        }
-
         if (!leadLag.isDefault()) {
             return false;
         }
 
+        if (!epoch.isDefault()) {
+            return false;
+        }
         return true;
     }
 
@@ -98,18 +123,18 @@ public class TransRegSettings implements InformationSetSerializable {
         TransRegSettings copy = new TransRegSettings();
         copy.setCenteruser(centeruser.copy());
         copy.setGroups(groups.copy());
-        copy.setExtending(extending.copy());
         copy.setLeadLag(leadLag.copy());
+        copy.setEpoch(epoch.copy());
 
         return copy;
     }
 
-    public ExtendingSettings getExtending() {
-        return extending;
+    public EpochSettings getEpoch() {
+        return epoch;
     }
 
-    public void setExtending(ExtendingSettings extending) {
-        this.extending = extending;
+    public void setEpoch(EpochSettings epoch) {
+        this.epoch = epoch;
     }
 
     //<editor-fold defaultstate="collapsed" desc="for Workspace">
@@ -122,9 +147,6 @@ public class TransRegSettings implements InformationSetSerializable {
         tmp = groups.write(verbose);
         info.add(GROUPS, tmp);
 
-        tmp = extending.write(verbose);
-        info.add(EXTENDING, tmp);
-
         tmp = leadLag.write(verbose);
         info.add(LEADLAG, tmp);
 
@@ -136,12 +158,11 @@ public class TransRegSettings implements InformationSetSerializable {
 
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
-        extending.read(info.getSubSet(EXTENDING));
         leadLag.read(info.getSubSet(LEADLAG));
 
         return true;
     }
 
-    private static String CENTERUSER = "centeruser", GROUPS = "groups", EXTENDING = "extending", LEADLAG = "leadlag";
+    private static String CENTERUSER = "centeruser", GROUPS = "groups", LEADLAG = "leadlag";
 //</editor-fold>
 }

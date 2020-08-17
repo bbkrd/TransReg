@@ -28,12 +28,13 @@ import ec.tstoolkit.timeseries.TsPeriodSelector;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class CenteruserSettings implements InformationSetSerializable {
 
     private TsPeriodSelector span;
     private CenteruserEnum method;
+    private int extendingPeriods = 0;
 
     public CenteruserSettings() {
         //Defaults:
@@ -62,8 +63,23 @@ public class CenteruserSettings implements InformationSetSerializable {
         this.method = method;
     }
 
+    public int getExtendingPeriods() {
+        return extendingPeriods;
+    }
+    
+    public boolean isExtending(){
+        return extendingPeriods!=0;
+    }
+
+    public void setExtendingPeriods(int extendingPeriods) {
+        this.extendingPeriods = extendingPeriods;
+    }
+
     public boolean isDefault() {
-        if(!method.equals(CenteruserEnum.Seasonal)){
+        if (!method.equals(CenteruserEnum.Seasonal)) {
+            return false;
+        }
+        if (extendingPeriods != 0) {
             return false;
         }
         return span.getType().equals(PeriodSelectorType.All);
@@ -74,6 +90,7 @@ public class CenteruserSettings implements InformationSetSerializable {
         CenteruserSettings copy = new CenteruserSettings();
         copy.setMethod(method);
         copy.setSpan(span.clone());
+        copy.setExtendingPeriods(extendingPeriods);
 
         return copy;
     }
@@ -86,20 +103,21 @@ public class CenteruserSettings implements InformationSetSerializable {
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
         info.add(METHOD, method.toString());
-        //TODO: Span
         info.add(SPAN, span);
-        
+        info.add(EXTENDING, extendingPeriods);
+
         return info;
     }
 
     @Override
     public boolean read(InformationSet info) {
-        method = CenteruserEnum.valueOf(info.get(METHOD, String.class));   
+        method = CenteruserEnum.valueOf(info.get(METHOD, String.class));
         span = info.get(SPAN, TsPeriodSelector.class);
+        extendingPeriods = info.get(EXTENDING, int.class);
         return true;
     }
 
-    private static String METHOD = "method", SPAN = "span";
+    private static String METHOD = "method", SPAN = "span", EXTENDING = "extending";
 
     public boolean isEnabled() {
         return !method.equals(CenteruserEnum.None);
