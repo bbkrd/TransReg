@@ -22,6 +22,7 @@ package de.bundesbank.transreg.ui;
 
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.logic.TransRegVar;
+import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.TransRegVarChildrenFactory;
 import ec.nbdemetra.ui.DemetraUI;
 import ec.nbdemetra.ui.NbComponents;
@@ -72,7 +73,7 @@ import org.openide.nodes.Children;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegVarOutlineView extends JComponent implements ITsActionAble, ExplorerManager.Provider {
 
@@ -90,6 +91,9 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
 
     private final TransRegDocument vars;
     private final List<TransRegVar> myModels = new ArrayList<>();
+    
+    @lombok.Setter
+    private TransRegSettings startSettings = TransRegSettings.DEFAULT;
 
     private OutlineView outlineview;
     private final ExplorerManager em = new ExplorerManager();
@@ -185,7 +189,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     public TransRegDocument getVars() {
         return vars;
     }
-
+    
     public TransRegVar getSelectedVariable() {
         return getSelectedVariable(this);
     }
@@ -228,6 +232,10 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             } else {
                 v = new TransRegVar(name, s.getMoniker(), s.getTsData());
             }
+            TransRegSettings t = startSettings.copy();
+            t.getGroups().setFreq(v.getDefinitionFrequency().intValue());
+            v.setSettings(t);
+
             // in myModel
             String nextName = getNextName(name, vars);
             v.setName(nextName);
@@ -499,7 +507,6 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     }
 
 //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="VarName">
     private static final class VarName extends NotifyDescriptor.InputLine {
 

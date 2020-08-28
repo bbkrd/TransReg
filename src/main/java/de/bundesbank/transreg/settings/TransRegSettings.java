@@ -136,6 +136,17 @@ public class TransRegSettings implements InformationSetSerializable {
     public void setEpoch(EpochSettings epoch) {
         this.epoch = epoch;
     }
+    
+    @Override
+    public String toString(){
+        if(DEFAULT.equals(this)){
+            return "Default";
+        }
+        if(TEST.equals(this)){
+            return "Test";
+        }
+        return "";
+    }
 
     //<editor-fold defaultstate="collapsed" desc="for Workspace">
     @Override

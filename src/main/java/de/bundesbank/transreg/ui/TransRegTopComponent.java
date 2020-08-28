@@ -29,22 +29,21 @@ import de.bundesbank.transreg.logic.TransRegVar;
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.ui.propertyEditor.TransRegSettingsUI;
-import de.bundesbank.transreg.ui.toolbar.SettingsSelectionComponent;
 import ec.nbdemetra.ui.DemetraUiIcon;
 import ec.nbdemetra.ui.NbComponents;
-import ec.nbdemetra.ui.awt.PopupMenuAdapter;
 import ec.nbdemetra.ui.properties.l2fprod.PropertiesPanelFactory;
 import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
-import ec.nbdemetra.ws.ui.SpecSelectionComponent;
 import ec.nbdemetra.ws.ui.WorkspaceTopComponent;
 import ec.tstoolkit.timeseries.regression.ITsVariable;
 import static ec.ui.view.tsprocessing.DefaultProcessingViewer.BUTTONS;
 import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,14 +51,13 @@ import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import javax.swing.event.PopupMenuEvent;
+import javax.swing.SpringLayout;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -91,9 +89,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
     private JLabel dropDataLabel;
     private JButton runButton;
-    private JLabel defSpecLabel;
-
-    private TransRegSettings defaultSettings;
+    private JComboBox specComboBox;
 
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
@@ -207,76 +203,73 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         });
         //</editor-fold>
         add(outlineview);
-//</editor-fold>
+        //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Toolbar">
         toolBarRepresentation = NbComponents.newInnerToolbar();
-        toolBarRepresentation.setFloatable(false);
+        toolBarRepresentation.setFloatable(true);
+        FlowLayout f = new FlowLayout();
+        toolBarRepresentation.setLayout(f);
 
         //<editor-fold defaultstate="collapsed" desc="Data drop here">
         dropDataLabel = new JLabel("Drop data here");
         dropDataLabel.setFont(new JLabel().getFont().deriveFont(Font.ITALIC));
-        dropDataLabel.setPreferredSize(new Dimension(50, 40));
+        dropDataLabel.setPreferredSize(new Dimension(100, 40));
         dropDataLabel.setVisible(true);
         dropDataLabel.setTransferHandler(new TransRegTransferHandler(outlineview));
         toolBarRepresentation.add(dropDataLabel);
         toolBarRepresentation.addSeparator();
         //</editor-fold>
 
-        //<editor-fold defaultstate="collapsed" desc="Settings popup">
-        JPopupMenu specPopup = new JPopupMenu();
-        final JButton specButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, specPopup));
-        specPopup.add(new SettingsSelectionComponent()).addPropertyChangeListener(evt -> {
-            String p = evt.getPropertyName();
-            if (p.equals(SettingsSelectionComponent.SETTING_PROPERTY) && evt.getNewValue() != null) {
-                setDefaultSettings((TransRegSettings) evt.getNewValue());
-            } else if (p.equals(SpecSelectionComponent.ICON_PROPERTY) && evt.getNewValue() != null) {
-                specButton.setIcon(ImageUtilities.image2Icon((Image) evt.getNewValue()));
-            }
-        });
-        specPopup.addPopupMenuListener(new PopupMenuAdapter() {
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                ((SettingsSelectionComponent) ((JPopupMenu) e.getSource()).getComponent(0)).setSettings(getDefaultSettings());
-            }
-        });
+        //<editor-fold defaultstate="collapsed" desc="Settingss">
+        specComboBox = new JComboBox(TransRegSettings.allSettings());
+//        specComboBox.setPrototypeDisplayValue(" Default ");
+        specComboBox.setPreferredSize(new Dimension(100, 30));
 
-        defSpecLabel = (JLabel) toolBarRepresentation.add(new JLabel());
-        defSpecLabel.setText("TransRegDefaultSettings");
-        toolBarRepresentation.addSeparator();
+        //ActionListener
+        specComboBox.addActionListener((ActionEvent e) -> {
+            TransRegSettings item = (TransRegSettings) specComboBox.getSelectedItem();
+            outlineview.setStartSettings(item);
+
+        });
+        toolBarRepresentation.add(specComboBox);
         //</editor-fold>
-
+        toolBarRepresentation.addSeparator();
         //<editor-fold defaultstate="collapsed" desc="Runbutton">
         runButton = toolBarRepresentation.add(new AbstractAction("", DemetraUiIcon.COMPILE_16) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TransRegDocument vars = outlineview.getVars();
-                Iterator<ITsVariable> iter = vars.variables().iterator();
-                while (iter.hasNext()) {
-                    ITsVariable v = iter.next();
+                ITsVariable[] varsArray = vars.variables().toArray(new ITsVariable[0]);
+                for (ITsVariable v : varsArray) {
                     if (v instanceof TransRegVar) {
-                        TransRegVar var = (TransRegVar) v;
-
-                        if (var.hasChildren()) {
+                        TransRegVar var = ((TransRegVar) v);
+                        if (var.isRoot()) {
                             // falls Kinder vorhanden sind: alle löschen + Abhängigkeiten
                             // denn in calculate erfolgt kompletteneuberechnung
                             ArrayList<TransRegVar> deleteVars = var.deleteChildren();
                             deleteVars.stream().forEach((t) -> {
                                 vars.remove(t);
                             });
-                        }
 
-                        HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
+                            HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated
+                                    = TransRegCalculationTool.calculate(var);
 
-                        calculated.values().forEach((a) -> {
-                            a.forEach((_item) -> {
-                                a.stream().forEach((child) -> {
-                                    vars.set(child.getName(), child);
+                            calculated.values().forEach((a) -> {
+                                a.forEach((_item) -> {
+                                    a.stream().forEach((child) -> {
+                                        try {
+                                            vars.set(child.getName(), child);
+                                        } catch (Exception nothing) {
+                                            System.out.println("Problem mit: " + child.getName());
+                                        }
+                                    });
                                 });
                             });
-                        });
+                        }
                     }
                 }
+//                runButton.setEnabled(false);
                 outlineview.refresh();
                 outlineview.repaint();
             }
@@ -289,20 +282,9 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 //</editor-fold>
     }
 
-    private TransRegSettings getDefaultSettings() {
-        return defaultSettings;
-    }
-
     @Override
     public void refresh() {
         outlineview.refresh();
         outlineview.repaint();
-    }
-
-    private void setDefaultSettings(TransRegSettings transRegSettings) {
-        TransRegSettings old = this.defaultSettings;
-        this.defaultSettings = transRegSettings;
-        defSpecLabel.setText(defaultSettings == null ? "" : "hier Name");
-        firePropertyChange(DEFAULT_SETTING_PROPERTY, old, this.defaultSettings);
     }
 }

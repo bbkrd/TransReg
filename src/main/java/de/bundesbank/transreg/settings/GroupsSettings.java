@@ -34,23 +34,27 @@ import java.util.TreeSet;
  */
 @lombok.Data
 public class GroupsSettings implements InformationSetSerializable {
-
+    
     private Group[] groups = new Group[]{new Group(1)};
     private boolean enabled = false;
     private DefaultValueEnum defaultValue = DefaultValueEnum.ZERO;
-
+    
     public GroupsSettings() {
-
+        
     }
-
+    
     public GroupsSettings(int freq) {
 //        enable = true;
         generateGroups(freq);
     }
-
+    
     private void generateGroups(int freq) {
         groups = new Group[freq];
         Arrays.fill(groups, new Group(1));
+    }
+    
+    public void setFreq(int f) {
+        generateGroups(f);
     }
 
     public int getFreq() {
@@ -59,7 +63,7 @@ public class GroupsSettings implements InformationSetSerializable {
         }
         return 0;
     }
-
+    
     public boolean isDefault() {
         if (defaultValue.equals(DefaultValueEnum.NaN)) {
             return false;
@@ -71,16 +75,16 @@ public class GroupsSettings implements InformationSetSerializable {
         }
         return result || !enabled;
     }
-
+    
     public GroupsSettings copy() {
-
+        
         GroupsSettings copy = new GroupsSettings();
         copy.setGroups(groups.clone());
         copy.setDefaultValue(defaultValue);
-
+        
         return copy;
     }
-
+    
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -89,9 +93,9 @@ public class GroupsSettings implements InformationSetSerializable {
         }
         return result.toString().trim();
     }
-
+    
     private static String GROUPS = "groups", ENABLE = "enable", DEFAULTVALUE = "defaultvalue";
-
+    
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
@@ -100,10 +104,10 @@ public class GroupsSettings implements InformationSetSerializable {
         }
         info.add(ENABLE, enabled);
         info.add(DEFAULTVALUE, defaultValue);
-
+        
         return info;
     }
-
+    
     @Override
     public boolean read(InformationSet info) {
         Group[] groupsInfo = info.get(GROUPS, Group[].class);
@@ -112,10 +116,10 @@ public class GroupsSettings implements InformationSetSerializable {
         }
         enabled = info.get(ENABLE, Boolean.class);
         defaultValue = DefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
-
+        
         return true;
     }
-
+    
     public Set<Group> getGivenGroups() {
         Set<Group> result = new TreeSet<>((Group o1, Group o2)
                 -> o1.getNumber() - o2.getNumber()

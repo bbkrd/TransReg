@@ -264,7 +264,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             case ORIGINAL:
                 return "Original";
             case LEADLAG:
-                if (LeadLagEnum.Lag.equals(currentSettings.getLeadLag().getnPeriods() > 0)) {
+                if ((currentSettings.getLeadLag().getnPeriods() > 0)) {
                     return "Lag";
                 } else {
                     return "Lead";
@@ -284,9 +284,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                         break;
                 }
                 return s;
+            default:
+                throw new IllegalArgumentException("Unkown Level name");
         }
-
-        return null;
     }
 
     public void setLevel(NodesLevelEnum level) {
@@ -358,15 +358,15 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             // find the variable
             ArrayList<TransRegVar> v = results.get(this.getLevel());
             int v_length = v.size();
-            for(int i =0; i < v_length; i++){
-                for(TransRegVar t : v){
+            for (int i = 0; i < v_length; i++) {
+                for (TransRegVar t : v) {
                     if (t.getGroupStatus() == (this.getGroupStatus())) {
-                    this.setCalculatedData(t.getTsData().clone());
-                    return true;
-                } 
+                        this.setCalculatedData(t.getTsData().clone());
+                        return true;
+                    }
                 }
             }
-            
+
 //            for (TransRegVar t : results.get(this.getLevel())) {
 //                if (t.getGroupStatus() == (this.getGroupStatus())) {
 //                    this.setCalculatedData(t.getTsData().clone());

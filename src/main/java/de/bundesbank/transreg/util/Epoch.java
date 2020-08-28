@@ -12,8 +12,7 @@ import ec.tstoolkit.timeseries.simplets.TsPeriod;
  *
  * @author Nina Gonschorreck
  */
-
-public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, Cloneable{
+public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, Cloneable {
 
     private Day start, end;
 
@@ -42,7 +41,7 @@ public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, 
     public void setEnd(Day day) {
         end = day;
     }
-    
+
     @Override
     public Epoch clone() {
         try {
@@ -70,5 +69,10 @@ public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, 
     @Override
     public String getName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toString() {
+        return start.toString() + " - " + end.toString();
     }
 }

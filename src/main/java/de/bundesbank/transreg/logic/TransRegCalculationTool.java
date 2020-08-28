@@ -379,13 +379,17 @@ public class TransRegCalculationTool {
          *
          * periods > 0 : Shift in die vergangeheit, lag periods < 0 : Shift in
          * die Zukunft, lead
+         *
+         * meine Logik
+         * 
+         * if (periods > 0) {
+         * data = data.lead(periods);
+         * } else {
+         * data = data.lag(-periods);
+         * }
+         * 
          */
-        if (periods > 0) {
-            data = data.lead(periods);
-        } else {
-            data = data.lag(-periods);
-        }
-        return data;
+        return data.lead(periods);
     }
 
     private static double[] calcSeasonalMeans(TsData data) {
