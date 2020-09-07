@@ -12,6 +12,7 @@ import ec.tstoolkit.timeseries.simplets.TsPeriod;
  *
  * @author Nina Gonschorreck
  */
+//ToDo Nina - 02: Warum sind soviele Methoden nicht implementiert, muss man dann extenden
 public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, Cloneable {
 
     private Day start, end;

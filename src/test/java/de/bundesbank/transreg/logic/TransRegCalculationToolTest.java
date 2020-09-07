@@ -286,6 +286,7 @@ public class TransRegCalculationToolTest {
     }
 
     //@Test
+    //ToDo Nina - 07: was soll hier getestet werden? Wie ist die Abdeckung? Epoch
     public void testCalculate() {
         // kombiniert Gruppen mit centeruser
         double[] d1 = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
@@ -453,7 +454,7 @@ public class TransRegCalculationToolTest {
 //        TsData expResult;
 //
 //        TransRegVar v = new TransRegVar(inputData);
-//        
+//
 //        v.getSettings().getCenteruser().setMethod(CenteruserEnum.None);
 //        v.getSettings().getCenteruser().setExtendingPeriods(12);
 //
@@ -552,11 +553,10 @@ public class TransRegCalculationToolTest {
 
         double[] result_group1 = TransRegCalculationTool.calculate(var).get(NodesLevelEnum.CENTERUSER).get(0).getTsData().internalStorage();
         double[] result_group2 = TransRegCalculationTool.calculate(var).get(NodesLevelEnum.CENTERUSER).get(0).getTsData().internalStorage();
-    
-        
+
     }
-    
-    public void testEpoch(){
-        
+
+    public void testEpoch() {
+
     }
 }

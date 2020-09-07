@@ -23,8 +23,8 @@ public class EpochSettings implements InformationSetSerializable {
         activeEpochs = new Epoch[1];
         activeEpochs[0] = new Epoch();
     }
-    
-    public EpochSettings(Day start, Day end){
+
+    public EpochSettings(Day start, Day end) {
         this.enabled = false;
         defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
@@ -54,27 +54,27 @@ public class EpochSettings implements InformationSetSerializable {
     public void setDefaultValue(DefaultValueEnum defaultValue) {
         this.defaultValue = defaultValue;
     }
-    
-    public boolean isDefault(){
-        return !isEnabled() ; //|| activeEpochs.isEmpty();
+
+    public boolean isDefault() {
+        return !isEnabled(); //|| activeEpochs.isEmpty();
     }
 
-    public EpochSettings copy(){
+    public EpochSettings copy() {
         EpochSettings copy = new EpochSettings();
         copy.setEnabled(enabled);
-        if(activeEpochs!=null ){//&& !activeEpochs.isEmpty()){
+        if (activeEpochs != null) {//&& !activeEpochs.isEmpty()){
             copy.setEpochs(activeEpochs);
         }
         copy.setDefaultValue(defaultValue);
-        
+
         return copy;
     }
-    
+
     private static String ENABLED = "enabled";
-    
+
     @Override
     public InformationSet write(boolean verbose) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. //ToDo Nina - 01: Warum sind read und write nicht ausprogrammiert
     }
 
     @Override

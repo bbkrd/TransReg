@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -130,6 +130,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             if (var != null) {
                 TransRegDocument vars = outlineview.getVars();
                 if (var.hasChildren()) {
+                    //ToDo Nina - 00: sollen die Kommentare drin bleiben? GGF auf Englisch
                     // falls Kinder vorhanden sind: alle löschen + Abhängigkeiten
                     // denn in calculate erfolgt kompletteneuberechnung
                     ArrayList<TransRegVar> deleteVars = var.deleteChildren();
@@ -141,7 +142,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 //                ArrayList<TransRegVar> calculated = TransRegCalculationTool.calculate(var);
                 HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
                 calculated.values().forEach((a) -> {
-                    a.forEach((_item) -> {
+                    a.forEach((_item) -> { //ToDo Nina - 06: siehe 05
                         a.stream().forEach((child) -> {
                             vars.set(child.getName(), child);
                         });
@@ -207,7 +208,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
         //<editor-fold defaultstate="collapsed" desc="Toolbar">
         toolBarRepresentation = NbComponents.newInnerToolbar();
-        toolBarRepresentation.setFloatable(true);
+        toolBarRepresentation.setFloatable(true); //ToDo Nina - 04: Warum ist von der Kopfzeile drag and drop bar? Die Zeile ist auch ein bisschen hoch
         FlowLayout f = new FlowLayout();
         toolBarRepresentation.setLayout(f);
 
@@ -256,7 +257,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                                     = TransRegCalculationTool.calculate(var);
 
                             calculated.values().forEach((a) -> {
-                                a.forEach((_item) -> {
+                                a.forEach((_item) -> { //ToDo Nina - 05: warum wird _item nicht benutzt
                                     a.stream().forEach((child) -> {
                                         try {
                                             vars.set(child.getName(), child);

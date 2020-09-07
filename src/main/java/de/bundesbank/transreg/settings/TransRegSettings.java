@@ -44,8 +44,8 @@ public class TransRegSettings implements InformationSetSerializable {
         TEST = new TransRegSettings();
         TEST.centeruser.setMethod(CenteruserEnum.Global);
     }
-    
-     public static final TransRegSettings[] allSettings(){
+
+    public static final TransRegSettings[] allSettings() {
         return new TransRegSettings[]{DEFAULT, TEST};
     }
 
@@ -62,15 +62,15 @@ public class TransRegSettings implements InformationSetSerializable {
         leadLag = new LeadLagSettings();
         epoch = new EpochSettings();
     }
-    
-    public TransRegSettings(Day start, Day end){
+
+    public TransRegSettings(Day start, Day end) {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings();
         leadLag = new LeadLagSettings();
         epoch = new EpochSettings(start, end);
     }
-    
-        public TransRegSettings(int freq, Day start, Day end){
+
+    public TransRegSettings(int freq, Day start, Day end) {
         centeruser = new CenteruserSettings();
         groups = new GroupsSettings(freq);
         leadLag = new LeadLagSettings();
@@ -136,13 +136,13 @@ public class TransRegSettings implements InformationSetSerializable {
     public void setEpoch(EpochSettings epoch) {
         this.epoch = epoch;
     }
-    
+
     @Override
-    public String toString(){
-        if(DEFAULT.equals(this)){
+    public String toString() {
+        if (DEFAULT.equals(this)) {
             return "Default";
         }
-        if(TEST.equals(this)){
+        if (TEST.equals(this)) {
             return "Test";
         }
         return "";
@@ -161,6 +161,7 @@ public class TransRegSettings implements InformationSetSerializable {
         tmp = leadLag.write(verbose);
         info.add(LEADLAG, tmp);
 
+        //ToDo Nina - 03: Warum fehlt hier Epoch?
         return info;
     }
 
