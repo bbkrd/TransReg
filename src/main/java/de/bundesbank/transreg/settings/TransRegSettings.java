@@ -161,7 +161,9 @@ public class TransRegSettings implements InformationSetSerializable {
         tmp = leadLag.write(verbose);
         info.add(LEADLAG, tmp);
 
-        //ToDo Nina - 03: Warum fehlt hier Epoch?
+        tmp = epoch.write(verbose);
+        info.add(EPOCH, tmp);
+
         return info;
     }
 
@@ -175,6 +177,6 @@ public class TransRegSettings implements InformationSetSerializable {
         return true;
     }
 
-    private static String CENTERUSER = "centeruser", GROUPS = "groups", LEADLAG = "leadlag";
+    private static String CENTERUSER = "centeruser", GROUPS = "groups", LEADLAG = "leadlag", EPOCH = "epoch";
 //</editor-fold>
 }

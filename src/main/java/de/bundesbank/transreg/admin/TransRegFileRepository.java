@@ -32,12 +32,12 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 @ServiceProvider(service = IWorkspaceItemRepository.class)
 public class TransRegFileRepository extends AbstractFileItemRepository<TransRegDocument> {
 
-    public static final WorkspaceFamily TRANSREG = parse("Utilities@TransReg");
+    public static final WorkspaceFamily TRANSREG = parse("TransReg@TransRegDocument");
 
     @Override
     public boolean load(WorkspaceItem<TransRegDocument> item) {

@@ -30,7 +30,7 @@ import static javax.swing.TransferHandler.COPY;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegTransferHandler extends TransferHandler {
 

@@ -459,7 +459,6 @@ public class TransRegCalculationTool {
                 result.set(next.getPeriod(), next.getValue());
             }
         }
-
         return result;
     }
 }

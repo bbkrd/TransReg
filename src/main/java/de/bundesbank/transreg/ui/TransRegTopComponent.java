@@ -31,6 +31,7 @@ import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.ui.propertyEditor.TransRegSettingsUI;
 import ec.nbdemetra.ui.DemetraUiIcon;
 import ec.nbdemetra.ui.NbComponents;
+import ec.nbdemetra.ui.awt.PopupMenuAdapter;
 import ec.nbdemetra.ui.properties.l2fprod.PropertiesPanelFactory;
 import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
@@ -42,6 +43,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -54,10 +56,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -89,7 +93,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
     private JLabel dropDataLabel;
     private JButton runButton;
-    private JComboBox specComboBox;
 
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
@@ -139,13 +142,10 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                     });
                 }
 
-//                ArrayList<TransRegVar> calculated = TransRegCalculationTool.calculate(var);
                 HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
                 calculated.values().forEach((a) -> {
-                    a.forEach((_item) -> { //ToDo Nina - 06: siehe 05
-                        a.stream().forEach((child) -> {
-                            vars.set(child.getName(), child);
-                        });
+                    a.stream().forEach((child) -> {
+                        vars.set(child.getName(), child);
                     });
                 });
 
@@ -166,6 +166,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
         //</editor-fold>
+       
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
@@ -208,7 +209,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
         //<editor-fold defaultstate="collapsed" desc="Toolbar">
         toolBarRepresentation = NbComponents.newInnerToolbar();
-        toolBarRepresentation.setFloatable(true); //ToDo Nina - 04: Warum ist von der Kopfzeile drag and drop bar? Die Zeile ist auch ein bisschen hoch
+        toolBarRepresentation.setFloatable(false);
         FlowLayout f = new FlowLayout();
         toolBarRepresentation.setLayout(f);
 
@@ -222,8 +223,8 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         toolBarRepresentation.addSeparator();
         //</editor-fold>
 
-        //<editor-fold defaultstate="collapsed" desc="Settingss">
-        specComboBox = new JComboBox(TransRegSettings.allSettings());
+        //<editor-fold defaultstate="collapsed" desc="Settings old">
+        /*specComboBox = new JComboBox(TransRegSettings.allSettings());
 //        specComboBox.setPrototypeDisplayValue(" Default ");
         specComboBox.setPreferredSize(new Dimension(100, 30));
 
@@ -233,9 +234,32 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             outlineview.setStartSettings(item);
 
         });
-        toolBarRepresentation.add(specComboBox);
+        toolBarRepresentation.add(specComboBox);*/
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Settings">
+         JPopupMenu specPopup = new JPopupMenu();
+        final JButton specButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, specPopup));
+        specPopup.add(new SettingSelectionComponent()).addPropertyChangeListener(evt -> {
+            String p = evt.getPropertyName();
+            if (p.equals(SettingSelectionComponent.SPECIFICATION_PROPERTY) && evt.getNewValue() != null) {
+//                setDefaultSpecification((ISaSpecification) evt.getNewValue());
+            } else if (p.equals(SettingSelectionComponent.ICON_PROPERTY) && evt.getNewValue() != null) {
+                specButton.setIcon(ImageUtilities.image2Icon((Image) evt.getNewValue()));
+            }
+        });
+        /*
+        specPopup.addPopupMenuListener(new PopupMenuAdapter() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                ((SettingSelectionComponent) ((JPopupMenu) e.getSource()).getComponent(0)).setSpecification(getDefaultSpecification());
+            }
+        });*/
+
+        
         //</editor-fold>
         toolBarRepresentation.addSeparator();
+        
         //<editor-fold defaultstate="collapsed" desc="Runbutton">
         runButton = toolBarRepresentation.add(new AbstractAction("", DemetraUiIcon.COMPILE_16) {
             @Override
@@ -257,14 +281,12 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                                     = TransRegCalculationTool.calculate(var);
 
                             calculated.values().forEach((a) -> {
-                                a.forEach((_item) -> { //ToDo Nina - 05: warum wird _item nicht benutzt
-                                    a.stream().forEach((child) -> {
-                                        try {
-                                            vars.set(child.getName(), child);
-                                        } catch (Exception nothing) {
-                                            System.out.println("Problem mit: " + child.getName());
-                                        }
-                                    });
+                                a.stream().forEach((child) -> {
+                                    try {
+                                        vars.set(child.getName(), child);
+                                    } catch (Exception nothing) {
+                                        System.out.println("Problem mit: " + child.getName());
+                                    }
                                 });
                             });
                         }

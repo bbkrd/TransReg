@@ -1,7 +1,6 @@
 package de.bundesbank.transreg.ui.propertyEditor;
 
 import de.bundesbank.transreg.settings.LeadLagSettings;
-import de.bundesbank.transreg.util.LeadLagEnum;
 import ec.nbdemetra.ui.properties.l2fprod.CustomPropertyEditorRegistry;
 import ec.tstoolkit.descriptors.EnhancedPropertyDescriptor;
 import ec.tstoolkit.descriptors.IObjectDescriptor;
@@ -10,7 +9,6 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *

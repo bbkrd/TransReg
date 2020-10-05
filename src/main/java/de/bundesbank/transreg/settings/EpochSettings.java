@@ -70,16 +70,34 @@ public class EpochSettings implements InformationSetSerializable {
         return copy;
     }
 
-    private static String ENABLED = "enabled";
+    private static String ENABLED = "enabled", DEFAULTVALUE = "defaultvalue", EPOCHS = "epochs", EPOCHLENGTH = "epochlength";
 
     @Override
     public InformationSet write(boolean verbose) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. //ToDo Nina - 01: Warum sind read und write nicht ausprogrammiert
+        InformationSet info = new InformationSet();
+        info.add(EPOCHLENGTH, activeEpochs.length);
+        if (activeEpochs.length != 0) {
+            for (int i = 0; i < activeEpochs.length; i++) {
+                info.add(EPOCHS + i, activeEpochs[i].toString());
+            }
+        }
+        info.add(ENABLED, enabled);
+        info.add(DEFAULTVALUE, defaultValue);
+
+        return info;
     }
 
     @Override
     public boolean read(InformationSet info) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        enabled = info.get(ENABLED, Boolean.class);
+        defaultValue = DefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
+        int length = info.get(EPOCHLENGTH, Integer.class);
+        if (length != 0) {
+            activeEpochs = new Epoch[length];
+            for (int i = 0; i < length; i++) {
+                activeEpochs[i] = info.get(EPOCHS + i, Epoch.class);
+            }
+        }
+        return true;
     }
-
 }

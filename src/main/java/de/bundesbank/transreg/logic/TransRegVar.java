@@ -22,7 +22,6 @@ package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
-import de.bundesbank.transreg.util.LeadLagEnum;
 import ec.tss.Ts;
 import ec.tss.TsFactory;
 import ec.tss.TsInformationType;

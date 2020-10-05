@@ -2,7 +2,7 @@ package de.bundesbank.transreg.util;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 @lombok.Data
 public class Group {
