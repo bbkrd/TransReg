@@ -137,6 +137,13 @@ public class TransRegSettings implements InformationSetSerializable {
         this.epoch = epoch;
     }
 
+    public void setSettings(TransRegSettings settings){
+        centeruser = settings.getCenteruser();
+        epoch = settings.getEpoch();
+        groups = settings.getGroups();
+        leadLag = settings.getLeadLag();
+    }
+    
     @Override
     public String toString() {
         if (DEFAULT.equals(this)) {

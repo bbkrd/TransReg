@@ -1,6 +1,7 @@
-package de.bundesbank.transreg.ui;
+package de.bundesbank.transreg.settings.admin;
 
 import com.google.common.base.Optional;
+import de.bundesbank.transreg.settings.TransRegSettings;
 import ec.nbdemetra.ui.awt.IDialogDescriptorProvider;
 import ec.nbdemetra.ui.awt.JComponent2;
 import ec.nbdemetra.ui.calendars.CustomDialogDescriptor;
@@ -9,9 +10,6 @@ import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.DummyWsNode;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
-import ec.nbdemetra.ws.ui.SpecSelectionComponent;
-import ec.satoolkit.GenericSaProcessingFactory;
-import ec.satoolkit.ISaSpecification;
 import ec.tss.tsproviders.utils.IConstraint;
 import ec.tstoolkit.utilities.Id;
 import ec.tstoolkit.utilities.LinearId;
@@ -36,14 +34,14 @@ import org.openide.nodes.Node;
 public class SettingSelectionComponent extends JComponent2 implements ExplorerManager.Provider, IDialogDescriptorProvider {
 
     public static final Id SPECS_ID = new LinearId("TransReg", "TransRegSettings");
-    public static final String SPECIFICATION_PROPERTY = "specification";
+    public static final String SETTING_PROPERTY = "transregsetting";
     public static final String ICON_PROPERTY = "icon";
 
     private final BeanTreeView tree;
     private final ExplorerManager em;
     private final SelectionListener selectionListener;
 
-    private ISaSpecification specification;
+    private TransRegSettings setting;
     private Image icon;
 
     public SettingSelectionComponent() {
@@ -54,13 +52,14 @@ public class SettingSelectionComponent extends JComponent2 implements ExplorerMa
         this.tree = new BeanTreeView();
         this.em = new ExplorerManager();
         this.selectionListener = new SelectionListener();
-        this.specification = null;
+        this.setting = null;
         this.icon = null;
 
         tree.setRootVisible(false);
         tree.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        DecoratedNode root = new DecoratedNode(new DummyWsNode(WorkspaceFactory.getInstance().getActiveWorkspace(), SPECS_ID), showSystemOnly ? ItemWsNodeFilter.SYSTEM_ONLY : (o -> true));
+        DecoratedNode root = new DecoratedNode(new DummyWsNode(WorkspaceFactory.getInstance().getActiveWorkspace(), 
+                SPECS_ID), showSystemOnly ? ItemWsNodeFilter.SYSTEM_ONLY : (o -> true));
         for (DecoratedNode o : root.breadthFirstIterable()) {
             o.setPreferredActionDecorator(DecoratedNode.PreferredAction.DO_NOTHING);
         }
@@ -74,14 +73,14 @@ public class SettingSelectionComponent extends JComponent2 implements ExplorerMa
         em.addVetoableChangeListener(selectionListener);
         addPropertyChangeListener(evt -> {
             String p = evt.getPropertyName();
-            if (p.equals(SPECIFICATION_PROPERTY)) {
+            if (p.equals(SETTING_PROPERTY)) {
                 onSpecificationChange();
             }
         });
     }
 
     boolean isCurrentSpecificationNode(Node o) {
-        return o instanceof ItemWsNode && ((ItemWsNode) o).getItem().getElement().equals(specification);
+        return o instanceof ItemWsNode && ((ItemWsNode) o).getItem().getElement().equals(setting);
     }
 
     class SelectionListener implements VetoableChangeListener {
@@ -94,10 +93,10 @@ public class SettingSelectionComponent extends JComponent2 implements ExplorerMa
                 Node[] nodes = (Node[]) evt.getNewValue();
                 if (nodes.length > 0 && ((DecoratedNode) nodes[0]).getOriginal() instanceof ItemWsNode) {
                     ItemWsNode node = (ItemWsNode) ((DecoratedNode) nodes[0]).getOriginal();
-                    setSpecification((ISaSpecification) node.getItem().getElement());
+                    setSetting((TransRegSettings) node.getItem().getElement());
                     setIcon(node.getIcon(BeanInfo.ICON_COLOR_16x16));
                 } else {
-                    setSpecification(null);
+                    setSetting(null);
                     setIcon(null);
                 }
             }
@@ -128,14 +127,14 @@ public class SettingSelectionComponent extends JComponent2 implements ExplorerMa
         return em;
     }
 
-    public ISaSpecification getSpecification() {
-        return specification;
+    public TransRegSettings getSetting() {
+        return setting;
     }
 
-    public void setSpecification(ISaSpecification specification) {
-        ISaSpecification old = this.specification;
-        this.specification = specification;
-        firePropertyChange(SPECIFICATION_PROPERTY, old, this.specification);
+    public void setSetting(TransRegSettings setting) {
+        TransRegSettings old = this.setting;
+        this.setting = setting;
+        firePropertyChange(SETTING_PROPERTY, old, this.setting);
     }
 
     public Image getIcon() {
@@ -151,32 +150,32 @@ public class SettingSelectionComponent extends JComponent2 implements ExplorerMa
 
     @Override
     public DialogDescriptor createDialogDescriptor(String title) {
-        return new SpecSelectionDialogDescriptor(this, title);
+        return new SettingSelectionDialogDescriptor(this, title);
     }
 
-    private static class SpecSelectionDialogDescriptor extends CustomDialogDescriptor<SettingSelectionComponent> {
+    private static class SettingSelectionDialogDescriptor extends CustomDialogDescriptor<SettingSelectionComponent> {
 
-        SpecSelectionDialogDescriptor(SettingSelectionComponent p, String title) {
+        SettingSelectionDialogDescriptor(SettingSelectionComponent p, String title) {
             super(p, title, p);
-            validate(SpecSelectionConstraints.values());
+            validate(SettingSelectionConstraints.values());
         }
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             String p = evt.getPropertyName();
-            if (p.equals(SpecSelectionComponent.SPECIFICATION_PROPERTY)) {
-                validate(SpecSelectionConstraints.values());
+            if (p.equals(SettingSelectionComponent.SETTING_PROPERTY)) {
+                validate(SettingSelectionConstraints.values());
             }
         }
     }
 
-    private enum SpecSelectionConstraints implements IConstraint<SettingSelectionComponent> {
+    private enum SettingSelectionConstraints implements IConstraint<SettingSelectionComponent> {
 
         SELECTION;
 
         @Override
         public String check(SettingSelectionComponent t) {
-            return t.getSpecification() == null ? "Specification not selected" : null;
+            return t.getSetting() == null ? "Specification not selected" : null;
         }
     }
 

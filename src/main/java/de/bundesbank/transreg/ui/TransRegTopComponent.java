@@ -20,6 +20,7 @@
  */
 package de.bundesbank.transreg.ui;
 
+import de.bundesbank.transreg.settings.admin.SettingSelectionComponent;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
@@ -59,6 +60,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
+import javax.swing.event.PopupMenuEvent;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.DropDownButtonFactory;
@@ -92,7 +97,10 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
     private TransRegVarOutlineView outlineview;
 
     private JLabel dropDataLabel;
+    private JLabel defSettingLabel;
     private JButton runButton;
+
+    private TransRegSettings currentSetting;
 
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
@@ -166,7 +174,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
         //</editor-fold>
-       
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
@@ -238,28 +245,30 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Settings">
-         JPopupMenu specPopup = new JPopupMenu();
+        JPopupMenu specPopup = new JPopupMenu();
         final JButton specButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, specPopup));
         specPopup.add(new SettingSelectionComponent()).addPropertyChangeListener(evt -> {
             String p = evt.getPropertyName();
-            if (p.equals(SettingSelectionComponent.SPECIFICATION_PROPERTY) && evt.getNewValue() != null) {
-//                setDefaultSpecification((ISaSpecification) evt.getNewValue());
+            if (p.equals(SettingSelectionComponent.SETTING_PROPERTY) && evt.getNewValue() != null) {
+                setDefaultSetting((TransRegSettings) evt.getNewValue());
             } else if (p.equals(SettingSelectionComponent.ICON_PROPERTY) && evt.getNewValue() != null) {
                 specButton.setIcon(ImageUtilities.image2Icon((Image) evt.getNewValue()));
             }
         });
-        /*
+        
         specPopup.addPopupMenuListener(new PopupMenuAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                ((SettingSelectionComponent) ((JPopupMenu) e.getSource()).getComponent(0)).setSpecification(getDefaultSpecification());
+                ((SettingSelectionComponent) ((JPopupMenu) e.getSource()).getComponent(0)).setSetting(currentSetting);
             }
-        });*/
+        });
 
-        
+        defSettingLabel = (JLabel) toolBarRepresentation.add(new JLabel());
+        defSettingLabel.setText(currentSetting == null ? "" : currentSetting.toString());
+
         //</editor-fold>
         toolBarRepresentation.addSeparator();
-        
+
         //<editor-fold defaultstate="collapsed" desc="Runbutton">
         runButton = toolBarRepresentation.add(new AbstractAction("", DemetraUiIcon.COMPILE_16) {
             @Override
@@ -309,5 +318,21 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
     public void refresh() {
         outlineview.refresh();
         outlineview.repaint();
+    }
+
+    public void setDefaultSetting(TransRegSettings setting) {
+        TransRegSettings old = this.currentSetting;
+        this.currentSetting = setting;
+        defSettingLabel.setText(currentSetting == null ? "" : currentSetting.toString());
+        firePropertyChange(DEFAULT_SETTING_PROPERTY, old, this.currentSetting);
+    }
+    
+     public void editDefaultSetting() {
+        SettingSelectionComponent c = new SettingSelectionComponent();
+        c.setSetting(currentSetting);
+        DialogDescriptor dd = c.createDialogDescriptor("Choose active specification");
+        if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+            setDefaultSetting(c.getSetting());
+        }
     }
 }
