@@ -100,7 +100,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
     private JLabel defSettingLabel;
     private JButton runButton;
 
-    private TransRegSettings currentSetting;
+    private TransRegSettings currentSetting = TransRegSettings.DEFAULT;
 
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
@@ -171,7 +171,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         propertyPanel.setVisible(false);
         propertyPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(propertyPanel, BorderLayout.EAST);
-        // TODO: Listner hinzufuegen, damit calc button blau wird, damit anwender Button drückt
 
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
@@ -216,14 +215,14 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
         //<editor-fold defaultstate="collapsed" desc="Toolbar">
         toolBarRepresentation = NbComponents.newInnerToolbar();
-        toolBarRepresentation.setFloatable(false);
+        /*toolBarRepresentation.setFloatable(false);
         FlowLayout f = new FlowLayout();
-        toolBarRepresentation.setLayout(f);
+        toolBarRepresentation.setLayout(f);*/
 
         //<editor-fold defaultstate="collapsed" desc="Data drop here">
         dropDataLabel = new JLabel("Drop data here");
         dropDataLabel.setFont(new JLabel().getFont().deriveFont(Font.ITALIC));
-        dropDataLabel.setPreferredSize(new Dimension(100, 40));
+        dropDataLabel.setPreferredSize(new Dimension(200, 40));
         dropDataLabel.setVisible(true);
         dropDataLabel.setTransferHandler(new TransRegTransferHandler(outlineview));
         toolBarRepresentation.add(dropDataLabel);
@@ -323,7 +322,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
     public void setDefaultSetting(TransRegSettings setting) {
         TransRegSettings old = this.currentSetting;
         this.currentSetting = setting;
-        defSettingLabel.setText(currentSetting == null ? "" : currentSetting.toString());
+        defSettingLabel.setText(currentSetting == null ? "Test" : currentSetting.toString());
         firePropertyChange(DEFAULT_SETTING_PROPERTY, old, this.currentSetting);
     }
     

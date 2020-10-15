@@ -1,8 +1,12 @@
 package de.bundesbank.transreg.settings.admin;
 
+import de.bundesbank.transreg.admin.TransRegDocument;
+import de.bundesbank.transreg.admin.TransRegDocumentManager;
 import de.bundesbank.transreg.settings.TransRegSettings;
+import de.bundesbank.transreg.ui.TransRegTopComponent;
 import ec.nbdemetra.ws.AbstractWorkspaceItemManager;
 import ec.nbdemetra.ws.IWorkspaceItemManager;
+import ec.nbdemetra.ws.Workspace;
 import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
@@ -26,7 +30,8 @@ import org.openide.util.lookup.ServiceProvider;
 position = 1020)
 public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRegSettings>{
     
-    public static final LinearId ID = new LinearId("TransReg", "TransRegSettings"); //(X13ProcessingFactory.DESCRIPTOR.family, "specifications", X13ProcessingFactory.DESCRIPTOR.name);
+    public static final LinearId ID = new LinearId("TransReg", "TransRegSpecifications"); 
+//(X13ProcessingFactory.DESCRIPTOR.family, "specifications", X13ProcessingFactory.DESCRIPTOR.name);
     public static final String PATH = "transreg.setting";
     public static final String ITEMPATH = "transreg.setting.item";
 
@@ -80,15 +85,15 @@ public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRe
         return result;
     }
 
-    /*public void createDocument(final Workspace ws, final WorkspaceItem<TransRegSettings> xdoc) {
+    public void createDocument(final Workspace ws, final WorkspaceItem<TransRegSettings> xdoc) {
         TransRegDocumentManager dmgr = (TransRegDocumentManager) WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.ID);
         WorkspaceItem<TransRegDocument> doc = (WorkspaceItem<TransRegDocument>) dmgr.create(ws);
         doc.getElement().setSpecification(xdoc.getElement()); //<-Todo
         doc.setComments(xdoc.getComments());
-        X13TopComponent view = new X13TopComponent(doc);
+        TransRegTopComponent view = new TransRegTopComponent(doc);
         view.open();
         view.requestActive();
-    }*/
+    }
 
     @Override
     public Class<TransRegSettings> getItemClass() {

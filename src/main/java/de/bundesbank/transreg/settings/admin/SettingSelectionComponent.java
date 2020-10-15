@@ -33,7 +33,8 @@ import org.openide.nodes.Node;
  */
 public class SettingSelectionComponent extends JComponent2 implements ExplorerManager.Provider, IDialogDescriptorProvider {
 
-    public static final Id SPECS_ID = new LinearId("TransReg", "TransRegSettings");
+    public static final Id SPECS_ID = TransRegSettingManager.ID;
+//new LinearId("TransReg", "TransRegSpecifications");
     public static final String SETTING_PROPERTY = "transregsetting";
     public static final String ICON_PROPERTY = "icon";
 

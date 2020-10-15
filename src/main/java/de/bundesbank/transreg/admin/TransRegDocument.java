@@ -21,13 +21,14 @@
 package de.bundesbank.transreg.admin;
 
 import de.bundesbank.transreg.logic.TransRegVar;
+import de.bundesbank.transreg.settings.TransRegSettings;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.timeseries.regression.TsVariables;
 import ec.tstoolkit.utilities.DefaultNameValidator;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegDocument extends TsVariables{
 
@@ -46,4 +47,9 @@ public class TransRegDocument extends TsVariables{
         TransRegVar.register();
         return super.read(info);
     }
+    
+    public void setSpecification(TransRegSettings settings){
+        // TODO: wohin werden die settings übertragen
+    }
+            
 }
