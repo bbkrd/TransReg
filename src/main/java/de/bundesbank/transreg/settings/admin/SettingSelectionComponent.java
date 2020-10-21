@@ -10,6 +10,7 @@ import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.DummyWsNode;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
+import ec.nbdemetra.ws.nodes.ManagerWsNode;
 import ec.tss.tsproviders.utils.IConstraint;
 import ec.tstoolkit.utilities.Id;
 import ec.tstoolkit.utilities.LinearId;
@@ -59,7 +60,7 @@ public class SettingSelectionComponent extends JComponent2 implements ExplorerMa
         tree.setRootVisible(false);
         tree.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        DecoratedNode root = new DecoratedNode(new DummyWsNode(WorkspaceFactory.getInstance().getActiveWorkspace(), 
+        DecoratedNode root = new DecoratedNode(new ManagerWsNode(WorkspaceFactory.getInstance().getActiveWorkspace(), 
                 SPECS_ID), showSystemOnly ? ItemWsNodeFilter.SYSTEM_ONLY : (o -> true));
         for (DecoratedNode o : root.breadthFirstIterable()) {
             o.setPreferredActionDecorator(DecoratedNode.PreferredAction.DO_NOTHING);

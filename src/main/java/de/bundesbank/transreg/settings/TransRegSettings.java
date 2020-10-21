@@ -152,7 +152,7 @@ public class TransRegSettings implements InformationSetSerializable {
         if (TEST.equals(this)) {
             return "Test";
         }
-        return "";
+        return "TransRegSetting";
     }
 
     //<editor-fold defaultstate="collapsed" desc="for Workspace">

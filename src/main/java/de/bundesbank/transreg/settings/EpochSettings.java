@@ -91,8 +91,8 @@ public class EpochSettings implements InformationSetSerializable {
     public boolean read(InformationSet info) {
         enabled = info.get(ENABLED, Boolean.class);
         defaultValue = DefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
-        int length = info.get(EPOCHLENGTH, Integer.class);
-        if (length != 0) {
+        Integer length = info.get(EPOCHLENGTH, Integer.class);
+        if (length != null && length != 0) {
             activeEpochs = new Epoch[length];
             for (int i = 0; i < length; i++) {
                 activeEpochs[i] = info.get(EPOCHS + i, Epoch.class);

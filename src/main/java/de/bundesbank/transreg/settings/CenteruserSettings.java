@@ -66,9 +66,9 @@ public class CenteruserSettings implements InformationSetSerializable {
     public int getExtendingPeriods() {
         return extendingPeriods;
     }
-    
-    public boolean isExtending(){
-        return extendingPeriods!=0;
+
+    public boolean isExtending() {
+        return extendingPeriods != 0;
     }
 
     public void setExtendingPeriods(int extendingPeriods) {
@@ -113,7 +113,10 @@ public class CenteruserSettings implements InformationSetSerializable {
     public boolean read(InformationSet info) {
         method = CenteruserEnum.valueOf(info.get(METHOD, String.class));
         span = info.get(SPAN, TsPeriodSelector.class);
-        extendingPeriods = info.get(EXTENDING, int.class);
+        Integer i = info.get(EXTENDING, Integer.class);
+        if (i != null) {
+            extendingPeriods = i;
+        }
         return true;
     }
 

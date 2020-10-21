@@ -31,7 +31,6 @@ position = 1020)
 public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRegSettings>{
     
     public static final LinearId ID = new LinearId("TransReg", "TransRegSpecifications"); 
-//(X13ProcessingFactory.DESCRIPTOR.family, "specifications", X13ProcessingFactory.DESCRIPTOR.name);
     public static final String PATH = "transreg.setting";
     public static final String ITEMPATH = "transreg.setting.item";
 
