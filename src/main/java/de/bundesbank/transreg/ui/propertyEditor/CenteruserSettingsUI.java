@@ -142,7 +142,7 @@ public class CenteruserSettingsUI implements IObjectDescriptor<CenteruserSetting
 
     @NbBundle.Messages({
         "centeruserSettingsUI.extendingDesc.name=Extending",
-        "centeruserSettingsUI.extendingDesc.desc=..."
+        "centeruserSettingsUI.extendingDesc.desc=Length to extend regressor in periods (positive values) or years (negative values)."
     })
     private EnhancedPropertyDescriptor extendingDesc() {
         try {

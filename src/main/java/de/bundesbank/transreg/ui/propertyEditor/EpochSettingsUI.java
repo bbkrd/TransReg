@@ -75,7 +75,7 @@ public class EpochSettingsUI implements IObjectDescriptor<EpochSettings> {
 
     @NbBundle.Messages({
         "epochSettingsUI.enableDesc.name=Enable",
-        "epochSettingsUI.enableDesc.desc= ..."
+        "epochSettingsUI.enableDesc.desc= Mark checkbox to customise the active period."
     })
     private EnhancedPropertyDescriptor enableDesc() {
         try {
@@ -101,7 +101,7 @@ public class EpochSettingsUI implements IObjectDescriptor<EpochSettings> {
 
     @NbBundle.Messages({
         "epochSettingsUI.epochDesc.name=Epoch",
-        "epochSettingsUI.epochDesc.desc=..."
+        "epochSettingsUI.epochDesc.desc=Assign active period."
     })
     private EnhancedPropertyDescriptor epochDesc() {
         try {
@@ -127,7 +127,7 @@ public class EpochSettingsUI implements IObjectDescriptor<EpochSettings> {
 
     @NbBundle.Messages({
         "epochSettingsUI.defaultValueDesc.name=Value for inactive periods",
-        "epochSettingsUI.defaultValueDesc.desc=Value assigned to inactive periods of period-specific regression variables."
+        "epochSettingsUI.defaultValueDesc.desc=Value assigned to inactive periods."
     })
     private EnhancedPropertyDescriptor defaultValueDesc() {
         try {
