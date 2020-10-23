@@ -27,10 +27,6 @@ public class EpochDescriptor implements IObjectDescriptor<Epoch> {
         return epoch.toString();
     }
 
-    public EpochDescriptor() {
-        epoch = new Epoch();
-    }
-
     public EpochDescriptor(Epoch e) {
         epoch = e;
     }

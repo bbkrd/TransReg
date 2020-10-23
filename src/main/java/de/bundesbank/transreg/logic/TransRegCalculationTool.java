@@ -184,7 +184,7 @@ public class TransRegCalculationTool {
                 //<editor-fold defaultstate="collapsed" desc="simple way">
                 TsData tmpData = beforeVar.getTsData();
                 if (settings.getCenteruser().isExtending()) {
-                    tmpData = extend(beforeVar.getTsData(),
+                    tmpData = extend(tmpData,
                             settings.getCenteruser().getExtendingPeriods(),
                             calcSeasonalMeans(beforeVar.getOriginalData()));
                     extendingNode = true;
@@ -313,17 +313,23 @@ public class TransRegCalculationTool {
             case Seasonal:
                 TsData dataMean = data.select(settings.getSpan());
                 double[] seasonalMean = calcSeasonalMeans(dataMean);
-//                result.setMean(seasonalMean);
+
+                //Test wegen komischer werte bei leand/lag =5 und extending -1
+                /*System.out.println("Data: " + dataMean.get(498));
+                System.out.println("Mean: "+ seasonalMean[11]);
+                System.out.println("Result: "+(dataMean.get(498)-seasonalMean[11]));*/
                 // von OriginalZR abziehen
                 Iterator<TsObservation> iterator = data.iterator();
                 while (iterator.hasNext()) {
                     TsObservation obs = iterator.next();
-                    newData.set(obs.getPeriod(), (obs.getValue() - seasonalMean[obs.getPeriod().getPosition()]));
+                    if (obs.getValue() != 0.0) { // hier verlasse ich mich darauf, dass nur Werte 0.0 wirklich sind, die durch Epoch so gesetzt sind
+                        newData.set(obs.getPeriod(), (obs.getValue() - seasonalMean[obs.getPeriod().getPosition()]));
+                    }
                 }
                 break;
         }
         // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
-        newData.setIf(Double::isNaN, () -> 0.0);
+        //newData.setIf(Double::isNaN, () -> 0.0);
 
         return newData;
     }
@@ -349,19 +355,6 @@ public class TransRegCalculationTool {
         return data;
     }
 
-    private static TsData doExtendingWithGroups(TsData data, int extend) {
-
-        int lengthBefore = data.getLength();
-        double average = data.average();
-        data = data.extend(0, extend);
-
-        for (int i = lengthBefore; i < data.getLength(); i++) {
-            data.set(i, average);
-        }
-
-        return data;
-    }
-
     private static TsData extendingDataToValue(TsData data, int extend, double value) {
 
         for (int i = data.getLength() - 1; i >= (data.getLength() - extend); i--) {
@@ -381,13 +374,10 @@ public class TransRegCalculationTool {
          * die Zukunft, lead
          *
          * meine Logik
-         * 
-         * if (periods > 0) {
-         * data = data.lead(periods);
-         * } else {
-         * data = data.lag(-periods);
-         * }
-         * 
+         *
+         * if (periods > 0) { data = data.lead(periods); } else { data =
+         * data.lag(-periods); }
+         *
          */
         return data.lead(periods);
     }
@@ -413,36 +403,9 @@ public class TransRegCalculationTool {
         return means;
     }
 
-    private static ArrayList<TsData> doEpoch2(TsData data, EpochSettings settings) {
-
-        ArrayList<TsData> result = new ArrayList<>();
-        TsData curData = data.clone();
-        for (int i = 0; i < curData.getObsCount(); i++) {
-            curData.set(i, settings.getDefaultValue().getValue());
-        }
-
-        for (Epoch epoch : settings.getEpochs()) {
-            TsData calcData = curData.clone();
-            Day start = epoch.getStart();
-            Day end = epoch.getEnd();
-
-            TsPeriodSelector selector = new TsPeriodSelector();
-            selector.between(start, end);
-            TsData tmp = data.select(selector);
-            Iterator<TsObservation> iter = tmp.iterator();
-            while (iter.hasNext()) {
-                TsObservation next = iter.next();
-                calcData.set(next.getPeriod(), next.getValue());
-            }
-            result.add(calcData);
-        }
-
-        return result;
-    }
-
     private static TsData doEpoch(TsData data, EpochSettings settings) {
         TsData result = data.clone();
-        for (int i = 0; i < result.getObsCount(); i++) {
+        for (int i = 0; i < result.getLength(); i++) {
             result.set(i, settings.getDefaultValue().getValue());
         }
 

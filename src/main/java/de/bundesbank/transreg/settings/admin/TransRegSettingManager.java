@@ -80,7 +80,6 @@ public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRe
     public List<WorkspaceItem<TransRegSettings>> getDefaultItems() {
         List<WorkspaceItem<TransRegSettings>> result = new ArrayList<>();
         result.add(WorkspaceItem.system(ID, "Default", TransRegSettings.DEFAULT));
-         result.add(WorkspaceItem.system(ID, "Test", TransRegSettings.TEST));
         return result;
     }
 

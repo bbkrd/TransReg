@@ -23,8 +23,8 @@ public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, 
     }
 
     public Epoch() {
-        start = Day.toDay().minus(1);
-        end = Day.toDay();
+        /*start = Day.toDay().minus(1);
+        end = Day.toDay();*/
     }
 
     public Day getStart() {
@@ -74,6 +74,9 @@ public class Epoch extends AbstractSingleTsVariable implements IUserTsVariable, 
 
     @Override
     public String toString() {
-        return start.toString() + " - " + end.toString();
+        if (start != null && end != null) {
+            return start.toString() + " - " + end.toString();
+        }
+        return "";
     }
 }

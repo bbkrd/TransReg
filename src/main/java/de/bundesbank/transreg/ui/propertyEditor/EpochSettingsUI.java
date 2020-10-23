@@ -29,10 +29,6 @@ public class EpochSettingsUI implements IObjectDescriptor<EpochSettings> {
         CustomPropertyEditorRegistry.INSTANCE.register(DefaultValueEnum.class, null);
         CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(Epoch[].class, new ArrayRenderer());
     }
-
-    public EpochSettingsUI() {
-        core = new EpochSettings();
-    }
     
     public EpochSettingsUI(Day start, Day end) {
         core = new EpochSettings(start, end);

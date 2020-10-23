@@ -13,7 +13,6 @@ import ec.nbdemetra.ws.nodes.ItemWsNode;
 import ec.nbdemetra.ws.nodes.ManagerWsNode;
 import ec.tss.tsproviders.utils.IConstraint;
 import ec.tstoolkit.utilities.Id;
-import ec.tstoolkit.utilities.LinearId;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -35,7 +34,6 @@ import org.openide.nodes.Node;
 public class SettingSelectionComponent extends JComponent2 implements ExplorerManager.Provider, IDialogDescriptorProvider {
 
     public static final Id SPECS_ID = TransRegSettingManager.ID;
-//new LinearId("TransReg", "TransRegSpecifications");
     public static final String SETTING_PROPERTY = "transregsetting";
     public static final String ICON_PROPERTY = "icon";
 

@@ -45,7 +45,8 @@ public class EditTransRegSettings implements ActionListener {
             return;
 
         }
-        final TransRegSettingsUI ui = new TransRegSettingsUI(xdoc.getElement().copy()); 
+        
+        final TransRegSettingsUI ui = new TransRegSettingsUI(xdoc.getElement().copy(), xdoc.isReadOnly());
         PropertiesDialog propDialog =
                 new PropertiesDialog(WindowManager.getDefault().getMainWindow(), true, ui,
                 new AbstractAction("OK") {

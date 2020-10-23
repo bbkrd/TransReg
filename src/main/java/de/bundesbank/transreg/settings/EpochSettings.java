@@ -5,7 +5,6 @@ import de.bundesbank.transreg.util.DefaultValueEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
 import ec.tstoolkit.timeseries.Day;
-import java.util.ArrayList;
 
 /**
  *
@@ -18,10 +17,10 @@ public class EpochSettings implements InformationSetSerializable {
     private DefaultValueEnum defaultValue = DefaultValueEnum.ZERO;
 
     public EpochSettings() {
-        this.enabled = false;
+        /*this.enabled = false;
         defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
-        activeEpochs[0] = new Epoch();
+        activeEpochs[0] = new Epoch();*/
     }
 
     public EpochSettings(Day start, Day end) {

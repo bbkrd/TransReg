@@ -20,7 +20,6 @@
  */
 package de.bundesbank.transreg.settings;
 
-import de.bundesbank.transreg.util.CenteruserEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
 import ec.tstoolkit.timeseries.Day;
@@ -37,16 +36,13 @@ public class TransRegSettings implements InformationSetSerializable {
     private EpochSettings epoch;
 
     public static final TransRegSettings DEFAULT;
-    public static final TransRegSettings TEST;
 
     static {
         DEFAULT = new TransRegSettings();
-        TEST = new TransRegSettings();
-        TEST.centeruser.setMethod(CenteruserEnum.Global);
     }
 
     public static final TransRegSettings[] allSettings() {
-        return new TransRegSettings[]{DEFAULT, TEST};
+        return new TransRegSettings[]{DEFAULT};
     }
 
     public TransRegSettings() {
@@ -137,20 +133,17 @@ public class TransRegSettings implements InformationSetSerializable {
         this.epoch = epoch;
     }
 
-    public void setSettings(TransRegSettings settings){
+    public void setSettings(TransRegSettings settings) {
         centeruser = settings.getCenteruser();
         epoch = settings.getEpoch();
         groups = settings.getGroups();
         leadLag = settings.getLeadLag();
     }
-    
+
     @Override
     public String toString() {
         if (DEFAULT.equals(this)) {
             return "Default";
-        }
-        if (TEST.equals(this)) {
-            return "Test";
         }
         return "TransRegSetting";
     }
