@@ -22,6 +22,7 @@ package de.bundesbank.transreg.actions;
 
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
+import de.bundesbank.transreg.settings.admin.TransRegSettingManager;
 import ec.nbdemetra.ui.nodes.SingleNodeAction;
 import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
@@ -40,7 +41,8 @@ import org.openide.util.NbBundle.Messages;
 @ActionRegistration(
         displayName = "#CTL_RenameAction", lazy = false)
 @ActionReferences({
-    @ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1100)
+    @ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1100),
+    @ActionReference(path = TransRegSettingManager.ITEMPATH, position = 1100)
 })
 @Messages("CTL_RenameAction=Rename...")
 public final class RenameAction extends SingleNodeAction<ItemWsNode> {

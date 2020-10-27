@@ -22,6 +22,8 @@ package de.bundesbank.transreg.actions;
 
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
+import de.bundesbank.transreg.settings.admin.SettingSelectionComponent;
+import de.bundesbank.transreg.settings.admin.TransRegSettingManager;
 import ec.nbdemetra.ui.nodes.SingleNodeAction;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.ItemWsNode;
@@ -42,7 +44,8 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#CTL_DeleteAction", lazy = false
 )
 @ActionReferences({
-    @ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1700, separatorBefore = 1699)
+    @ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1700, separatorBefore = 1699),
+    @ActionReference(path = TransRegSettingManager.ITEMPATH, position = 1700, separatorBefore = 1699)
 })
 @Messages("CTL_DeleteAction=Delete")
 public final class DeleteAction extends SingleNodeAction<ItemWsNode> {
@@ -68,7 +71,7 @@ public final class DeleteAction extends SingleNodeAction<ItemWsNode> {
     @Override
     protected boolean enable(ItemWsNode context) {
         WorkspaceItem<?> cur = context.getItem();
-        return cur != null && !cur.isReadOnly() && cur.getElement() instanceof TransRegDocument;
+        return cur != null && !cur.isReadOnly();
     }
 
     @Override
