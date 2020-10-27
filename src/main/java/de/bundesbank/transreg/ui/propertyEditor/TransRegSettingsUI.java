@@ -43,12 +43,12 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     }
 
     public TransRegSettingsUI(TransRegSettings t, boolean readOnly) {
-        core = t;
+        core = t.copy();
         this.readOnly = readOnly;
     }
     
     public TransRegSettingsUI(TransRegSettings t) {
-        core = t;
+        core = t.copy();
     }
 
     public TransRegSettingsUI(int freq) {

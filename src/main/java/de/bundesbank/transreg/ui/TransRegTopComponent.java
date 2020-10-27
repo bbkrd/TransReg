@@ -102,11 +102,13 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
     public TransRegTopComponent() {
         super(manager().create(WorkspaceFactory.getInstance().getActiveWorkspace()));
+        currentSetting = super.getDocument().getElement().getSpecification();
         initDocument();
     }
 
     public TransRegTopComponent(WorkspaceItem<TransRegDocument> doc) {
         super(doc);
+        currentSetting = doc.getElement().getSpecification();
         initDocument();
     }
 
@@ -159,7 +161,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="TransRegSettingsPropertyPanel">
-        TransRegSettingsUI settingsUI = new TransRegSettingsUI();
+        TransRegSettingsUI settingsUI = new TransRegSettingsUI(currentSetting);
         settingsUI.setReadOnly(true);
         propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(settingsUI);
         propertyPanel.setVisible(false);
@@ -167,9 +169,11 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         add(propertyPanel, BorderLayout.EAST);
 
         //</editor-fold>
+        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
+        outlineview.setStartSettings(currentSetting);
         //<editor-fold defaultstate="collapsed" desc="Selected Row">
         /*
          *   If selected row in outlineview is changed -> valueChanged method
@@ -209,9 +213,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
         //<editor-fold defaultstate="collapsed" desc="Toolbar">
         toolBarRepresentation = NbComponents.newInnerToolbar();
-        /*toolBarRepresentation.setFloatable(false);
-        FlowLayout f = new FlowLayout();
-        toolBarRepresentation.setLayout(f);*/
 
         //<editor-fold defaultstate="collapsed" desc="Data drop here">
         dropDataLabel = new JLabel("Drop data here");
@@ -221,20 +222,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         dropDataLabel.setTransferHandler(new TransRegTransferHandler(outlineview));
         toolBarRepresentation.add(dropDataLabel);
         toolBarRepresentation.addSeparator();
-        //</editor-fold>
-
-        //<editor-fold defaultstate="collapsed" desc="Settings old">
-        /*specComboBox = new JComboBox(TransRegSettings.allSettings());
-//        specComboBox.setPrototypeDisplayValue(" Default ");
-        specComboBox.setPreferredSize(new Dimension(100, 30));
-
-        //ActionListener
-        specComboBox.addActionListener((ActionEvent e) -> {
-            TransRegSettings item = (TransRegSettings) specComboBox.getSelectedItem();
-            outlineview.setStartSettings(item);
-
-        });
-        toolBarRepresentation.add(specComboBox);*/
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Settings">

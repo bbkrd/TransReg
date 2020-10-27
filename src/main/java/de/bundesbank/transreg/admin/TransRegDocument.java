@@ -32,6 +32,8 @@ import ec.tstoolkit.utilities.DefaultNameValidator;
  */
 public class TransRegDocument extends TsVariables{
 
+    private TransRegSettings specification = TransRegSettings.DEFAULT;
+    
     public TransRegDocument() {
         super("reg_", new DefaultNameValidator(""));
     }
@@ -49,7 +51,12 @@ public class TransRegDocument extends TsVariables{
     }
     
     public void setSpecification(TransRegSettings settings){
-        // TODO: wohin werden die settings übertragen
+        specification = settings.copy();
     }
-            
+
+    public TransRegSettings getSpecification() {
+        return specification;
+    }
+    
+    
 }
