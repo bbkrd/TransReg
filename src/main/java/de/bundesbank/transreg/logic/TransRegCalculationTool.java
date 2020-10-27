@@ -186,7 +186,7 @@ public class TransRegCalculationTool {
                 if (settings.getCenteruser().isExtending()) {
                     tmpData = extend(tmpData,
                             settings.getCenteruser().getExtendingPeriods(),
-                            calcSeasonalMeans(beforeVar.getOriginalData()));
+                            calcSeasonalMeans(beforeVar.getTsData()));
                     extendingNode = true;
                 }
                 tmpData = doCenteruser(tmpData, settings.getCenteruser());
@@ -314,10 +314,6 @@ public class TransRegCalculationTool {
                 TsData dataMean = data.select(settings.getSpan());
                 double[] seasonalMean = calcSeasonalMeans(dataMean);
 
-                //Test wegen komischer werte bei leand/lag =5 und extending -1
-                /*System.out.println("Data: " + dataMean.get(498));
-                System.out.println("Mean: "+ seasonalMean[11]);
-                System.out.println("Result: "+(dataMean.get(498)-seasonalMean[11]));*/
                 // von OriginalZR abziehen
                 Iterator<TsObservation> iterator = data.iterator();
                 while (iterator.hasNext()) {
@@ -328,8 +324,10 @@ public class TransRegCalculationTool {
                 }
                 break;
         }
+        /*        
         // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
-        //newData.setIf(Double::isNaN, () -> 0.0);
+        newData.setIf(Double::isNaN, () -> 0.0); 
+        */
 
         return newData;
     }
