@@ -67,18 +67,5 @@ public class TransRegTransferHandler extends TransferHandler {
                 .filter(o -> !o.isEmpty())
                 .peek(view::appendTsVariables)
                 .count() > 0;
-
-//        long count = TssTransferSupport.getDefault()
-//                .toTsCollectionStream(support.getTransferable())
-//                .peek(o -> o.load(TsInformationType.All))
-//                .filter(o -> !o.isEmpty())
-//                .peek(view::appendTsVariables)
-//                .count();
-//        if (count > 0) {
-//            view.refresh();
-//            return true;
-//        }
-//        return false;
-
     }
 }

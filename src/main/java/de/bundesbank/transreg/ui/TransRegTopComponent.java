@@ -231,6 +231,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             String p = evt.getPropertyName();
             if (p.equals(SettingSelectionComponent.SETTING_PROPERTY) && evt.getNewValue() != null) {
                 setDefaultSetting((TransRegSettings) evt.getNewValue());
+                outlineview.setStartSettings((TransRegSettings) evt.getNewValue());
             } else if (p.equals(SettingSelectionComponent.ICON_PROPERTY) && evt.getNewValue() != null) {
                 specButton.setIcon(ImageUtilities.image2Icon((Image) evt.getNewValue()));
             }

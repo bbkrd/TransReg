@@ -74,8 +74,8 @@ public class EpochSettings implements InformationSetSerializable {
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
-        info.add(EPOCHLENGTH, activeEpochs.length);
-        if (activeEpochs.length != 0) {
+        if (activeEpochs != null && activeEpochs.length != 0) {
+            info.add(EPOCHLENGTH, activeEpochs.length);
             for (int i = 0; i < activeEpochs.length; i++) {
                 info.add(EPOCHS + i, activeEpochs[i].toString());
             }
