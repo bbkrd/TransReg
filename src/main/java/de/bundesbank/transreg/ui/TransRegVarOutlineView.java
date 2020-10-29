@@ -224,6 +224,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         for (Ts s : coll) {
             TransRegVar v;
             String name = MultiLineNameUtil.join(s.getName());
+            name = name.replaceAll("[\\+\\.\\*\\-\\/]", "");
             if (s.getTsData() == null) {
                 continue;
             }
