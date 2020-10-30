@@ -83,46 +83,46 @@ import org.openide.windows.TopComponent;
     "HINT_TransRegTopComponent=This is a TransReg window"
 })
 public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument> {
-
+    
     public static final String DEFAULT_SETTING_PROPERTY = "settingsProperty";
-
+    
     private JToolBar toolBarRepresentation;
     private PropertySheetPanel propertyPanel;
     private TransRegVarOutlineView outlineview;
-
+    
     private JLabel dropDataLabel;
     private JLabel defSettingLabel;
     private JButton runButton;
-
+    
     private TransRegSettings currentSetting = TransRegSettings.DEFAULT;
-
+    
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
     }
-
+    
     public TransRegTopComponent() {
         super(manager().create(WorkspaceFactory.getInstance().getActiveWorkspace()));
         currentSetting = super.getDocument().getElement().getSpecification();
         initDocument();
     }
-
+    
     public TransRegTopComponent(WorkspaceItem<TransRegDocument> doc) {
         super(doc);
         currentSetting = doc.getElement().getSpecification();
         initDocument();
     }
-
+    
     private void initDocument() {
         initComponents();
         setToolTipText(Bundle.HINT_TransRegTopComponent());
         setName(getDocument().getDisplayName());
     }
-
+    
     @Override
     protected String getContextPath() {
         return TransRegDocumentManager.CONTEXTPATH;
     }
-
+    
     private void initComponents() {
         setLayout(new java.awt.BorderLayout());
 
@@ -131,7 +131,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         buttonPanel.setName(BUTTONS);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         JButton calc = new JButton("Calculate");
-
+        
         calc.addActionListener((ActionEvent e) -> {
             TransRegVar var = outlineview.getSelectedVariable();
             if (var != null) {
@@ -142,14 +142,14 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                         vars.remove(t);
                     });
                 }
-
+                
                 HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
                 calculated.values().forEach((a) -> {
                     a.stream().forEach((child) -> {
                         vars.set(child.getName(), child);
                     });
                 });
-
+                
                 outlineview.refresh();
                 outlineview.repaint();
             }
@@ -163,10 +163,10 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         propertyPanel = PropertiesPanelFactory.INSTANCE.createPanel(settingsUI);
         propertyPanel.setVisible(false);
         propertyPanel.add(buttonPanel, BorderLayout.SOUTH);
+        propertyPanel.setDescriptionVisible(true);
         add(propertyPanel, BorderLayout.EAST);
 
         //</editor-fold>
-        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
@@ -199,6 +199,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                     // update ui
                     PropertiesPanelFactory.INSTANCE.update(propertyPanel, ui1, null);
                     propertyPanel.setVisible(true);
+                    propertyPanel.setDescriptionVisible(true);
                 } else {
                     propertyPanel.setVisible(false);
                 }
@@ -220,7 +221,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         toolBarRepresentation.add(dropDataLabel);
         toolBarRepresentation.addSeparator();
         //</editor-fold>
-        
+
         //<editor-fold defaultstate="collapsed" desc="Settings">
         JPopupMenu specPopup = new JPopupMenu();
         final JButton specButton = (JButton) toolBarRepresentation.add(DropDownButtonFactory.createDropDownButton(DemetraUiIcon.BLOG_16, specPopup));
@@ -240,7 +241,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                 ((SettingSelectionComponent) ((JPopupMenu) e.getSource()).getComponent(0)).setSetting(currentSetting);
             }
         });
-
+        
         defSettingLabel = (JLabel) toolBarRepresentation.add(new JLabel());
         defSettingLabel.setText(currentSetting == null ? "" : currentSetting.toString());
 
@@ -263,10 +264,10 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                             deleteVars.stream().forEach((t) -> {
                                 vars.remove(t);
                             });
-
+                            
                             HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated
                                     = TransRegCalculationTool.calculate(var);
-
+                            
                             calculated.values().forEach((a) -> {
                                 a.stream().forEach((child) -> {
                                     try {
@@ -283,7 +284,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                 outlineview.refresh();
                 outlineview.repaint();
             }
-
+            
         });
         runButton.setDisabledIcon(ImageUtilities.createDisabledIcon(runButton.getIcon()));
         //</editor-fold>
@@ -291,13 +292,13 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         add(toolBarRepresentation, BorderLayout.NORTH);
 //</editor-fold>
     }
-
+    
     @Override
     public void refresh() {
         outlineview.refresh();
         outlineview.repaint();
     }
-
+    
     public void setDefaultSetting(TransRegSettings setting) {
         TransRegSettings old = this.currentSetting;
         this.currentSetting = setting;
@@ -305,7 +306,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         firePropertyChange(DEFAULT_SETTING_PROPERTY, old, this.currentSetting);
     }
     
-     public void editDefaultSetting() {
+    public void editDefaultSetting() {
         SettingSelectionComponent c = new SettingSelectionComponent();
         c.setSetting(currentSetting);
         DialogDescriptor dd = c.createDialogDescriptor("Choose active specification");

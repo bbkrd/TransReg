@@ -48,10 +48,11 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     }
 
     private final GroupsSettings core;
-    private boolean readOnly = true;
+    private boolean readOnly = false;
 
     public GroupsSettingsUI() {
         core = new GroupsSettings();
+        readOnly = true;
     }
 
     public GroupsSettingsUI(int freq) {

@@ -1,6 +1,7 @@
 package de.bundesbank.transreg.util;
 
 import ec.tstoolkit.timeseries.Day;
+import ec.tstoolkit.timeseries.Month;
 
 /**
  *
@@ -17,8 +18,8 @@ public class Epoch{
     }
 
     public Epoch() {
-        start = Day.BEG;
-        end = Day.END;
+        start = new Day(1900, Month.January, 0);
+        end = new Day(2100, Month.December, 30);
     }
 
     public Day getStart() {
