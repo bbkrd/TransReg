@@ -277,6 +277,8 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                                     }
                                 });
                             });
+                        }else{
+                            vars.remove(var);
                         }
                     }
                 }
