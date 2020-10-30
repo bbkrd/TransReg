@@ -17,10 +17,10 @@ public class EpochSettings implements InformationSetSerializable {
     private DefaultValueEnum defaultValue = DefaultValueEnum.ZERO;
 
     public EpochSettings() {
-        /*this.enabled = false;
+        this.enabled = false;
         defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
-        activeEpochs[0] = new Epoch();*/
+        activeEpochs[0] = new Epoch();
     }
 
     public EpochSettings(Day start, Day end) {
@@ -69,7 +69,10 @@ public class EpochSettings implements InformationSetSerializable {
         return copy;
     }
 
-    private static String ENABLED = "enabled", DEFAULTVALUE = "defaultvalue", EPOCHS = "epochs", EPOCHLENGTH = "epochlength";
+    private static String ENABLED = "enabled", 
+            DEFAULTVALUE = "defaultvalue", 
+            EPOCHS = "epochs", 
+            EPOCHLENGTH = "epochlength";
 
     @Override
     public InformationSet write(boolean verbose) {

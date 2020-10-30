@@ -36,7 +36,7 @@ import org.openide.util.NbBundle.Messages;
 public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
 
     private TransRegSettings core;
-    private boolean readOnly = false;
+    private boolean readOnly = true;
 
     public TransRegSettingsUI() {
         core = new TransRegSettings();
@@ -46,13 +46,14 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
         core = t.copy();
         this.readOnly = readOnly;
     }
-    
+
     public TransRegSettingsUI(TransRegSettings t) {
         core = t.copy();
     }
 
     public TransRegSettingsUI(int freq) {
         core = new TransRegSettings(freq);
+        readOnly = false;
     }
 
     public void setReadOnly(boolean b) {
@@ -166,7 +167,11 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     public GroupsSettingsUI getGroups() {
         GroupsSettingsUI ui = new GroupsSettingsUI(core.getGroups());
         ui.setDefaultValue(core.getGroups().getDefaultValue());
-        ui.setReadOnly(readOnly);
+        if (core.getGroups().getFreq() == 1) {
+            ui.setReadOnly(true);
+        } else {
+            ui.setReadOnly(readOnly);
+        }
         return ui;
     }
 

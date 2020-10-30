@@ -8,7 +8,6 @@ import de.bundesbank.transreg.util.Epoch;
 import ec.tstoolkit.descriptors.EnhancedPropertyDescriptor;
 import ec.tstoolkit.descriptors.IObjectDescriptor;
 import ec.tstoolkit.timeseries.Day;
-import ec.tstoolkit.timeseries.regression.Ramp;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
@@ -27,6 +26,10 @@ public class EpochDescriptor implements IObjectDescriptor<Epoch> {
         return epoch.toString();
     }
 
+    public EpochDescriptor(){
+        epoch = new Epoch();
+    }
+    
     public EpochDescriptor(Epoch e) {
         epoch = e;
     }
@@ -96,5 +99,4 @@ public class EpochDescriptor implements IObjectDescriptor<Epoch> {
     public String getDisplayName() {
         return "Epoch";
     }
-
 }

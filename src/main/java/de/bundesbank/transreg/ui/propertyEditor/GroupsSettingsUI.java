@@ -48,7 +48,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     }
 
     private final GroupsSettings core;
-    private boolean readOnly = false;
+    private boolean readOnly = true;
 
     public GroupsSettingsUI() {
         core = new GroupsSettings();
@@ -56,6 +56,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
 
     public GroupsSettingsUI(int freq) {
         core = new GroupsSettings(freq);
+        readOnly = false;
     }
 
     public GroupsSettingsUI(GroupsSettings g) {

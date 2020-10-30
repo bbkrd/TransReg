@@ -137,9 +137,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             if (var != null) {
                 TransRegDocument vars = outlineview.getVars();
                 if (var.hasChildren()) {
-                    //ToDo Nina - 00: sollen die Kommentare drin bleiben? GGF auf Englisch
-                    // falls Kinder vorhanden sind: alle löschen + Abhängigkeiten
-                    // denn in calculate erfolgt kompletteneuberechnung
                     ArrayList<TransRegVar> deleteVars = var.deleteChildren();
                     deleteVars.stream().forEach((t) -> {
                         vars.remove(t);
