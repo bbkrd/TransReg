@@ -259,7 +259,9 @@ public class TransRegCalculationTool {
                     beforeVars.get(i).addChild(var);
                     tmps.add(var);
                 }
-                results.replace(NodesLevelEnum.GROUP, beforeVars);
+//                results.replace(NodesLevelEnum.GROUP, beforeVars);
+//                results.remove(NodesLevelEnum.GROUP);
+//                results.put(NodesLevelEnum.GROUP, beforeVars);
                 //</editor-fold>
             }
             results.put(NodesLevelEnum.CENTERUSER, tmps);

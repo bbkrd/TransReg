@@ -411,10 +411,12 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
         ArrayList<TransRegVar> result = new ArrayList<>();
         if (this.hasChildren()) {
             result.addAll(this.getChildren());
-            for (TransRegVar child : getChildren()) {
+            getChildren().stream().map((child) -> {
                 result.addAll(child.deleteChildren());
+                return child;
+            }).forEachOrdered((child) -> {
                 variables.remove(child.getID());
-            }
+            });
             this.childrenIDs.clear();
         }
         return result;

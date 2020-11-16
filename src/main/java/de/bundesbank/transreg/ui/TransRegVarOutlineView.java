@@ -82,8 +82,8 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             ID_COLUMN_FREQUENCY = 2,
             ID_COLUMN_TIMESPAN = 3,
             ID_COLUMN_CENTERUSER = 4,
-            ID_COLUMN_TIMESTAMP = 5,
-            ID_COLUMN_CALC_SPAN = 6;
+            ID_COLUMN_TIMESTAMP = 5;
+//            ID_COLUMN_CALC_SPAN = 6;
 //            ID_COLUMN_CALC_MEAN = 7;
 //            ID_COLUMN_DATA = 4;
 
@@ -144,10 +144,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
                 TransRegVar.PROP_FREQUENCY, "Frequency",
                 TransRegVar.PROP_TIMESPAN, "Period",
                 TransRegVar.PROP_CENTERUSER, "Pre test",
-                TransRegVar.PROP_TIMESTAMP, "Timestamp",
-                TransRegVar.PROP_CALC_SPAN, "Mean calculation span"
-//                TransRegVar.PROP_CALC_MEAN, "Sample mean"
-        //                TransRegVar.PROP_DATA, "TsData"
+                TransRegVar.PROP_TIMESTAMP, "Timestamp"
         );
 
         TableColumnModel tableColumn = ov.getOutline().getColumnModel();
@@ -156,11 +153,6 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         tableColumn.getColumn(ID_COLUMN_TIMESPAN).setCellRenderer(new DefaultTableCellRenderer());
         tableColumn.getColumn(ID_COLUMN_CENTERUSER).setCellRenderer(new DefaultTableCellRenderer());
         tableColumn.getColumn(ID_COLUMN_TIMESTAMP).setCellRenderer(new DefaultTableCellRenderer());
-        tableColumn.getColumn(ID_COLUMN_CALC_SPAN).setCellRenderer(new DefaultTableCellRenderer());
-//        tableColumn.getColumn(ID_COLUMN_CALC_MEAN).setCellRenderer(new DefaultTableCellRenderer());
-//        tableColumn.getColumn(ID_COLUMN_DATA).setCellRenderer(new TsSparklineCellRenderer());
-        // Idee fuer TsData: 
-//        ov.getOutline().addColumn(<TableColumn>);
 
         ov.setTreeSortable(false);
         ov.getOutline().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

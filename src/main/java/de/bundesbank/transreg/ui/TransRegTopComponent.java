@@ -83,46 +83,46 @@ import org.openide.windows.TopComponent;
     "HINT_TransRegTopComponent=This is a TransReg window"
 })
 public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument> {
-    
+
     public static final String DEFAULT_SETTING_PROPERTY = "settingsProperty";
-    
+
     private JToolBar toolBarRepresentation;
     private PropertySheetPanel propertyPanel;
     private TransRegVarOutlineView outlineview;
-    
+
     private JLabel dropDataLabel;
     private JLabel defSettingLabel;
     private JButton runButton;
-    
+
     private TransRegSettings currentSetting = TransRegSettings.DEFAULT;
-    
+
     private static TransRegDocumentManager manager() {
         return WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.class);
     }
-    
+
     public TransRegTopComponent() {
         super(manager().create(WorkspaceFactory.getInstance().getActiveWorkspace()));
         currentSetting = super.getDocument().getElement().getSpecification();
         initDocument();
     }
-    
+
     public TransRegTopComponent(WorkspaceItem<TransRegDocument> doc) {
         super(doc);
         currentSetting = doc.getElement().getSpecification();
         initDocument();
     }
-    
+
     private void initDocument() {
         initComponents();
         setToolTipText(Bundle.HINT_TransRegTopComponent());
         setName(getDocument().getDisplayName());
     }
-    
+
     @Override
     protected String getContextPath() {
         return TransRegDocumentManager.CONTEXTPATH;
     }
-    
+
     private void initComponents() {
         setLayout(new java.awt.BorderLayout());
 
@@ -131,25 +131,25 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         buttonPanel.setName(BUTTONS);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         JButton calc = new JButton("Calculate");
-        
+
         calc.addActionListener((ActionEvent e) -> {
             TransRegVar var = outlineview.getSelectedVariable();
             if (var != null) {
                 TransRegDocument vars = outlineview.getVars();
-                if (var.hasChildren()) {
+                if (var.isRoot()) {
                     ArrayList<TransRegVar> deleteVars = var.deleteChildren();
                     deleteVars.stream().forEach((t) -> {
                         vars.remove(t);
                     });
-                }
-                
-                HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
-                calculated.values().forEach((a) -> {
-                    a.stream().forEach((child) -> {
-                        vars.set(child.getName(), child);
+
+                    HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
+                    calculated.values().forEach((a) -> {
+                        a.stream().forEach((child) -> {
+                            vars.set(child.getName(), child);
+                        });
                     });
-                });
-                
+                }
+
                 outlineview.refresh();
                 outlineview.repaint();
             }
@@ -234,14 +234,14 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                 specButton.setIcon(ImageUtilities.image2Icon((Image) evt.getNewValue()));
             }
         });
-        
+
         specPopup.addPopupMenuListener(new PopupMenuAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 ((SettingSelectionComponent) ((JPopupMenu) e.getSource()).getComponent(0)).setSetting(currentSetting);
             }
         });
-        
+
         defSettingLabel = (JLabel) toolBarRepresentation.add(new JLabel());
         defSettingLabel.setText(currentSetting == null ? "" : currentSetting.toString());
 
@@ -254,39 +254,32 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             public void actionPerformed(ActionEvent e) {
                 TransRegDocument vars = outlineview.getVars();
                 ITsVariable[] varsArray = vars.variables().toArray(new ITsVariable[0]);
+                vars.clear();
                 for (ITsVariable v : varsArray) {
                     if (v instanceof TransRegVar) {
                         TransRegVar var = ((TransRegVar) v);
-                        if (var.isRoot()) {
-                            // falls Kinder vorhanden sind: alle löschen + Abhängigkeiten
-                            // denn in calculate erfolgt kompletteneuberechnung
-                            ArrayList<TransRegVar> deleteVars = var.deleteChildren();
-                            deleteVars.stream().forEach((t) -> {
-                                vars.remove(t);
+                        if(NodesLevelEnum.ORIGINAL.equals(var.getLevel())){
+//                        if (var.isRoot()) {
+                            var.deleteChildren();
+                            HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
+                            calculated.get(NodesLevelEnum.ORIGINAL).stream().forEach((a) -> {
+                                vars.set(a.getName(), a);
                             });
-                            
-                            HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated
-                                    = TransRegCalculationTool.calculate(var);
-                            
-                            calculated.values().forEach((a) -> {
+                            /*calculated.values().forEach((a) -> {
                                 a.stream().forEach((child) -> {
-                                    try {
+                                    if (child.isRoot()) {
                                         vars.set(child.getName(), child);
-                                    } catch (Exception nothing) {
-                                        System.out.println("Problem mit: " + child.getName());
                                     }
                                 });
-                            });
-                        }else{
-                            vars.remove(var);
+                            });*/
+
                         }
                     }
                 }
-//                runButton.setEnabled(false);
                 outlineview.refresh();
                 outlineview.repaint();
             }
-            
+
         });
         runButton.setDisabledIcon(ImageUtilities.createDisabledIcon(runButton.getIcon()));
         //</editor-fold>
@@ -294,20 +287,20 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         add(toolBarRepresentation, BorderLayout.NORTH);
 //</editor-fold>
     }
-    
+
     @Override
     public void refresh() {
         outlineview.refresh();
         outlineview.repaint();
     }
-    
+
     public void setDefaultSetting(TransRegSettings setting) {
         TransRegSettings old = this.currentSetting;
         this.currentSetting = setting;
         defSettingLabel.setText(currentSetting == null ? "Test" : currentSetting.toString());
         firePropertyChange(DEFAULT_SETTING_PROPERTY, old, this.currentSetting);
     }
-    
+
     public void editDefaultSetting() {
         SettingSelectionComponent c = new SettingSelectionComponent();
         c.setSetting(currentSetting);
