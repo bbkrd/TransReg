@@ -152,27 +152,26 @@ public class TransRegSettings implements InformationSetSerializable {
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
-        InformationSet tmp = centeruser.write(verbose);
-        info.add(CENTERUSER, tmp);
-
-        tmp = groups.write(verbose);
-        info.add(GROUPS, tmp);
+        InformationSet tmp;
 
         tmp = leadLag.write(verbose);
         info.add(LEADLAG, tmp);
-
         tmp = epoch.write(verbose);
         info.add(EPOCH, tmp);
+        tmp = groups.write(verbose);
+        info.add(GROUPS, tmp);
+        tmp = centeruser.write(verbose);
+        info.add(CENTERUSER, tmp);
 
         return info;
     }
 
     @Override
     public boolean read(InformationSet info) {
-
+        leadLag.read(info.getSubSet(LEADLAG));
+        epoch.read(info.getSubSet(EPOCH));
         centeruser.read(info.getSubSet(CENTERUSER));
         groups.read(info.getSubSet(GROUPS));
-        leadLag.read(info.getSubSet(LEADLAG));
 
         return true;
     }

@@ -225,7 +225,9 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     private void setParentID(UUID parentID) {
         this.parentID = parentID;
-        this.setSettings(variables.get(parentID).getSettings());
+        if (variables.containsKey(parentID)) {
+            this.setSettings(variables.get(parentID).getSettings());
+        }
     }
 
     public void removeParent() {

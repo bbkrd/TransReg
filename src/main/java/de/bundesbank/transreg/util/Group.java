@@ -17,4 +17,8 @@ public class Group {
     public String toString() {
         return "Group " + this.number;
     }
+    
+    public static Group fromString(String text){
+       return new Group(Integer.parseInt(text.substring(6)));
+    }
 }

@@ -90,6 +90,7 @@ public class GroupsSettings implements InformationSetSerializable {
         StringBuilder result = new StringBuilder();
         for (Group g : groups) {
             result.append(g.toString());
+            result.append(";");
         }
         return result.toString().trim();
     }
@@ -100,7 +101,7 @@ public class GroupsSettings implements InformationSetSerializable {
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
         if (groups != null) {
-            info.add(GROUPS, groups);
+            info.add(GROUPS, this.toString());
         }
         info.add(ENABLE, enabled);
         info.add(DEFAULTVALUE, defaultValue);
@@ -110,10 +111,15 @@ public class GroupsSettings implements InformationSetSerializable {
     
     @Override
     public boolean read(InformationSet info) {
-        Group[] groupsInfo = info.get(GROUPS, Group[].class);
-        if (groupsInfo != null) {
-            groups = groupsInfo;
-        }
+        String groupsInfo = info.get(GROUPS, String.class);
+       if(groupsInfo != null && groupsInfo.contains(";")){
+           String[] split = groupsInfo.split(";");
+           groups = new Group[split.length];
+           for(int i = 0; i< split.length; i++){
+              groups[i] = Group.fromString(split[i]);
+           }
+       } 
+       
         enabled = info.get(ENABLE, Boolean.class);
         defaultValue = DefaultValueEnum.fromString(info.get(DEFAULTVALUE, String.class));
         
