@@ -560,7 +560,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             info.set(ORIGINAL, t.getOriginalData());
             info.set(LEVEL, t.getLevel().toString());
             info.set(GROUPSTATUS, t.getGroupStatus());
-
             info.set(TIMESTAMP, t.getTimestamp());
 
             if (!t.isRoot()) {
