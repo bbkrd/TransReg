@@ -7,12 +7,10 @@ package de.bundesbank.transreg.logic;
 
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import de.bundesbank.transreg.util.CenteruserEnum;
-import de.bundesbank.transreg.util.Group;
 import de.bundesbank.transreg.util.DefaultValueEnum;
-import de.bundesbank.transreg.util.LeadLagEnum;
+import de.bundesbank.transreg.util.Group;
 import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.Month;
-import ec.tstoolkit.timeseries.TsPeriodSelector;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import ec.tstoolkit.timeseries.simplets.TsPeriod;
@@ -354,13 +352,13 @@ public class TransRegCalculationToolTest {
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
 
         // expected
-        double[] r = new double[]{-5.5, 0.0, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
+        double[] r = new double[]{-5.5, Double.NaN, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
             -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
             -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
             -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
             -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
             -5.5, -4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5,
-            0.0, -4.5};
+            Double.NaN, -4.5};
 
         expResult = new TsData(start, r, true);
 
@@ -391,11 +389,11 @@ public class TransRegCalculationToolTest {
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
 
         //expected
-        double[] r = new double[]{-1.5, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 0.0,
+        double[] r = new double[]{-1.5, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, Double.NaN,
             -0.5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1.5,
             0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.5,
             1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5,
-            0.0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1.5};
+            Double.NaN, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1.5};
 
         expResult = new TsData(start, r, true);
 
