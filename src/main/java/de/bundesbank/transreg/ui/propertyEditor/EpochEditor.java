@@ -27,7 +27,7 @@ public class EpochEditor extends AbstractPropertyEditor {
             public void actionPerformed(ActionEvent e) {
                 final ArrayEditorDialog<EpochDescriptor> dialog = new ArrayEditorDialog<>(SwingUtilities.getWindowAncestor(editor),
                         null != epochs ? getDescriptors() : new EpochDescriptor[]{}, EpochDescriptor.class);
-                dialog.setTitle("Epochs");
+                dialog.setTitle("Regimes");
                 dialog.setVisible(true);
                 if (dialog.isDirty()) {
                     setDescriptors(dialog.getElements());

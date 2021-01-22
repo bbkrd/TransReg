@@ -30,7 +30,7 @@ import org.openide.util.lookup.ServiceProvider;
 position = 1020)
 public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRegSettings>{
     
-    public static final LinearId ID = new LinearId("TransReg", "TransRegSettings"); 
+    public static final LinearId ID = new LinearId("TransReg", "specifications"); 
     public static final String PATH = "transreg.setting";
     public static final String ITEMPATH = "transreg.setting.item";
 

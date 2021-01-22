@@ -182,6 +182,13 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         return vars;
     }
     
+    public void setVars(TransRegDocument doc){
+//        vars = doc;
+        if (!(vars == null || vars.variables() == null || vars.variables().isEmpty())) {
+            createTreeFromDoc();
+        }
+    }
+    
     public TransRegVar getSelectedVariable() {
         return getSelectedVariable(this);
     }
