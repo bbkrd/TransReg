@@ -167,6 +167,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         add(propertyPanel, BorderLayout.EAST);
 
         //</editor-fold>
+        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
@@ -255,27 +256,23 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                 TransRegDocument vars = outlineview.getVars();
                 ITsVariable[] varsArray = vars.variables().toArray(new ITsVariable[0]);
                 vars.clear();
+                
                 for (ITsVariable v : varsArray) {
                     if (v instanceof TransRegVar) {
                         TransRegVar var = ((TransRegVar) v);
-                        if(NodesLevelEnum.ORIGINAL.equals(var.getLevel())){
+                        if (NodesLevelEnum.ORIGINAL.equals(var.getLevel())) {
 //                        if (var.isRoot()) {
                             var.deleteChildren();
                             HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculated = TransRegCalculationTool.calculate(var);
-                            calculated.get(NodesLevelEnum.ORIGINAL).stream().forEach((a) -> {
-                                vars.set(a.getName(), a);
-                            });
-                            /*calculated.values().forEach((a) -> {
+                            calculated.values().forEach((a) -> {
                                 a.stream().forEach((child) -> {
-                                    if (child.isRoot()) {
-                                        vars.set(child.getName(), child);
-                                    }
+                                    vars.set(child.getName(), child);
                                 });
-                            });*/
-
+                            });
                         }
                     }
                 }
+//                outlineview.setVars(newVars);
                 outlineview.refresh();
                 outlineview.repaint();
             }

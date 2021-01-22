@@ -6,7 +6,7 @@ package de.bundesbank.transreg.util;
  */
 public enum DefaultValueEnum {
 
-    ZERO("0.0", 0.0),
+    ZERO("0.0", Double.NaN), // -> nur Anzeige 0
     NaN("NaN", Double.NaN);
 
     private final String name;

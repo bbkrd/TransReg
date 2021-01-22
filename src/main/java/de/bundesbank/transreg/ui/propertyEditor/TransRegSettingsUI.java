@@ -99,7 +99,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     private static final int Centeruser_ID = 5, Groups_ID = 4, Extending_ID = 2, LeadLag_ID = 1, Epoch_ID = 3;
 
     @Messages({
-        "transregSettingsUI.leadLagDesc.name=Lead/Lag",
+        "transregSettingsUI.leadLagDesc.name=LEAD/LAG",
         "transregSettingsUI.leadLagDesc.desc= "
     })
     private EnhancedPropertyDescriptor leadLagDesc() {
@@ -176,7 +176,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     }
 
     @Messages({
-        "transregSettingsUI.epochDesc.name=EPOCH",
+        "transregSettingsUI.epochDesc.name=REGIMES",
         "transregSettingsUI.epochDesc.desc= "
     })
     private EnhancedPropertyDescriptor epochDesc() {

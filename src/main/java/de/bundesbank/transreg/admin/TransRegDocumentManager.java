@@ -47,7 +47,7 @@ public class TransRegDocumentManager extends AbstractWorkspaceItemManager<TransR
         return nvars;
     }
 
-    public static final LinearId ID = new LinearId("TransReg", "TransRegDocument");
+    public static final LinearId ID = new LinearId("TransReg", "documents");
     public static final String PATH = "TransReg";
     public static final String ITEMPATH = "TransReg.item";
     public static final String CONTEXTPATH = "TransReg.context";

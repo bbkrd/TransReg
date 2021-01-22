@@ -29,15 +29,18 @@ import de.bundesbank.transreg.settings.TransRegSettings;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
 import static de.bundesbank.transreg.util.CenteruserEnum.Global;
 import static de.bundesbank.transreg.util.CenteruserEnum.Seasonal;
+import de.bundesbank.transreg.util.DefaultValueEnum;
 import de.bundesbank.transreg.util.Epoch;
 import de.bundesbank.transreg.util.Group;
 import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.data.DescriptiveStatistics;
 import ec.tstoolkit.timeseries.Day;
+import ec.tstoolkit.timeseries.Month;
 import ec.tstoolkit.timeseries.TsPeriodSelector;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsObservation;
+import ec.tstoolkit.timeseries.simplets.TsPeriod;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +154,6 @@ public class TransRegCalculationTool {
 
         //<editor-fold defaultstate="collapsed" desc="Groups">
         if (settings.getGroups().isEnabled()) {
-            //<editor-fold defaultstate="collapsed" desc="Simple way">
             ArrayList<TransRegVar> groupVars = new ArrayList<>();
             ArrayList<TsData> groups = doGroups(beforeVar.getTsData(), beforeVar.getSettings().getGroups());
             String name = beforeVar.getName() + "\n Group";
@@ -171,7 +173,6 @@ public class TransRegCalculationTool {
                 groupVars.add(var);
             }
             results.put(NodesLevelEnum.GROUP, groupVars);
-            //</editor-fold>
         }
         //</editor-fold>
 
@@ -268,6 +269,106 @@ public class TransRegCalculationTool {
         }
         //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="Korrektur von DefaultVauleEnum.Zero">
+        //<editor-fold defaultstate="collapsed" desc="Epoch">
+        if (settings.getEpoch().isEnabled() && DefaultValueEnum.ZERO.equals(settings.getEpoch().getDefaultValue())) {
+
+            // 1. Epoch
+            TransRegVar epoch = results.get(NodesLevelEnum.EPOCH).get(0);
+
+            TsPeriod start = epoch.getTsData().getStart();
+            for (int i = 0; i < epoch.getTsData().getLength(); i++) {
+                double value = epoch.getTsData().get(i);
+                if (Double.isNaN(value)) {
+                    TsPeriod current = start.plus(i);
+                    boolean activePeriod = false;
+                    for (Epoch p : settings.getEpoch().getEpochs()) {
+                        if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
+                            activePeriod = true;
+                        }
+                        if (current.isAfter(p.getStart()) && current.isBefore(p.getEnd())) {
+                            activePeriod = true;
+                        }
+                    }
+                    if (!activePeriod) {
+                        epoch.getTsData().set(i, 0.0);
+                    }
+                }
+            }
+
+            // 2. Groups
+            if (settings.getGroups().isEnabled()) {
+                ArrayList<TransRegVar> groups = results.get(NodesLevelEnum.GROUP);
+
+                for (TransRegVar group : groups) {
+                    start = group.getTsData().getStart();
+
+                    int groupStatus = group.getGroupStatus();
+                    Group[] groupsTemp = group.getSettings().getGroups().getGroups();
+                    int[] groupsByPeriod = new int[groupsTemp.length];
+                    for (int i = 0; i < groupsTemp.length; i++) {
+                        groupsByPeriod[i] = groupsTemp[i].getNumber();
+                    }
+
+                    for (int i = 0; i < group.getTsData().getLength(); i++) {
+                        double value = group.getTsData().get(i);
+                        if (Double.isNaN(value)) {
+                            TsPeriod current = start.plus(i);
+                            boolean activePeriod = false;
+                            for (Epoch p : settings.getEpoch().getEpochs()) {
+                                if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
+                                    activePeriod = true;
+                                }
+                                if (current.isAfter(p.getStart()) && current.isBefore(p.getEnd())) {
+                                    activePeriod = true;
+                                }
+                            }
+                            int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
+                            if (!activePeriod && (groupStatus == groupsByPeriod[currentPeriod])) {
+                                group.getTsData().set(i, 0.0);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 3. Centeruser
+            if (settings.getCenteruser().isEnabled()) {
+                ArrayList<TransRegVar> centerusers = results.get(NodesLevelEnum.CENTERUSER);
+                for (TransRegVar centeruser : centerusers) {
+
+                    int groupStatus = centeruser.getGroupStatus();
+                    Group[] groupsTemp = centeruser.getSettings().getGroups().getGroups();
+                    int[] groupsByPeriod = new int[groupsTemp.length];
+                    for (int i = 0; i < groupsTemp.length; i++) {
+                        groupsByPeriod[i] = groupsTemp[i].getNumber();
+                    }
+
+                    start = centeruser.getTsData().getStart();
+                    for (int i = 0; i < centeruser.getTsData().getLength(); i++) {
+                        double value = centeruser.getTsData().get(i);
+                        if (Double.isNaN(value)) {
+                            TsPeriod current = start.plus(i);
+                            boolean activePeriod = false;
+                            for (Epoch p : settings.getEpoch().getEpochs()) {
+                                if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
+                                    activePeriod = true;
+                                }
+                                if (current.isAfter(p.getStart()) && current.isBefore(p.getEnd())) {
+                                    activePeriod = true;
+                                }
+                            }
+                            int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
+                            if (!activePeriod && (groupStatus == groupsByPeriod[currentPeriod])) {
+                                centeruser.getTsData().set(i, 0.0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //</editor-fold>
+        //</editor-fold>
         return results;
     }
 
@@ -276,7 +377,7 @@ public class TransRegCalculationTool {
         ArrayList<TsData> result = new ArrayList<>();
         Group[] groups_array = settings.getGroups();
 
-        // Iteration ueber alle moeglichen gruppen, 0-basierend
+        // Iteration ueber alle moeglichen Gruppen, 0-basierend
         for (Group group : settings.getGivenGroups()) {
             TsData cur = data.clone();
 
@@ -287,7 +388,7 @@ public class TransRegCalculationTool {
             Iterator<TsObservation> iterator = data.iterator();
             while (iterator.hasNext()) {
                 TsObservation obs = iterator.next();
-                double value;
+                double value; // Double wegen NaN?
                 Group groupStatusForCurrentObservation = groups_array[obs.getPeriod().getPosition()];
                 if (groupStatusForCurrentObservation.getNumber() == currentGroup) {
                     value = obs.getValue();
@@ -320,16 +421,14 @@ public class TransRegCalculationTool {
                 Iterator<TsObservation> iterator = data.iterator();
                 while (iterator.hasNext()) {
                     TsObservation obs = iterator.next();
-                    if (obs.getValue() != 0.0) { // hier verlasse ich mich darauf, dass nur Werte 0.0 wirklich sind, die durch Epoch so gesetzt sind
-                        newData.set(obs.getPeriod(), (obs.getValue() - seasonalMean[obs.getPeriod().getPosition()]));
-                    }
+                    newData.set(obs.getPeriod(), (obs.getValue() - seasonalMean[obs.getPeriod().getPosition()]));
                 }
                 break;
         }
         /*        
         // NaN's werden durch 0 ersetzt, damit Wert da steht (Anwender wollten 0)
         newData.setIf(Double::isNaN, () -> 0.0); 
-        */
+         */
 
         return newData;
     }

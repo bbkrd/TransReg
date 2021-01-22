@@ -127,7 +127,7 @@ public class GroupsSettingsUI implements IObjectDescriptor<GroupsSettings> {
     }
 
     @NbBundle.Messages({
-        "groupsSettingsUI.enableDesc.name=Groups by period",
+        "groupsSettingsUI.enableDesc.name=Enabled",
         "groupsSettingsUI.enableDesc.desc= Mark checkbox to split regression variable into period-specific variants."
     })
     private EnhancedPropertyDescriptor enableDesc() {
