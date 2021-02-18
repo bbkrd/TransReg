@@ -270,7 +270,7 @@ public class TransRegCalculationTool {
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Korrektur von DefaultVauleEnum.Zero">
-        //<editor-fold defaultstate="collapsed" desc="Epoch">
+            //<editor-fold defaultstate="collapsed" desc="Epoch">
         if (settings.getEpoch().isEnabled() && DefaultValueEnum.ZERO.equals(settings.getEpoch().getDefaultValue())) {
 
             // 1. Epoch
@@ -360,6 +360,67 @@ public class TransRegCalculationTool {
                             }
                             int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
                             if (!activePeriod && (groupStatus == groupsByPeriod[currentPeriod])) {
+                                centeruser.getTsData().set(i, 0.0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //</editor-fold>
+        
+            //<editor-fold defaultstate="collapsed" desc="Groups">
+        if (settings.getGroups().isEnabled() && DefaultValueEnum.ZERO.equals(settings.getGroups().getDefaultValue())) {
+
+            // 1. Groups
+            if (settings.getGroups().isEnabled()) {
+                ArrayList<TransRegVar> groups = results.get(NodesLevelEnum.GROUP);
+
+                for (TransRegVar group : groups) {
+                    TsPeriod start = group.getTsData().getStart();
+
+                    int groupStatus = group.getGroupStatus();
+                    Group[] groupsTemp = group.getSettings().getGroups().getGroups();
+                    int[] groupsByPeriod = new int[groupsTemp.length];
+                    for (int i = 0; i < groupsTemp.length; i++) {
+                        groupsByPeriod[i] = groupsTemp[i].getNumber();
+                    }
+
+                    for (int i = 0; i < group.getTsData().getLength(); i++) {
+                        double value = group.getTsData().get(i);
+                        if (Double.isNaN(value)) {
+                            TsPeriod current = start.plus(i);
+                            
+
+                            int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
+                            if (groupStatus != groupsByPeriod[currentPeriod]) {
+                                group.getTsData().set(i, 0.0);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. Centeruser
+            if (settings.getCenteruser().isEnabled()) {
+                ArrayList<TransRegVar> centerusers = results.get(NodesLevelEnum.CENTERUSER);
+                for (TransRegVar centeruser : centerusers) {
+
+                    int groupStatus = centeruser.getGroupStatus();
+                    Group[] groupsTemp = centeruser.getSettings().getGroups().getGroups();
+                    int[] groupsByPeriod = new int[groupsTemp.length];
+                    for (int i = 0; i < groupsTemp.length; i++) {
+                        groupsByPeriod[i] = groupsTemp[i].getNumber();
+                    }
+
+                    TsPeriod start = centeruser.getTsData().getStart();
+                    for (int i = 0; i < centeruser.getTsData().getLength(); i++) {
+                        double value = centeruser.getTsData().get(i);
+                        if (Double.isNaN(value)) {
+                            TsPeriod current = start.plus(i);
+                            
+                            int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
+                            if (groupStatus != groupsByPeriod[currentPeriod]) {
                                 centeruser.getTsData().set(i, 0.0);
                             }
                         }
