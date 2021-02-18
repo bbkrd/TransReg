@@ -31,12 +31,12 @@ position = 1020)
 public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRegSettings>{
     
     public static final LinearId ID = new LinearId("TransReg", "specifications"); 
-    public static final String PATH = "transreg.setting";
-    public static final String ITEMPATH = "transreg.setting.item";
+    public static final String PATH = "transreg.spec";
+    public static final String ITEMPATH = "transreg.spec.item";
 
     @Override
     protected String getItemPrefix() {
-        return "TransRegSetting";
+        return "TransRegSpecification";
     }
 
     @Override
