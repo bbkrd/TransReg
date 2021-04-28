@@ -34,6 +34,8 @@ public class TransRegSettings implements InformationSetSerializable {
     private GroupsSettings groups;
     private LeadLagSettings leadLag;
     private EpochSettings epoch;
+    
+    private String specificationName = "Default";
 
     public static final TransRegSettings DEFAULT;
 
@@ -142,10 +144,11 @@ public class TransRegSettings implements InformationSetSerializable {
 
     @Override
     public String toString() {
-        if (DEFAULT.equals(this)) {
-            return "Default";
-        }
-        return "TransRegSetting";
+        return specificationName;
+    }
+    
+    public void setSpecificationName(String s){
+        specificationName = s;
     }
 
     //<editor-fold defaultstate="collapsed" desc="for Workspace">

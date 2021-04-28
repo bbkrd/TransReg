@@ -39,7 +39,9 @@ public final class CloneTransRegSettings implements ActionListener {
             return;
         }
         IWorkspaceItemManager mgr = WorkspaceFactory.getInstance().getManager(xdoc.getFamily());
-        WorkspaceItem<TransRegSettings> ndoc = WorkspaceItem.newItem(xdoc.getFamily(), mgr.getNextItemName(null), ((TransRegSettings) xdoc.getElement()).copy());
+        String name = mgr.getNextItemName(null);
+        WorkspaceItem<TransRegSettings> ndoc = WorkspaceItem.newItem(xdoc.getFamily(), name, ((TransRegSettings) xdoc.getElement()).copy());
+        ndoc.getElement().setSpecificationName(name);
         context.getWorkspace().add(ndoc);
     }
 }
