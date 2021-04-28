@@ -18,14 +18,14 @@ public class EpochSettings implements InformationSetSerializable {
 
     public EpochSettings() {
         this.enabled = false;
-        defaultValue = DefaultValueEnum.ZERO;
+//        defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
         activeEpochs[0] = new Epoch();
     }
 
     public EpochSettings(Day start, Day end) {
         this.enabled = false;
-        defaultValue = DefaultValueEnum.ZERO;
+//        defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
         activeEpochs[0] = new Epoch(start, end);
     }

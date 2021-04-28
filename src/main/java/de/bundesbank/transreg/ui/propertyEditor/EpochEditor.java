@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -49,6 +50,22 @@ public class EpochEditor extends AbstractPropertyEditor {
         epochs = new Epoch[elements.size()];
         for (int i = 0; i < epochs.length; ++i) {
             epochs[i] = elements.get(i).getCore();
+        }
+        
+        /* Warning for Users because of overlapping regimes*/
+        int epochs_length = epochs.length;
+        boolean overlapping = false;
+        if (epochs_length >= 2) {
+            for (int i = 0; i < epochs_length - 1; i++) {
+                for (int j = i + 1; j < epochs_length; j++) {
+                    if (epochs[i].getEnd().isAfter(epochs[j].getStart()) || epochs[i].getEnd().equals(epochs[j].getStart())) {
+                        overlapping = true;
+                    }
+                }
+            }
+            if (overlapping) {
+                JOptionPane.showMessageDialog(null, "Warning: Overlapping regimes.");
+            }
         }
         firePropertyChange(old, epochs);
     }

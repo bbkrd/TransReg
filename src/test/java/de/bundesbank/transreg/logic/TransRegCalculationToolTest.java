@@ -1061,4 +1061,131 @@ public class TransRegCalculationToolTest {
         assertEquals(expResult1, result.get(1).getTsData());
     }
 
+    @Test
+    public void test_2integratedEpochsNaN_Seasonal() {
+
+        double[] d = new double[]{
+            1, 1, 1, 1,
+            2, 2, 2, 2,
+            3, 3, 3, 3,
+            4, 4, 4, 4,
+            5, 5, 5, 5
+        };
+
+        TsPeriod start = new TsPeriod(TsFrequency.Quarterly, 1999, 0);
+        TsData inputData = new TsData(start, d, true);
+
+        ArrayList<TransRegVar> result;
+        TsData expResult1;
+
+        TransRegVar v = new TransRegVar(inputData);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Seasonal);
+
+        v.getSettings().getEpoch().setEnabled(true);
+        v.getSettings().getEpoch().setDefaultValue(DefaultValueEnum.NaN);
+
+        Epoch e1 = new Epoch(new Day(1999, Month.January, 0), new Day(2001, Month.December, 30));
+        Epoch e2 = new Epoch(new Day(2001, Month.April, 0), new Day(2001, Month.December, 30));
+        v.getSettings().getEpoch().setEpochs(new Epoch[]{e1, e2});
+
+        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
+
+        double[] d1 = new double[]{
+            1, 1, 1, 1,
+            2, 2, 2, 2,
+            3, 3, 3, 3,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Quarterly, 1999, 0),
+                d1,
+                true
+        );
+
+        assertEquals(expResult1, result.get(0).getTsData());
+
+        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
+
+        double[] d2 = new double[]{
+            -1, -1, -1, -1,
+            0, 0, 0, 0,
+            1, 1, 1, 1,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Quarterly, 1999, 0),
+                d2,
+                true
+        );
+
+        assertEquals(expResult1, result.get(0).getTsData());
+    }
+    
+        @Test
+    public void test_2overlappingEpochsNaN_Seasonal() {
+
+        double[] d = new double[]{
+            1, 1, 1, 1,
+            2, 2, 2, 2,
+            3, 3, 3, 3,
+            4, 4, 4, 4,
+            5, 5, 5, 5
+        };
+
+        TsPeriod start = new TsPeriod(TsFrequency.Quarterly, 1999, 0);
+        TsData inputData = new TsData(start, d, true);
+
+        ArrayList<TransRegVar> result;
+        TsData expResult1;
+
+        TransRegVar v = new TransRegVar(inputData);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Seasonal);
+
+        v.getSettings().getEpoch().setEnabled(true);
+        v.getSettings().getEpoch().setDefaultValue(DefaultValueEnum.NaN);
+
+        Epoch e1 = new Epoch(new Day(1999, Month.January, 0), new Day(2000, Month.December, 30));
+        Epoch e2 = new Epoch(new Day(2000, Month.July, 0), new Day(2001, Month.December, 30));
+        v.getSettings().getEpoch().setEpochs(new Epoch[]{e1, e2});
+
+        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
+
+        double[] d1 = new double[]{
+            1, 1, 1, 1,
+            2, 2, 2, 2, 
+            3, 3, 3, 3,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Quarterly, 1999, 0),
+                d1,
+                true
+        );
+
+        assertEquals(expResult1, result.get(0).getTsData());
+
+        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
+
+        double[] d2 = new double[]{
+            -1, -1, -1, -1,
+            0, 0, 0, 0,
+            1, 1, 1, 1,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN,
+            Double.NaN, Double.NaN, Double.NaN, Double.NaN
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Quarterly, 1999, 0),
+                d2,
+                true
+        );
+
+        assertEquals(expResult1, result.get(0).getTsData());
+    }
 }
