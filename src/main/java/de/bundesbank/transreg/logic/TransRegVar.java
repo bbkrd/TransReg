@@ -271,7 +271,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                     return "Lead";
                 }
             case EPOCH:
-                return "Epoch";
+                return "Regime";
             case GROUP:
                 return "Group " + getGroupStatus();
             case CENTERUSER:

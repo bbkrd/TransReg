@@ -132,7 +132,7 @@ public class TransRegCalculationTool {
         if (settings.getEpoch().isEnabled()) {
             ArrayList<TransRegVar> ex = new ArrayList<>();
             TsData epochs = doEpoch(beforeVar.getTsData(), beforeVar.getSettings().getEpoch());
-            String name = beforeVar.getName() + "\n Epoch";
+            String name = beforeVar.getName() + "\n Regime";
 
             TransRegVar var = beforeVar.copy();
             var.setCalculatedData(epochs);
