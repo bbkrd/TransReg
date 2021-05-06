@@ -36,7 +36,6 @@ import ec.tss.tsproviders.utils.MultiLineNameUtil;
 import ec.tstoolkit.data.DataBlock;
 import ec.tstoolkit.data.DescriptiveStatistics;
 import ec.tstoolkit.timeseries.Day;
-import ec.tstoolkit.timeseries.Month;
 import ec.tstoolkit.timeseries.TsPeriodSelector;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsObservation;
@@ -213,7 +212,6 @@ public class TransRegCalculationTool {
                 beforeVar.addChild(centeruser);
 
                 tmps.add(centeruser);
-//                beforeVar = centeruser; //.copy();
                 //</editor-fold>
             } else {
                 //<editor-fold defaultstate="collapsed" desc="with groups">
@@ -517,6 +515,9 @@ public class TransRegCalculationTool {
 
     private static TsData extendingDataToValue(TsData data, int extend, double value) {
 
+        if (extend < 0) {
+            extend = extend * (-1) * data.getStart().getFrequency().intValue();
+        }
         for (int i = data.getLength() - 1; i >= (data.getLength() - extend); i--) {
             data.set(i, value);
         }

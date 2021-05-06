@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /**
  *
- * @author s4504gn
+ * @author Nina Gonschorreck
  */
 public class TransRegCalculationToolTest {
 
@@ -802,7 +802,7 @@ public class TransRegCalculationToolTest {
                 d_g1,
                 true
         );
-     
+
         assertEquals(expResult1, result.get(0).getTsData());
 
         d_g2 = new double[]{
@@ -864,7 +864,7 @@ public class TransRegCalculationToolTest {
         assertTrue(correct);
     }
 
-     @Test
+    @Test
     public void test__GroupsZero_Seasonal() {
 
         double[] d = new double[]{
@@ -890,7 +890,6 @@ public class TransRegCalculationToolTest {
         Group g2 = new Group(2);
         v.getSettings().getGroups().setGroups(new Group[]{g1, g2, g2, g2});
 
-        
         // Test Group
         //**********************************************************************
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.GROUP);
@@ -903,7 +902,6 @@ public class TransRegCalculationToolTest {
             5, Double.NaN, Double.NaN, Double.NaN
         };
 
-
         double[] d_g2 = new double[]{
             Double.NaN, 1, 1, 1,
             Double.NaN, 2, 2, 2,
@@ -911,14 +909,13 @@ public class TransRegCalculationToolTest {
             Double.NaN, 4, 4, 4,
             Double.NaN, 5, 5, 5};
 
-
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
         d_g1 = new double[]{
             -2, 0, 0, 0,
             -1, 0, 0, 0,
-             0, 0, 0, 0,
-             1, 0, 0, 0,
-             2, 0, 0, 0
+            0, 0, 0, 0,
+            1, 0, 0, 0,
+            2, 0, 0, 0
         };
 
         expResult1 = new TsData(
@@ -926,8 +923,8 @@ public class TransRegCalculationToolTest {
                 d_g1,
                 true
         );
-     
-         System.out.println( result.get(0).getTsData());
+
+        System.out.println(result.get(0).getTsData());
         assertEquals(expResult1, result.get(0).getTsData());
 
         d_g2 = new double[]{
@@ -945,8 +942,8 @@ public class TransRegCalculationToolTest {
 
         assertEquals(expResult1, result.get(1).getTsData());
     }
-    
-     @Test
+
+    @Test
     public void test_EpochZero_GroupsZero_Seasonal() {
 
         double[] d = new double[]{
@@ -1042,7 +1039,7 @@ public class TransRegCalculationToolTest {
                 d_g1,
                 true
         );
-     
+
         assertEquals(expResult1, result.get(0).getTsData());
 
         d_g2 = new double[]{
@@ -1124,8 +1121,8 @@ public class TransRegCalculationToolTest {
 
         assertEquals(expResult1, result.get(0).getTsData());
     }
-    
-        @Test
+
+    @Test
     public void test_2overlappingEpochsNaN_Seasonal() {
 
         double[] d = new double[]{
@@ -1156,7 +1153,7 @@ public class TransRegCalculationToolTest {
 
         double[] d1 = new double[]{
             1, 1, 1, 1,
-            2, 2, 2, 2, 
+            2, 2, 2, 2,
             3, 3, 3, 3,
             Double.NaN, Double.NaN, Double.NaN, Double.NaN,
             Double.NaN, Double.NaN, Double.NaN, Double.NaN
@@ -1187,5 +1184,48 @@ public class TransRegCalculationToolTest {
         );
 
         assertEquals(expResult1, result.get(0).getTsData());
+    }
+
+    @Test
+    public void testForecast_GlobalMean() {
+        double[] d = new double[]{
+            1, 1, 1, 1,
+            2, 2, 2, 2,
+            3, 3, 3, 3,
+            4, 4, 4, 4,
+            5, 5, 5, 5
+        };
+
+        TsPeriod start = new TsPeriod(TsFrequency.Quarterly, 1999, 0);
+        TsData inputData = new TsData(start, d, true);
+
+        ArrayList<TransRegVar> result;
+        TsData expResult1;
+
+        TransRegVar v = new TransRegVar(inputData);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Global);
+        v.getSettings().getCenteruser().setExtendingPeriods(-2);
+
+        HashMap<NodesLevelEnum, ArrayList<TransRegVar>> tmp = TransRegCalculationTool.calculate(v);
+        result = tmp.get(NodesLevelEnum.CENTERUSER);
+        
+        double[] d2 = new double[]{
+            -2, -2, -2, -2,
+            -1, -1, -1, -1,
+            0, 0, 0, 0,
+            1, 1, 1, 1,
+            2, 2, 2, 2,
+            0, 0, 0, 0,
+            0, 0, 0, 0
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Quarterly, 1999, 0),
+                d2,
+                true
+        );
+
+        assertEquals(expResult1, result.get(0).getTsData());
+        
     }
 }
