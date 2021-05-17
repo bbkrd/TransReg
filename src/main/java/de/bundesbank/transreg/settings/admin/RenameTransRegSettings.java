@@ -7,8 +7,6 @@ package de.bundesbank.transreg.settings.admin;
 import static de.bundesbank.transreg.actions.RenameAction.NAME_MESSAGE;
 import static de.bundesbank.transreg.actions.RenameAction.RENAME_TITLE;
 import de.bundesbank.transreg.settings.TransRegSettings;
-import ec.nbdemetra.ws.IWorkspaceItemManager;
-import ec.nbdemetra.ws.WorkspaceFactory;
 import ec.nbdemetra.ws.WorkspaceItem;
 import ec.nbdemetra.ws.nodes.WsNode;
 import java.awt.event.ActionEvent;

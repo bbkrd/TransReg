@@ -268,7 +268,7 @@ public class TransRegCalculationTool {
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Korrektur von DefaultVauleEnum.Zero">
-            //<editor-fold defaultstate="collapsed" desc="Epoch">
+        //<editor-fold defaultstate="collapsed" desc="Epoch">
         if (settings.getEpoch().isEnabled() && DefaultValueEnum.ZERO.equals(settings.getEpoch().getDefaultValue())) {
 
             // 1. Epoch
@@ -335,13 +335,22 @@ public class TransRegCalculationTool {
                 ArrayList<TransRegVar> centerusers = results.get(NodesLevelEnum.CENTERUSER);
                 for (TransRegVar centeruser : centerusers) {
 
-                    int groupStatus = centeruser.getGroupStatus();
-                    Group[] groupsTemp = centeruser.getSettings().getGroups().getGroups();
-                    int[] groupsByPeriod = new int[groupsTemp.length];
-                    for (int i = 0; i < groupsTemp.length; i++) {
-                        groupsByPeriod[i] = groupsTemp[i].getNumber();
+                    int groupStatus = 1;
+                    int[] groupsByPeriod = new int[centeruser.getFrequency().intValue()];
+                    
+                    if (centeruser.getSettings().getGroups().isEnabled()) {
+                        groupStatus = centeruser.getGroupStatus();
+                        Group[] groupsTemp = centeruser.getSettings().getGroups().getGroups();
+//                    groupsByPeriod = new int[groupsTemp.length];
+                        for (int i = 0; i < groupsTemp.length; i++) {
+                            groupsByPeriod[i] = groupsTemp[i].getNumber();
+                        }
+                    }else{
+                        for (int i = 0; i < groupsByPeriod.length; i++) {
+                            groupsByPeriod[i] = 1;
+                        }
                     }
-
+                    
                     start = centeruser.getTsData().getStart();
                     for (int i = 0; i < centeruser.getTsData().getLength(); i++) {
                         double value = centeruser.getTsData().get(i);
@@ -366,8 +375,8 @@ public class TransRegCalculationTool {
             }
         }
         //</editor-fold>
-        
-            //<editor-fold defaultstate="collapsed" desc="Groups">
+
+        //<editor-fold defaultstate="collapsed" desc="Groups">
         if (settings.getGroups().isEnabled() && DefaultValueEnum.ZERO.equals(settings.getGroups().getDefaultValue())) {
 
             // 1. Groups
@@ -388,7 +397,6 @@ public class TransRegCalculationTool {
                         double value = group.getTsData().get(i);
                         if (Double.isNaN(value)) {
                             TsPeriod current = start.plus(i);
-                            
 
                             int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
                             if (groupStatus != groupsByPeriod[currentPeriod]) {
@@ -416,7 +424,7 @@ public class TransRegCalculationTool {
                         double value = centeruser.getTsData().get(i);
                         if (Double.isNaN(value)) {
                             TsPeriod current = start.plus(i);
-                            
+
                             int currentPeriod = (current.getPosition()) % current.getFrequency().intValue();
                             if (groupStatus != groupsByPeriod[currentPeriod]) {
                                 centeruser.getTsData().set(i, 0.0);
