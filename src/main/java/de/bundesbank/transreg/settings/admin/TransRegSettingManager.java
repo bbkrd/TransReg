@@ -86,7 +86,7 @@ public class TransRegSettingManager extends AbstractWorkspaceItemManager<TransRe
     public void createDocument(final Workspace ws, final WorkspaceItem<TransRegSettings> xdoc) {
         TransRegDocumentManager dmgr = (TransRegDocumentManager) WorkspaceFactory.getInstance().getManager(TransRegDocumentManager.ID);
         WorkspaceItem<TransRegDocument> doc = (WorkspaceItem<TransRegDocument>) dmgr.create(ws);
-        doc.getElement().setSpecification(xdoc.getElement()); 
+        doc.getElement().setSpecification(xdoc.getElement());
         doc.setComments(xdoc.getComments());
         TransRegTopComponent view = new TransRegTopComponent(doc);
         view.open();

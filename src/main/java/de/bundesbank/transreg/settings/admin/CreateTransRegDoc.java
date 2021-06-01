@@ -17,12 +17,12 @@ import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "Tools",
-id = "ec.nbdemetra.x13.actions.CreateX13Doc")
-@ActionRegistration(displayName = "#CTL_CreateX13Doc")
+id = "de.bundesbank.transreg.settings.admin.CreateTransRegDoc")
+@ActionRegistration(displayName = "#CTL_CreateTransRegDoc")
 @ActionReferences({
     @ActionReference(path = TransRegSettingManager.ITEMPATH, position = 1610, separatorBefore = 1300)
 })
-@Messages("CTL_CreateX13Doc=Create Document")
+@Messages("CTL_CreateTransRegDoc=Create Document")
 public final class CreateTransRegDoc implements ActionListener {
 
     private final WsNode context;

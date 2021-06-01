@@ -56,7 +56,5 @@ public class TransRegDocument extends TsVariables{
 
     public TransRegSettings getSpecification() {
         return specification;
-    }
-    
-    
+    }    
 }
