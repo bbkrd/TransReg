@@ -64,7 +64,7 @@ public class EpochEditor extends AbstractPropertyEditor {
                 }
             }
             if (overlapping) {
-                JOptionPane.showMessageDialog(null, "Warning: Overlapping regimes.");
+                JOptionPane.showMessageDialog(null, "Overlapping regimes.", "Warning", JOptionPane.WARNING_MESSAGE); 
             }
         }
         firePropertyChange(old, epochs);

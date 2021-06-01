@@ -31,19 +31,15 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "TransReg",
         id = "de.bundesbank.transreg.actions.RenameAction")
-@ActionRegistration(
-        displayName = "#CTL_RenameAction", lazy = false)
-@ActionReferences({
-    @ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1100),
-    @ActionReference(path = TransRegSettingManager.ITEMPATH, position = 1100)
-})
+@ActionRegistration(displayName = "#CTL_RenameAction", lazy = false)
+@ActionReference(path = TransRegDocumentManager.ITEMPATH, position = 1100)
+
 @Messages("CTL_RenameAction=Rename...")
 public final class RenameAction extends SingleNodeAction<ItemWsNode> {
 

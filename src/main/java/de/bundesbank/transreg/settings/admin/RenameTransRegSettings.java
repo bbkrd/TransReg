@@ -15,16 +15,14 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "Tools",
         id = "de.bundesbank.transreg.settings.admin.RenameTransRegSettings")
 @ActionRegistration(displayName = "#CTL_RenameTransRegSettings")
-@ActionReferences({
-    @ActionReference(path = TransRegSettingManager.ITEMPATH, position = 1700),})
-@Messages("CTL_RenameTransRegSettings=Rename")
+@ActionReference(path = TransRegSettingManager.ITEMPATH, position = 1100)
+@Messages("CTL_RenameTransRegSettings=Rename...")
 public final class RenameTransRegSettings implements ActionListener {
 
     private final WsNode context;
@@ -47,7 +45,7 @@ public final class RenameTransRegSettings implements ActionListener {
                 return;
             }
             newName = nd.getInputText();
-            if (!newName.equals(oldName)) {              
+            if (!newName.equals(oldName)) {
                 context.getWorkspace().rename(cur, newName);
                 cur.getElement().setSpecificationName(newName);
             }
