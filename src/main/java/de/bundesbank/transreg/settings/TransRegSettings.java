@@ -119,6 +119,7 @@ public class TransRegSettings implements InformationSetSerializable {
 
     public TransRegSettings copy() {
         TransRegSettings copy = new TransRegSettings();
+        copy.setSpecificationName(this.specificationName);
         copy.setCenteruser(centeruser.copy());
         copy.setGroups(groups.copy());
         copy.setLeadLag(leadLag.copy());
