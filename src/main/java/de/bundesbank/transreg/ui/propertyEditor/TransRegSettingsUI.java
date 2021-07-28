@@ -167,7 +167,7 @@ public class TransRegSettingsUI implements IObjectDescriptor<TransRegSettings> {
     public GroupsSettingsUI getGroups() {
         GroupsSettingsUI ui = new GroupsSettingsUI(core.getGroups());
         ui.setDefaultValue(core.getGroups().getDefaultValue());
-        if (core.getGroups().getFreq() == 1) {
+        if (core.getGroups().getGroups().length <= 1) {
             ui.setReadOnly(true);
         } else {
             ui.setReadOnly(readOnly);
