@@ -111,10 +111,7 @@ public class TransRegSettings implements InformationSetSerializable {
             return false;
         }
 
-        if (!epoch.isDefault()) {
-            return false;
-        }
-        return true;
+        return epoch.isDefault();
     }
 
     public TransRegSettings copy() {
@@ -156,8 +153,9 @@ public class TransRegSettings implements InformationSetSerializable {
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
+        info.add(SPECNAME, specificationName);
+        
         InformationSet tmp;
-
         tmp = leadLag.write(verbose);
         info.add(LEADLAG, tmp);
         tmp = epoch.write(verbose);
@@ -172,6 +170,8 @@ public class TransRegSettings implements InformationSetSerializable {
 
     @Override
     public boolean read(InformationSet info) {
+        
+        specificationName = info.get(SPECNAME, String.class);
         leadLag.read(info.getSubSet(LEADLAG));
         epoch.read(info.getSubSet(EPOCH));
         centeruser.read(info.getSubSet(CENTERUSER));
@@ -180,6 +180,6 @@ public class TransRegSettings implements InformationSetSerializable {
         return true;
     }
 
-    private static String CENTERUSER = "centeruser", GROUPS = "groups", LEADLAG = "leadlag", EPOCH = "epoch";
+    private static String CENTERUSER = "centeruser", GROUPS = "groups", LEADLAG = "leadlag", EPOCH = "epoch", SPECNAME = "specname";
 //</editor-fold>
 }
