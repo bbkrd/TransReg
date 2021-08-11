@@ -1208,7 +1208,7 @@ public class TransRegCalculationToolTest {
 
         HashMap<NodesLevelEnum, ArrayList<TransRegVar>> tmp = TransRegCalculationTool.calculate(v);
         result = tmp.get(NodesLevelEnum.CENTERUSER);
-        
+
         double[] d2 = new double[]{
             -2, -2, -2, -2,
             -1, -1, -1, -1,
@@ -1226,6 +1226,71 @@ public class TransRegCalculationToolTest {
         );
 
         assertEquals(expResult1, result.get(0).getTsData());
+
+    }
+
+    @Test
+    public void test_() {
+
+        double[] d = new double[]{
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+        };
+
+        TsPeriod start = new TsPeriod(TsFrequency.Monthly, 1999, 0);
+        TsData inputData = new TsData(start, d, true);
+
+        ArrayList<TransRegVar> result;
+        TsData expResult1;
+
+        TransRegVar v = new TransRegVar(inputData);
+        v.getSettings().getCenteruser().setMethod(CenteruserEnum.Seasonal);
+
+        v.getSettings().getEpoch().setEnabled(true);
+        v.getSettings().getEpoch().setDefaultValue(DefaultValueEnum.ZERO);
+
+        Epoch e1 = new Epoch(new Day(1999, Month.January, 0), new Day(2001, Month.November, 0));
+        Epoch e2 = new Epoch(new Day(2001, Month.November, 29), new Day(2002, Month.December, 30));
+        v.getSettings().getEpoch().setEpochs(new Epoch[]{e1, e2});
+
+        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
+
+        double[] d1 = new double[]{
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 3,
+            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Monthly, 1999, 0),
+                d1,
+                true
+        );
+
+        assertEquals(expResult1, result.get(0).getTsData());
+        result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
+
+        
+        double[] d2 = new double[]{
+            -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -4/3., -1.5,
+            -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -1/3., -0.5,
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, 0.5,
+            1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5/3., 1.5,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        expResult1 = new TsData(
+                new TsPeriod(TsFrequency.Monthly, 1999, 0),
+                d2,
+                true
+        );
+
+        assertEquals(expResult1.round(6), result.get(0).getTsData().round(6));
         
     }
 }

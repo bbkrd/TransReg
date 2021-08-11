@@ -281,9 +281,9 @@ public class TransRegCalculationTool {
                     TsPeriod current = start.plus(i);
                     boolean activePeriod = false;
                     for (Epoch p : settings.getEpoch().getEpochs()) {
-                        if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
+                        /*if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
                             activePeriod = true;
-                        }
+                        }*/
                         if (current.isAfter(p.getStart()) && current.isBefore(p.getEnd())) {
                             activePeriod = true;
                         }
@@ -314,9 +314,9 @@ public class TransRegCalculationTool {
                             TsPeriod current = start.plus(i);
                             boolean activePeriod = false;
                             for (Epoch p : settings.getEpoch().getEpochs()) {
-                                if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
+                                /*if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
                                     activePeriod = true;
-                                }
+                                }*/
                                 if (current.isAfter(p.getStart()) && current.isBefore(p.getEnd())) {
                                     activePeriod = true;
                                 }
@@ -358,9 +358,9 @@ public class TransRegCalculationTool {
                             TsPeriod current = start.plus(i);
                             boolean activePeriod = false;
                             for (Epoch p : settings.getEpoch().getEpochs()) {
-                                if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
+                                /*if (current.contains(p.getStart()) || current.contains(p.getEnd())) {
                                     activePeriod = true;
-                                }
+                                }*/
                                 if (current.isAfter(p.getStart()) && current.isBefore(p.getEnd())) {
                                     activePeriod = true;
                                 }
