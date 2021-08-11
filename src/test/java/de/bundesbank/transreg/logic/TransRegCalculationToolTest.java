@@ -1230,7 +1230,7 @@ public class TransRegCalculationToolTest {
     }
 
     @Test
-    public void test_() {
+    public void test_RegimesMittenImMonat() {
 
         double[] d = new double[]{
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
