@@ -70,7 +70,7 @@ public class EpochSettingsUI implements IObjectDescriptor<EpochSettings> {
 
     @Override
     public String getDisplayName() {
-        return "Epoch";
+        return "Regime";
     }
 
     @NbBundle.Messages({

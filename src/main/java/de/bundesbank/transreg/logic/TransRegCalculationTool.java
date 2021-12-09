@@ -582,6 +582,21 @@ public class TransRegCalculationTool {
             Day start = epoch.getStart();
             Day end = epoch.getEnd();
 
+//            boolean transformation = false;
+//            if(start.isAfter(new Day(start.getYear(), Month.valueOf(start.getMonth()), 0))){
+//                start = new Day(start.getYear(), Month.valueOf(start.getMonth()), 0);
+//                epoch.setStart(start);
+//                transformation = true;
+//            }
+//            if(!end.lastday().equals(end)){
+//                end = end.lastday();
+//                epoch.setEnd(end);
+//                transformation = true;
+//            }
+//            if (transformation) {
+//                JOptionPane.showMessageDialog(null, "End or start period transformed", "Warning", JOptionPane.WARNING_MESSAGE); 
+//            }
+            
             TsPeriodSelector selector = new TsPeriodSelector();
             selector.between(start, end);
             TsData tmp = data.select(selector);
