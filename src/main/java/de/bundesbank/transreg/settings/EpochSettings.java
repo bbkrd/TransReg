@@ -1,82 +1,93 @@
 package de.bundesbank.transreg.settings;
 
-import de.bundesbank.transreg.util.Epoch;
 import de.bundesbank.transreg.util.DefaultValueEnum;
+import de.bundesbank.transreg.util.Epoch;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
 import ec.tstoolkit.timeseries.Day;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author Nina Gonschorreck
  */
 public class EpochSettings implements InformationSetSerializable {
-    
+
     private boolean enabled;
     private Epoch[] activeEpochs;
     private DefaultValueEnum defaultValue = DefaultValueEnum.ZERO;
-    
+
     public EpochSettings() {
         this.enabled = false;
 //        defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
         activeEpochs[0] = new Epoch();
     }
-    
+
     public EpochSettings(Day start, Day end) {
         this.enabled = false;
 //        defaultValue = DefaultValueEnum.ZERO;
         activeEpochs = new Epoch[1];
         activeEpochs[0] = new Epoch(start, end);
     }
-    
+
     public boolean isEnabled() {
         return enabled;
     }
-    
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    
+
     public Epoch[] getEpochs() {
         return activeEpochs;
     }
-    
-    public void setEpochs(Epoch[] epochs) {
+
+    /**
+     *
+     * @param epochs
+     * @throws IllegalArgumentException If the regimes are overlapping
+     */
+    public void setEpochs(Epoch[] epochs) throws IllegalArgumentException {
         if (checkEpochs(epochs)) {
             this.activeEpochs = epochs;
-        }else{
-             JOptionPane.showMessageDialog(null, "Overlapping regimes.", "Error", JOptionPane.WARNING_MESSAGE); 
+        } else {
+            throw new IllegalArgumentException("Overlapping regimes are not allowed!");
         }
     }
-    
+
     private boolean checkEpochs(Epoch[] epochs) {
-        boolean isOkay = true;
-        for (int i = 0; i < epochs.length - 1; i++) {
-            Epoch epoch_1 = epochs[i];
-            for (int j = 1; j < epochs.length; j++) {
-                Epoch epoch_2 = epochs[j];
-                if (epoch_1.getEnd().isAfter(epoch_2.getStart())) {
-                    isOkay = false;
+        int epochs_length = epochs.length;
+        if (epochs_length >= 2) {
+            for (int i = 0; i < epochs_length - 1; i++) {
+                Day startX = epochs[i].getStart();
+                Day endX = epochs[i].getEnd();
+                for (int j = i + 1; j < epochs_length; j++) {
+                    Day startY = epochs[j].getStart();
+                    Day endY = epochs[j].getEnd();
+
+                    if ((startX.isNotAfter(startY) && endX.isNotBefore(startY))
+                            || (startX.isNotBefore(startY) && startX.isNotAfter(endY))
+                            || (endX.isNotBefore(startY) && endX.isNotAfter(endY))) {
+                        return false;
+                    }
                 }
             }
         }
-        return isOkay;
+        return true;
     }
-    
+
     public DefaultValueEnum getDefaultValue() {
         return defaultValue;
     }
-    
+
     public void setDefaultValue(DefaultValueEnum defaultValue) {
         this.defaultValue = defaultValue;
     }
-    
+
     public boolean isDefault() {
         return !isEnabled(); //|| activeEpochs.isEmpty();
     }
-    
+
     public EpochSettings copy() {
         EpochSettings copy = new EpochSettings();
         copy.setEnabled(enabled);
@@ -84,15 +95,15 @@ public class EpochSettings implements InformationSetSerializable {
             copy.setEpochs(activeEpochs);
         }
         copy.setDefaultValue(defaultValue);
-        
+
         return copy;
     }
-    
+
     private static String ENABLED = "enabled",
             DEFAULTVALUE = "defaultvalue",
             EPOCHS = "epochs",
             EPOCHLENGTH = "epochlength";
-    
+
     @Override
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
@@ -104,10 +115,10 @@ public class EpochSettings implements InformationSetSerializable {
         }
         info.add(ENABLED, enabled);
         info.add(DEFAULTVALUE, defaultValue);
-        
+
         return info;
     }
-    
+
     @Override
     public boolean read(InformationSet info) {
         enabled = info.get(ENABLED, Boolean.class);

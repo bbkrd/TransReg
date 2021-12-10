@@ -7,6 +7,7 @@ package de.bundesbank.transreg.ui.propertyEditor;
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import de.bundesbank.transreg.util.Epoch;
 import ec.nbdemetra.ui.properties.l2fprod.ArrayEditorDialog;
+import ec.tstoolkit.timeseries.Day;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -29,10 +30,14 @@ public class EpochEditor extends AbstractPropertyEditor {
                 final ArrayEditorDialog<EpochDescriptor> dialog = new ArrayEditorDialog<>(SwingUtilities.getWindowAncestor(editor),
                         null != epochs ? getDescriptors() : new EpochDescriptor[]{}, EpochDescriptor.class);
                 dialog.setTitle("Regimes");
-                dialog.setVisible(true);
-                if (dialog.isDirty()) {
-                    setDescriptors(dialog.getElements());
-                }
+                boolean permittedInput = true;
+                do {
+                    dialog.setVisible(true);
+                    if (dialog.isDirty()) {
+                        permittedInput = setDescriptors(dialog.getElements());
+                    }
+                } while (!permittedInput);
+
             }
         });
     }
@@ -45,29 +50,41 @@ public class EpochEditor extends AbstractPropertyEditor {
         return descs;
     }
 
-    private void setDescriptors(List<EpochDescriptor> elements) {
+    private boolean setDescriptors(List<EpochDescriptor> elements) {
         Epoch[] old = epochs;
         epochs = new Epoch[elements.size()];
         for (int i = 0; i < epochs.length; ++i) {
             epochs[i] = elements.get(i).getCore();
         }
-        
+
         /* Warning for Users because of overlapping regimes*/
+        if (isOverlapping()) {
+            JOptionPane.showMessageDialog(null, "Overlapping regimes are not allowed!", "Invalid regimes", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        firePropertyChange(old, epochs);
+        return true;
+    }
+
+    private boolean isOverlapping() {
         int epochs_length = epochs.length;
-        boolean overlapping = false;
         if (epochs_length >= 2) {
             for (int i = 0; i < epochs_length - 1; i++) {
+                Day startX = epochs[i].getStart();
+                Day endX = epochs[i].getEnd();
                 for (int j = i + 1; j < epochs_length; j++) {
-                    if (epochs[i].getEnd().isAfter(epochs[j].getStart()) || epochs[i].getEnd().equals(epochs[j].getStart())) {
-                        overlapping = true;
+                    Day startY = epochs[j].getStart();
+                    Day endY = epochs[j].getEnd();
+
+                    if ((startX.isNotAfter(startY) && endX.isNotBefore(startY))
+                            || (startX.isNotBefore(startY) && startX.isNotAfter(endY))
+                            || (endX.isNotBefore(startY) && endX.isNotAfter(endY))) {
+                        return true;
                     }
                 }
             }
-            if (overlapping) {
-                JOptionPane.showMessageDialog(null, "Overlapping regimes.", "Warning", JOptionPane.WARNING_MESSAGE); 
-            }
         }
-        firePropertyChange(old, epochs);
+        return false;
     }
 
     @Override
