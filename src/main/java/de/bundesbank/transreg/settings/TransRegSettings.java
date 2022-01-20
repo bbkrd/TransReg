@@ -34,7 +34,7 @@ public class TransRegSettings implements InformationSetSerializable {
     private GroupsSettings groups;
     private LeadLagSettings leadLag;
     private EpochSettings epoch;
-    
+
     private String specificationName = "Default";
 
     public static final TransRegSettings DEFAULT;
@@ -144,8 +144,8 @@ public class TransRegSettings implements InformationSetSerializable {
     public String toString() {
         return specificationName;
     }
-    
-    public void setSpecificationName(String s){
+
+    public void setSpecificationName(String s) {
         specificationName = s;
     }
 
@@ -154,7 +154,7 @@ public class TransRegSettings implements InformationSetSerializable {
     public InformationSet write(boolean verbose) {
         InformationSet info = new InformationSet();
         info.add(SPECNAME, specificationName);
-        
+
         InformationSet tmp;
         tmp = leadLag.write(verbose);
         info.add(LEADLAG, tmp);
@@ -170,13 +170,24 @@ public class TransRegSettings implements InformationSetSerializable {
 
     @Override
     public boolean read(InformationSet info) {
-        
-        specificationName = info.get(SPECNAME, String.class);
-        leadLag.read(info.getSubSet(LEADLAG));
-        epoch.read(info.getSubSet(EPOCH));
-        centeruser.read(info.getSubSet(CENTERUSER));
-        groups.read(info.getSubSet(GROUPS));
 
+        specificationName = info.get(SPECNAME, String.class);
+        InformationSet leadLagInfo = info.getSubSet(LEADLAG);
+        if (leadLagInfo != null) {
+            leadLag.read(leadLagInfo);
+        }
+        InformationSet epochInfo = info.getSubSet(EPOCH);
+        if (epochInfo != null) {
+            epoch.read(epochInfo);
+        }
+        InformationSet centeruserInfo = info.getSubSet(CENTERUSER);
+        if (centeruserInfo != null) {
+            centeruser.read(centeruserInfo);
+        }
+        InformationSet groupsInfo = info.getSubSet(GROUPS);
+        if (groupsInfo != null) {
+            groups.read(groupsInfo);
+        }
         return true;
     }
 

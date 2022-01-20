@@ -1,6 +1,5 @@
 package de.bundesbank.transreg.settings;
 
-import de.bundesbank.transreg.util.LeadLagEnum;
 import ec.tstoolkit.information.InformationSet;
 import ec.tstoolkit.information.InformationSetSerializable;
 
@@ -38,7 +37,7 @@ public class LeadLagSettings implements InformationSetSerializable {
         return copy;
     }
 
-    private static String NPERIODS = "nperiods";
+    private static final String NPERIODS = "nperiods";
 
     @Override
     public InformationSet write(boolean verbose) {
@@ -50,7 +49,10 @@ public class LeadLagSettings implements InformationSetSerializable {
 
     @Override
     public boolean read(InformationSet info) {
-        nPeriods = info.get(NPERIODS, Integer.class);
+        Integer i = info.get(NPERIODS, Integer.class);
+        if (i != null) {
+            nPeriods = i;
+        }
 
         return true;
     }
