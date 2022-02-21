@@ -94,6 +94,7 @@ public class TransRegCalculationTool {
     public static HashMap<NodesLevelEnum, ArrayList<TransRegVar>> calculate(TransRegVar original) {
 
         LocalDateTime stamp = LocalDateTime.now();
+        original.setTimestamp(stamp);
         TransRegSettings settings = original.getSettings();
 
         HashMap<NodesLevelEnum, ArrayList<TransRegVar>> results = new HashMap<>();

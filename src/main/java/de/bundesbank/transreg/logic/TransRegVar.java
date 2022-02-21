@@ -367,14 +367,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                     }
                 }
             }
-
-//            for (TransRegVar t : results.get(this.getLevel())) {
-//                if (t.getGroupStatus() == (this.getGroupStatus())) {
-//                    this.setCalculatedData(t.getTsData().clone());
-////                    this.setMean(t.getMean());
-//                    return true;
-//                }
-//            }
         }
         this.setCalculatedData(ts.getTsData());
         preTestResult = TransRegCalculationTool.testCenteruser(calculatedData);

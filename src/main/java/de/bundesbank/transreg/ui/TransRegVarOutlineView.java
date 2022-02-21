@@ -77,15 +77,12 @@ import org.openide.nodes.Children;
  */
 public class TransRegVarOutlineView extends JComponent implements ITsActionAble, ExplorerManager.Provider {
 
-    private static final int //ID_COLUMN_ACTIVE = -1, 
+    private static final int  
             ID_COLUMN_LEVEL = 1,
             ID_COLUMN_FREQUENCY = 2,
             ID_COLUMN_TIMESPAN = 3,
             ID_COLUMN_CENTERUSER = 4,
             ID_COLUMN_TIMESTAMP = 5;
-//            ID_COLUMN_CALC_SPAN = 6;
-//            ID_COLUMN_CALC_MEAN = 7;
-//            ID_COLUMN_DATA = 4;
 
     public static final String CHANGE_SELECTED_VAR = "change_selected_var";
 
