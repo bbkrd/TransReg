@@ -20,7 +20,6 @@
  */
 package de.bundesbank.transreg.ui;
 
-import de.bundesbank.transreg.settings.admin.SettingSelectionComponent;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.admin.TransRegDocumentManager;
@@ -28,8 +27,11 @@ import de.bundesbank.transreg.admin.TransRegTransferHandler;
 import de.bundesbank.transreg.logic.TransRegCalculationTool;
 import de.bundesbank.transreg.logic.TransRegVar;
 import de.bundesbank.transreg.settings.TransRegSettings;
+import de.bundesbank.transreg.settings.admin.SettingSelectionComponent;
 import de.bundesbank.transreg.ui.nodes.NodesLevelEnum;
+import de.bundesbank.transreg.ui.nodes.TransRegVarNode;
 import de.bundesbank.transreg.ui.propertyEditor.TransRegSettingsUI;
+import ec.nbdemetra.ui.ActiveViewManager;
 import ec.nbdemetra.ui.DemetraUiIcon;
 import ec.nbdemetra.ui.NbComponents;
 import ec.nbdemetra.ui.awt.PopupMenuAdapter;
@@ -61,6 +63,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.DropDownButtonFactory;
+import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -167,7 +170,6 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         add(propertyPanel, BorderLayout.EAST);
 
         //</editor-fold>
-        
         //<editor-fold defaultstate="collapsed" desc="OutlineView">
         TransRegDocument regressors = getDocument().getElement();
         outlineview = new TransRegVarOutlineView(regressors);
@@ -201,8 +203,10 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                     PropertiesPanelFactory.INSTANCE.update(propertyPanel, ui1, null);
                     propertyPanel.setVisible(true);
                     propertyPanel.setDescriptionVisible(true);
+                    ActiveViewManager.getInstance().set(this);
                 } else {
                     propertyPanel.setVisible(false);
+                    ActiveViewManager.getInstance().set(null);
                 }
             }
         });
@@ -256,7 +260,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
                 TransRegDocument vars = outlineview.getVars();
                 ITsVariable[] varsArray = vars.variables().toArray(new ITsVariable[0]);
                 vars.clear();
-                
+
                 for (ITsVariable v : varsArray) {
                     if (v instanceof TransRegVar) {
                         TransRegVar var = ((TransRegVar) v);
@@ -306,4 +310,26 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
             setDefaultSetting(c.getSetting());
         }
     }
+
+    @Override
+    public Node getNode() {
+        TransRegVar selectedVariable = outlineview.getSelectedVariable();
+        if (selectedVariable != null) {
+            return new TransRegVarNode(selectedVariable);
+        }
+        return null;
+    }
+
+    @Override
+    public void componentActivated() {
+        super.componentActivated();
+        ActiveViewManager.getInstance().set(this);
+    }
+
+    @Override
+    public void componentDeactivated() {
+        super.componentDeactivated();
+        ActiveViewManager.getInstance().set(null);
+    }
+
 }

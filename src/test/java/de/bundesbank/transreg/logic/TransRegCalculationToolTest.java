@@ -392,8 +392,6 @@ public class TransRegCalculationToolTest {
 
         expResult = new TsData(start, r, true);
 
-        System.out.println(expResult.toString());
-        System.out.println(result.get(0).getTsData());
         assertEquals(expResult.getLength(), result.get(0).getTsData().getLength());
         assertEquals(expResult, result.get(0).getTsData());
     }
@@ -577,7 +575,7 @@ public class TransRegCalculationToolTest {
         Group g2 = new Group(2);
         v.getSettings().getGroups().setGroups(new Group[]{g1, g2, g2, g2});
 
-        // Test Epoch 
+        // Test Epoch
         //**********************************************************************
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
         double[] d1 = new double[]{
@@ -738,7 +736,7 @@ public class TransRegCalculationToolTest {
         Group g2 = new Group(2);
         v.getSettings().getGroups().setGroups(new Group[]{g1, g2, g2, g2});
 
-        // Test Epoch 
+        // Test Epoch
         //**********************************************************************
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
         double[] d1 = new double[]{
@@ -857,7 +855,6 @@ public class TransRegCalculationToolTest {
         boolean correct = true;
         for (int i = 0; i < length; i++) {
             if (diff.get(i) >= epsilon) {
-                System.out.println(diff.get(i) + " " + i);
                 correct = false;
             }
         }
@@ -924,7 +921,6 @@ public class TransRegCalculationToolTest {
                 true
         );
 
-        System.out.println(result.get(0).getTsData());
         assertEquals(expResult1, result.get(0).getTsData());
 
         d_g2 = new double[]{
@@ -975,7 +971,7 @@ public class TransRegCalculationToolTest {
         Group g2 = new Group(2);
         v.getSettings().getGroups().setGroups(new Group[]{g1, g2, g2, g2});
 
-        // Test Epoch 
+        // Test Epoch
         //**********************************************************************
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
         double[] d1 = new double[]{
@@ -1257,9 +1253,7 @@ public class TransRegCalculationToolTest {
         v.getSettings().getEpoch().setEpochs(new Epoch[]{e1, e2});
 
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.EPOCH);
-        System.out.println(v.getSettings().getEpoch().getEpochs()[0]);
-        System.out.println(v.getSettings().getEpoch().getEpochs()[1]);
-        
+
         double[] d1 = new double[]{
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -1277,7 +1271,6 @@ public class TransRegCalculationToolTest {
         assertEquals(expResult1, result.get(0).getTsData());
         result = TransRegCalculationTool.calculate(v).get(NodesLevelEnum.CENTERUSER);
 
-        
         double[] d2 = new double[]{
             -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5, -1.5,
             -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5,
@@ -1293,6 +1286,6 @@ public class TransRegCalculationToolTest {
         );
 
         assertEquals(expResult1, result.get(0).getTsData());
-        
+
     }
 }

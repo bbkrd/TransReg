@@ -149,7 +149,6 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     public void rename(String s) {
         this.setName(s);
-        this.setDescription(s);
     }
 
     public int getGroupStatus() {
@@ -174,6 +173,11 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
 
     public void setAppear(boolean appear) {
         this.appear = appear;
+    }
+
+    @Override
+    public void setDescription(String desc) {
+        super.setDescription(desc);
     }
 
     public ArrayList<TransRegVar> getChildren() {
@@ -286,7 +290,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 }
                 return s;
             default:
-                throw new IllegalArgumentException("Unkown Level name");
+                throw new IllegalArgumentException("Unknown Level name");
         }
     }
 
@@ -508,6 +512,11 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             result.setLevel(NodesLevelEnum.fromString(level));
             result.setGroupStatus(group);
 
+            String desc = info.get(DESC, String.class);
+            if (desc != null) {
+                result.setDescription(desc);
+            }
+
             if (stamp != null) {
                 result.setTimestamp(stamp);
             }
@@ -553,6 +562,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
             info.set(LEVEL, t.getLevel().toString());
             info.set(GROUPSTATUS, t.getGroupStatus());
             info.set(TIMESTAMP, t.getTimestamp());
+            info.set(DESC, t.getDescription(TsFrequency.Undefined));
 
             if (!t.isRoot()) {
                 info.set(PARENT, t.getParent().getID().toString());
@@ -596,7 +606,8 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 LEVEL = "level",
                 TIMESTAMP = "timestamp",
                 GROUPSTATUS = "groupsstatus",
-                MEAN = "mean";
+                MEAN = "mean",
+                DESC = "description";
     }
 //</editor-fold>
 

@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -77,8 +77,7 @@ import org.openide.nodes.Children;
  */
 public class TransRegVarOutlineView extends JComponent implements ITsActionAble, ExplorerManager.Provider {
 
-    private static final int  
-            ID_COLUMN_LEVEL = 1,
+    private static final int ID_COLUMN_LEVEL = 1,
             ID_COLUMN_FREQUENCY = 2,
             ID_COLUMN_TIMESPAN = 3,
             ID_COLUMN_CENTERUSER = 4,
@@ -88,7 +87,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
 
     private final TransRegDocument vars;
     private final List<TransRegVar> myModels = new ArrayList<>();
-    
+
     @lombok.Setter
     private TransRegSettings startSettings = TransRegSettings.DEFAULT;
 
@@ -178,14 +177,14 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     public TransRegDocument getVars() {
         return vars;
     }
-    
-    public void setVars(TransRegDocument doc){
+
+    public void setVars(TransRegDocument doc) {
 //        vars = doc;
         if (!(vars == null || vars.variables() == null || vars.variables().isEmpty())) {
             createTreeFromDoc();
         }
     }
-    
+
     public TransRegVar getSelectedVariable() {
         return getSelectedVariable(this);
     }
@@ -232,6 +231,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             TransRegSettings t = startSettings.copy();
             t.getGroups().setFreq(v.getDefinitionFrequency().intValue());
             v.setSettings(t);
+            v.setDescription(s.getName());
 
             // in myModel
             String nextName = getNextName(name, vars);
@@ -416,7 +416,7 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             TransRegVar var = getSelectedVariable(c);
             if (var != null) {
                 /*
-                 * delete a variable (var) and its children 
+                 * delete a variable (var) and its children
                  */
 
                 // recursive methode
@@ -504,7 +504,6 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     }
 
 //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="VarName">
     private static final class VarName extends NotifyDescriptor.InputLine {
 

@@ -1,15 +1,15 @@
-/* 
+/*
  * Copyright 2018 Deutsche Bundesbank
- * 
+ *
  * Licensed under the EUPL, Version 1.1 or – as soon they
- * will be approved by the European Commission - subsequent 
+ * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the
  * Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl.html
- * 
+ *
  * Unless required by applicable law or agreed to in
  * writing, software distributed under the Licence is
  * distributed on an "AS IS" basis,
@@ -21,6 +21,10 @@
 package de.bundesbank.transreg.ui.nodes;
 
 import de.bundesbank.transreg.logic.TransRegVar;
+import ec.nbdemetra.ui.properties.NodePropertySetBuilder;
+import ec.tstoolkit.timeseries.simplets.TsData;
+import ec.tstoolkit.timeseries.simplets.TsFrequency;
+import ec.tstoolkit.timeseries.simplets.TsPeriod;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.openide.nodes.Children;
@@ -58,17 +62,31 @@ public class TransRegVarNode extends TransRegVarNodeAdapter {
 
     @Override
     protected final Sheet createSheet() {
-
-        TransRegVar model = getLookup().lookup(TransRegVar.class);
-        TransRegVarPropertySetter modelPropertySetter = new TransRegVarPropertySetter(model);
-
         Sheet sheet = super.createSheet();
         Sheet.Set set = super.createDefaultSetter();
-        set.put(modelPropertySetter.getAppearanceProperty());
-//        set.put(modelPropertySetter.getAppearanceProperty());
-
         sheet.put(set);
-        
+
+        TransRegVar item = getLookup().lookup(TransRegVar.class);
+        NodePropertySetBuilder b = new NodePropertySetBuilder();
+        sheet.put(getDataSheetSet(item, b));
+
         return sheet;
     }
+
+    private static Sheet.Set getDataSheetSet(TransRegVar item, NodePropertySetBuilder b) {
+        b.reset("Root Input Data");
+        TransRegVar root = item.getRoot();
+
+        b.with(String.class).selectConst("Name", root.getDescription(TsFrequency.Undefined)).display("Name").add();
+        TsData data = root.getTsData();
+        if (data != null) {
+            b.withEnum(TsFrequency.class).select(data, "getFrequency", null).display("Frequency").add();
+            b.with(TsPeriod.class).select(data, "getStart", null).display("First period").add();
+            b.with(TsPeriod.class).select(data, "getLastPeriod", null).display("Last period").add();
+            b.withInt().select(data, "getObsCount", null).display("Obs count").add();
+            b.with(TsData.class).selectConst("values", data).display("Values").add();
+        }
+        return b.build();
+    }
+
 }
