@@ -136,7 +136,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
         JButton calc = new JButton("Calculate");
 
         calc.addActionListener((ActionEvent e) -> {
-            TransRegVar var = outlineview.getSelectedVariable();
+            TransRegVar var = outlineview.getFirstSelectedVariable();
             if (var != null) {
                 TransRegDocument vars = outlineview.getVars();
                 if (var.isRoot()) {
@@ -313,7 +313,7 @@ public class TransRegTopComponent extends WorkspaceTopComponent<TransRegDocument
 
     @Override
     public Node getNode() {
-        TransRegVar selectedVariable = outlineview.getSelectedVariable();
+        TransRegVar selectedVariable = outlineview.getFirstSelectedVariable();
         if (selectedVariable != null) {
             return new TransRegVarNode(selectedVariable);
         }

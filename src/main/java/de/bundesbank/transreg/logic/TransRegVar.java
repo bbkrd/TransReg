@@ -413,6 +413,7 @@ public class TransRegVar extends TsVariable implements IDynamicObject, Serializa
                 result.addAll(child.deleteChildren());
                 return child;
             }).forEachOrdered((child) -> {
+                child.removeParent();
                 variables.remove(child.getID());
             });
             this.childrenIDs.clear();

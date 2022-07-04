@@ -23,6 +23,7 @@ package de.bundesbank.transreg.ui;
 import de.bundesbank.transreg.admin.TransRegDocument;
 import de.bundesbank.transreg.logic.TransRegVar;
 import de.bundesbank.transreg.settings.TransRegSettings;
+import de.bundesbank.transreg.settings.admin.SettingSelectionComponent;
 import de.bundesbank.transreg.ui.nodes.TransRegVarChildrenFactory;
 import ec.nbdemetra.ui.DemetraUI;
 import ec.nbdemetra.ui.NbComponents;
@@ -48,6 +49,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.swing.ActionMap;
@@ -64,6 +66,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.explorer.ExplorerManager;
@@ -151,14 +154,14 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         tableColumn.getColumn(ID_COLUMN_TIMESTAMP).setCellRenderer(new DefaultTableCellRenderer());
 
         ov.setTreeSortable(false);
-        ov.getOutline().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        ov.getOutline().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         ov.getOutline().setRowSorter(null);
 
         ov.getOutline().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    firePropertyChange(CHANGE_SELECTED_VAR, null, getSelectedVariable());
+                    firePropertyChange(CHANGE_SELECTED_VAR, null, getFirstSelectedVariable());
                 }
             }
         });
@@ -185,20 +188,25 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         }
     }
 
-    public TransRegVar getSelectedVariable() {
-        return getSelectedVariable(this);
+    public TransRegVar getFirstSelectedVariable() {
+        TransRegVar[] selectedVariables = getSelectedVariables(this);
+        return selectedVariables.length == 0 ? null : selectedVariables[0];
     }
 
-    private static TransRegVar getSelectedVariable(TransRegVarOutlineView ov) {
-        int selectetedRow = ov.getOutlineview().getOutline().getSelectedRow();
-        if (selectetedRow >= 0) {
-            String name = ov.getOutlineview().getOutline().getModel().getValueAt(selectetedRow, 0).toString();
+    private static TransRegVar[] getSelectedVariables(TransRegVarOutlineView ov) {
+        int[] selectedRows = ov.getOutlineview().getOutline().getSelectedRows();
+        if (selectedRows.length == 0) {
+            return new TransRegVar[0];
+        }
+        TransRegVar[] selectedVariables = new TransRegVar[selectedRows.length];
+        for (int i = 0; i < selectedRows.length; i++) {
+            String name = ov.getOutlineview().getOutline().getModel().getValueAt(selectedRows[i], 0).toString();
             ITsVariable var = ov.getVars().get(name);
             if (var instanceof TransRegVar) {
-                return ((TransRegVar) var);
+                selectedVariables[i] = (TransRegVar) var;
             }
         }
-        return null;
+        return selectedVariables;
     }
 
     private static Ts toTs(TransRegVar variable) {
@@ -269,12 +277,14 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
     public static final String DELETE_ACTION = "delete";
     public static final String OPEN_ACTION = "open";
     public static final String RENAME_ACTION = "rename";
+    public static final String CHANGE_SPECIFICATION_ACTION = "changeSpec";
 
     private void registerActions() {
         ActionMap am = getActionMap();
         am.put(OPEN_ACTION, OpenCommand.INSTANCE.toAction(this));
         am.put(RENAME_ACTION, RenameCommand.INSTANCE.toAction(this));
         am.put(DELETE_ACTION, DeleteCommand.INSTANCE.toAction(this));
+        am.put(CHANGE_SPECIFICATION_ACTION, ChangeSpecificationCommand.INSTANCE.toAction(this));
         ActionMaps.copyEntries(am, false, outlineview.getActionMap());
     }
 
@@ -334,7 +344,11 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
         result.add(item);
 
         result.addSeparator();
+        item = new JMenuItem(actionMap.get(CHANGE_SPECIFICATION_ACTION));
+        item.setText("Change specification");
+        result.add(item);
 
+        result.addSeparator();
         item = new JMenuItem(actionMap.get(DELETE_ACTION));
         item.setText("Remove");
         item.setAccelerator(KeyStrokes.DELETE.get(0));
@@ -349,14 +363,18 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
 
         @Override
         public void execute(TransRegVarOutlineView c) throws Exception {
-            TransRegVar variable = getSelectedVariable(c);
-            ITsAction tsAction = c.tsAction != null ? c.tsAction : DemetraUI.getDefault().getTsAction();
-            tsAction.open(toTs(variable));
+            TransRegVar[] selectedVariables = getSelectedVariables(c);
+            if (selectedVariables.length == 1) {
+                TransRegVar variable = selectedVariables[0];
+                ITsAction tsAction = c.tsAction != null ? c.tsAction : DemetraUI.getDefault().getTsAction();
+                tsAction.open(toTs(variable));
+            }
+
         }
 
         @Override
         public boolean isEnabled(TransRegVarOutlineView c) {
-            return getSelectedVariable(c) != null;
+            return c.outlineview.getOutline().getSelectedRowCount() == 1;
         }
 
         @Override
@@ -395,7 +413,48 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
 
         @Override
         public void execute(TransRegVarOutlineView c) throws Exception {
-            tsAction.open(toTs(getSelectedVariable(c)));
+            TransRegVar[] selectedVariables = getSelectedVariables(c);
+            if (selectedVariables.length == 1) {
+                TransRegVar variable = selectedVariables[0];
+                tsAction.open(toTs(variable));
+            }
+
+        }
+    }
+
+    private static final class ChangeSpecificationCommand extends JCommand<TransRegVarOutlineView> {
+
+        public static final ChangeSpecificationCommand INSTANCE = new ChangeSpecificationCommand();
+
+        @Override
+        public void execute(TransRegVarOutlineView c) throws Exception {
+            TransRegVar[] selectedVariables = getSelectedVariables(c);
+
+            SettingSelectionComponent s = new SettingSelectionComponent();
+            DialogDescriptor dd = s.createDialogDescriptor("Choose active settings");
+            if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+                for (TransRegVar selectedVariable : selectedVariables) {
+                    selectedVariable.setSettings(s.getSetting());
+                    ArrayList<TransRegVar> deletedChildren = selectedVariable.deleteChildren();
+                    deletedChildren.stream().forEach((deletedChild) -> {
+                        c.getVars().remove(deletedChild);
+                        c.myModels.remove(deletedChild);
+                    });
+                }
+                c.setNodes();
+            }
+
+        }
+
+        @Override
+        public boolean isEnabled(TransRegVarOutlineView c) {
+            TransRegVar[] selectedVariables = getSelectedVariables(c);
+            return selectedVariables.length != 0 && Arrays.stream(selectedVariables).allMatch(var -> var != null && var.isRoot());
+        }
+
+        @Override
+        public JCommand.ActionAdapter toAction(TransRegVarOutlineView c) {
+            return super.toAction(c).withWeakListSelectionListener(c.outlineview.getOutline().getSelectionModel());
         }
     }
 
@@ -413,37 +472,28 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
             if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
                 return;
             }
-            TransRegVar var = getSelectedVariable(c);
-            if (var != null) {
-                /*
-                 * delete a variable (var) and its children
-                 */
-
-                // recursive methode
-                deleteWithChildren(var, c);
-
-                if (!var.isRoot()) {
-                    var.getParent().removeChild(var);
+            TransRegVar[] vars = getSelectedVariables(c);
+            for (TransRegVar var : vars) {
+                if (var != null) {
+                    deleteWithChildren(var, c);
+                    if (!var.isRoot()) {
+                        var.getParent().removeChild(var);
+                    }
                 }
-
-                // general todo to delete a variable
-                c.vars.remove(var);
-                if (c.myModels.contains(var)) {
-                    c.myModels.remove(var);
-                }
-                TransRegVar.variables.remove(var.getID());
-                c.firePropertyChange(CHANGE_SELECTED_VAR, var, null);
-                c.setNodes();
             }
+            c.setNodes();
         }
 
-        private static void deleteWithChildren(TransRegVar var, TransRegVarOutlineView c) {
+        private void deleteWithChildren(TransRegVar var, TransRegVarOutlineView c) {
             if (var.hasChildren()) {
-                var.getChildren().stream().forEach((TransRegVar t) -> {
+                var.getChildren().forEach((TransRegVar t) -> {
                     deleteWithChildren(t, c);
                 });
             }
             c.vars.remove(var);
+            if (c.myModels.contains(var)) {
+                c.myModels.remove(var);
+            }
             TransRegVar.variables.remove(var.getID());
         }
 
@@ -464,11 +514,11 @@ public class TransRegVarOutlineView extends JComponent implements ITsActionAble,
 
         @Override
         public void execute(TransRegVarOutlineView c) throws java.lang.Exception {
-            int[] sel = c.outlineview.getOutline().getSelectedRows();
-            if (sel.length != 1) {
+            TransRegVar[] selectedVariables = getSelectedVariables(c);
+            if (selectedVariables.length != 1) {
                 return;
             }
-            TransRegVar renamedVar = getSelectedVariable(c);
+            TransRegVar renamedVar = selectedVariables[0];
             String oldName = c.vars.get(renamedVar);
             String newName;
             VarName nd = new VarName(c.vars, "New name:", "Please enter the new name", oldName);
